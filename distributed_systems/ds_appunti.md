@@ -27,3 +27,17 @@ A distributed system should:
 - it should be open (?)
 - and it should be scalable
 
+### Goals for distributed systems 
+
+*Transparency* means hiding that the process and resources are distributed throw multiple computers.
+
+Different types of transparency:
+    - access: hide difference in data rapresentation and how resources are accessed
+    - location: hide where resources are located
+    - migratio: hide that a resource may move to another location
+    - relocation: hide that a resource may move to another location while in use 
+    - replication: hide that a resource is replicated 
+    - concurrency: hide that a resource may be shared by several competitve users 
+    - failure: hide the failure and revcovery of a resource 
+
+Degree of transparency: 
