@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.7)  18 SEP 2023 08:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.7)  20 SEP 2023 07:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -246,28 +246,35 @@ LaTeX Font Info:    External font `cmex10' loaded for size
  [1
 
 {/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<media/semplice_automa.png, id=42, 331.2375pt x 153.57375pt>
+<media/semplice_automa.png, id=62, 331.2375pt x 153.57375pt>
 File: media/semplice_automa.png Graphic file (type png)
 <use media/semplice_automa.png>
 Package pdftex.def Info: media/semplice_automa.png  used on input line 33.
 (pdftex.def)             Requested size: 99.37201pt x 46.07246pt.
- [2 <./media/semplice_automa.png>] [3] [4] [5] (./notes.aux)
+ [2 <./media/semplice_automa.png>] [3] [4]
+LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 85.
+ (/usr/local/texlive/2022/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2022/07/10 v2.5l Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 85.
+ [5] [6] (./notes.aux)
 Package rerunfilecheck Info: File `notes.out' has not changed.
-(rerunfilecheck)             Checksum: 0E6A9EA7D8EC4B9B32441930B285734D;799.
+(rerunfilecheck)             Checksum: FB185880EF2033338677E3C91E489095;1395.
  ) 
 Here is how much of TeX's memory you used:
- 9611 strings out of 476024
- 153776 string characters out of 5790025
+ 9643 strings out of 476024
+ 154306 string characters out of 5790025
  1856388 words of memory out of 5000000
- 29942 multiletter control sequences out of 15000+600000
- 516878 words of font info for 47 fonts, out of 8000000 for 9000
+ 29964 multiletter control sequences out of 15000+600000
+ 517225 words of font info for 48 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,8n,76p,289b,638s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on notes.pdf (5 pages, 51025 bytes).
+{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
+Output written on notes.pdf (6 pages, 109548 bytes).
 PDF statistics:
- 83 PDF objects out of 1000 (max. 8388607)
- 67 compressed objects within 1 object stream
- 14 named destinations out of 1000 (max. 500000)
- 54 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 140 PDF objects out of 1000 (max. 8388607)
+ 110 compressed objects within 2 object streams
+ 20 named destinations out of 1000 (max. 500000)
+ 86 words of extra memory for PDF output out of 10000 (max. 10000000)
 

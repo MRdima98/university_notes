@@ -79,6 +79,33 @@ Cambridge University Press, Second Edition, 2004. Cap. 1–3
 
 \newpage
 \section{Linguaggi regolari}
+\subsection{Alfabeti}
+Un \emph{alfabeto} è un insieme finito e non vuoto di simboli, comunemente indicato con $\Sigma$. Seguono alcuni esempi di alfabeti: 
+\begin{outline}
+  \1 $\Sigma$ = \{0,1\} alfabeto binario
+  \1 $\Sigma$ = \{a,b,...,z\} alfabeto di tutte lettere minuscole
+  \1 L'insieme ASCII
+\end{outline}
+
+\subsubsection{Stringhe}
+Una stringa/parola è un insieme di simboli di un alfabeto, 0010 è una stringa che appartiene $\Sigma$ = \{0,1\}.
+\\ La \emph{stringa vuota} è una stringa composta da 0 simboli.
+\\ La lunghezza della stringa sono il numeri di caratteri che la compongono (non devono essere unici). La sintassi per la lunghezza di una stringa w è $|w|$, quindi $|001|$ = 3 oppure $|\epsilon| = 0.$
+
+\subsubsection*{Potenze di un alfabeto}
+Se $\Sigma$ è un alfabeto si può esprimere l'insieme di tutte le stringhe di una certa lunghezza con una notazione esponenziale: $\Sigma^k$ denota tutte le stringhe di lunghezza k con simboli che appartengono a $\Sigma$. \\
+Per esempio: 
+\\ $\Sigma^1$ = \{0,1\} 
+\\ $\Sigma^2$ = \{00, 01, 10, 11\}
+\\ $\Sigma^2$ = \{000, 001, 010, 011, 100, 101, 110, 111\}
+\\ L'insieme delle stringhe meno quella vuota è segnato come $\Sigma^+$, mentre l'insieme che include la stringa vuota è $\Sigma^*$,
+
+\subsubsection{Concatenazione di stringhe}
+Siano x e y stringhe, dove i è la lunghezza di x e j è la lunghezza di y, la stringa xy è la stringa risultata dalla concatenazione delle stringhe xy di lunghezza i+j.
+
+\subsection{Definizione di linguaggio}
+Un insieme di stringhe a scelta L $\subseteq\Sigma^*$ si definisce linguaggio su $\Sigma$. 
+\\ Un modo formale per definire un alfabeto è il seguente \{w $|$ enunciato su w\}, che si traduce in "w tale che enunciato su w".
+\\ $\{0^n 1^n | n \ge 1 \}$ si traduce in "l’insieme di 0 elevato alla n, 1 alla n tale che n è maggiore o uguale a 1" 
 
 \end{document}
-
