@@ -90,7 +90,7 @@ Un \emph{alfabeto} è un insieme finito e non vuoto di simboli, comunemente indi
 \subsubsection{Stringhe}
 Una stringa/parola è un insieme di simboli di un alfabeto, 0010 è una stringa che appartiene $\Sigma$ = \{0,1\}.
 \\ La \emph{stringa vuota} è una stringa composta da 0 simboli.
-\\ La lunghezza della stringa sono il numeri di caratteri che la compongono (non devono essere unici). La sintassi per la lunghezza di una stringa w è $|w|$, quindi $|001|$ = 3 oppure $|\epsilon| = 0.$
+\\ La lunghezza della stringa sono il numeri di caratteri che la compongono (non devono essere unici). La sintassi per la lunghezza di una stringa w è $|w|$, quindi $|001|$ = 3 oppure $|\epsilon| = 0$ (nota bene, $\epsilon \ne 0$ ma è di lunghezza 0).
 
 \subsubsection*{Potenze di un alfabeto}
 Se $\Sigma$ è un alfabeto si può esprimere l'insieme di tutte le stringhe di una certa lunghezza con una notazione esponenziale: $\Sigma^k$ denota tutte le stringhe di lunghezza k con simboli che appartengono a $\Sigma$. \\
@@ -108,4 +108,19 @@ Un insieme di stringhe a scelta L $\subseteq\Sigma^*$ si definisce linguaggio su
 \\ Un modo formale per definire un alfabeto è il seguente \{w $|$ enunciato su w\}, che si traduce in "w tale che enunciato su w".
 \\ $\{0^n 1^n | n \ge 1 \}$ si traduce in "l’insieme di 0 elevato alla n, 1 alla n tale che n è maggiore o uguale a 1" 
 
+\newpage
+\section{Automa a stati finiti}
+Un automa a stati finiti deterministico consiste in: 
+\begin{enumerate}
+  \item Un insieme di stati finiti Q
+  \item Un insieme di simboli di input, $\Sigma$
+  \item Una funzione di transizione, che prende in input uno stato e un simbolo e restituisce uno stato. Tale funzione è spesso indicato con $\sigma$ ed è usata per rappresentare i archi nella rappresentazione grafica. Ovvero sia \emph{q} uno stato, \emph{a} un input allora $\sigma$(q,a) è lo stato \emph{p} tale che esista un arco da q a p.
+  \item Uno stato iniziale (naturalmente che appartiene a Q)
+  \item Un insieme di stati accettati finali F. Questo è un sottoinsieme di Q.
+\end{enumerate}
+Un automa a stati finiti deterministico è spesso chiamato con l'acronimo DFA e viene può essere rappresentato nella seguente maniera concisa: 
+\[A = (Q, \Sigma, \sigma, q\textsubscript{0}, F)\]
+Dove A rappresenta il DFA.
+
+\subsection{ Elaborazione di stringhe }
 \end{document}
