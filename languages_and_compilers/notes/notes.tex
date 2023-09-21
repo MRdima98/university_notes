@@ -3,6 +3,17 @@
 \usepackage[italian]{babel}
 \usepackage{graphicx}
 \usepackage{outlines}
+\newcommand{\circumdelta}{%
+  \leavevmode\vbox{
+    \offinterlineskip
+    \ialign{%
+      \hfil##\hfil\cr
+      \^{}\cr\noalign{\vskip-1ex}
+      $\delta$\cr
+    }
+  }%
+}
+
 \begin{document}
 \tableofcontents
 \newpage
@@ -114,13 +125,69 @@ Un automa a stati finiti deterministico consiste in:
 \begin{enumerate}
   \item Un insieme di stati finiti Q
   \item Un insieme di simboli di input, $\Sigma$
-  \item Una funzione di transizione, che prende in input uno stato e un simbolo e restituisce uno stato. Tale funzione è spesso indicato con $\sigma$ ed è usata per rappresentare i archi nella rappresentazione grafica. Ovvero sia \emph{q} uno stato, \emph{a} un input allora $\sigma$(q,a) è lo stato \emph{p} tale che esista un arco da q a p.
+  \item Una funzione di transizione, che prende in input uno stato e un simbolo e restituisce uno stato. Tale funzione è spesso indicato con $\delta$ ed è usata per rappresentare i archi nella rappresentazione grafica. Ovvero sia \emph{q} uno stato, \emph{a} un input allora $\delta$(q,a) è lo stato \emph{p} tale che esista un arco da q a p.
   \item Uno stato iniziale (naturalmente che appartiene a Q)
   \item Un insieme di stati accettati finali F. Questo è un sottoinsieme di Q.
 \end{enumerate}
 Un automa a stati finiti deterministico è spesso chiamato con l'acronimo DFA e viene può essere rappresentato nella seguente maniera concisa: 
-\[A = (Q, \Sigma, \sigma, q\textsubscript{0}, F)\]
+\[A = (Q, \Sigma, \delta, q\textsubscript{0}, F)\]
 Dove A rappresenta il DFA.
 
 \subsection{ Elaborazione di stringhe }
+Per elaborare una stringa è si definisce lo stato iniziale, quello finale e una serie di regole di transizione per poterci arrivare. 
+Se dovessi decodificare la stringa 01 il DFA risulterebbe: 
+\[A = (Q=\{q1,q2,q3\}, \{0,1\}, \delta, q\textsubscript{0}, \{q1\})\]
+I stati sono i sequenti: 
+\\ $\delta(q\textsubscript{0},1)=q\textsubscript{0}$: leggo come primo stato 1, nessun progresso fatto
+\\ $\delta(q\textsubscript{0},0)=q\textsubscript{2}$: leggo come primo stato 0, posso andare avanti e cercare un 1
+\\ $\delta(q\textsubscript{2},1)=q\textsubscript{1}$: leggo 1 dopo lo 0, ho trovato la stringa
+\\ $\delta(q\textsubscript{2},0)=q\textsubscript{2}$: leggo 0 dopo lo 0, non ho fatto progresso
+\\ Nota bene: questa è una notazione arbitraria del libro, q1 e q2 si possono invertire.
+
+\subsubsection{ Notazioni semplici per DFA }
+\subsubsection*{ Diagramma di transizione }
+Dato un DFA $A = (Q, \Sigma, \delta, q\textsubscript{0}, F)$ un suo diagramma di transizione è composto da: 
+\begin{outline}
+  \1 Ogni stato Q è un nodo 
+  \1 Ogni funzione $\delta$ è una freccia
+  \1 La freccia Start che denota il primo input 
+  \1 Gli stati accettati F hanno un doppio cerchio
+\end{outline}
+\begin{figure}[h]
+\includegraphics[scale = 0.3]{media/diagramma_stato.png}
+\centering
+\caption{Diagramma di transizione}
+\end{figure}
+
+\subsubsection*{ Tabelle di transizione }
+Una tabella di transizione è costituita nelle riga dalle funzioni $\delta$ e nelle colonne dagli input. Ogni incrocio equivale a uno stato della funzione $\delta$ con un input generico \emph{a}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{c | c | c}
+& 0 & 1 \\
+\hline
+$\rightarrow$  q\textsubscript{0} & q\textsubscript{2} & q\textsubscript{0} \\
+$*$q\textsubscript{1} & q\textsubscript{1} & q\textsubscript{1} \\
+q\textsubscript{2} & q\textsubscript{2} & q\textsubscript{1} \\
+\end{tabular}
+\caption{Esempio di tabella}
+\end{table}
+La freccia è lo start e l'asterisco è lo stato finale.
+
+\subsubsection{ Estensione della funzione di transizione di stringhe }
+Allo scopo di poter seguire una sequenza di input ci serve definire una funzione di transizione estesa. Se $\delta$ è una funzione di transizione, chiameremo \circumdelta\space la sua funzione estesa.
+La funzione estesa prende in input \emph{q} e una stringa \emph{w} e ritorna uno stato \emph{p}. 
+\\ Ogni stato viene calcolato grazie allo stato esteso precedente: \[\circumdelta(\emph{q,w}) = \delta(\circumdelta(\emph{q,x}), \emph{a})\]
+\subsubsection*{Esempio}
+L = \{ w $|$ w ha un numero pari di 0 e di 1 \}
+\\ Nota bene: 0 è pari quindi conta come stato accettato, ed è l'unico stato accettato. 
+\\ \hspace*{0.4cm} q\textsubscript{0}: 0 e 1 sono pari
+\\ \hspace*{0.4cm} q\textsubscript{1}: 0 pari 1 dispari
+\\ \hspace*{0.4cm} q\textsubscript{2}: 1 pari 0 dispari
+\\ \hspace*{0.4cm} q\textsubscript{3}: 0 dispari 1 dispari
+\[A = (\{q1,q2,q3,q4\}, \{0,1\}, \delta, q\textsubscript{0}, \{q\textsubscript{0}\})\]
+
+
 \end{document}
+
