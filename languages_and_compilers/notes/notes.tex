@@ -1,6 +1,7 @@
 \documentclass[12pt]{article}
 \usepackage[hidelinks]{hyperref}
 \newtheorem{theorem}{Theorem}
+\usepackage{import}
 \usepackage{xcolor}
 \usepackage{textcomp}
 \usepackage[italian]{babel}
@@ -363,7 +364,7 @@ Un linguaggio L è accettato da un DFA se e solo se L è accettato da un NFA.
 
 \newpage
 \section{Automa con epsilon-transazioni}
-Un estensione degli automa è la capacita di poter ammettere come input la stringa vuota $\epsilon$. È come se l'NFA compisse una transizioni spontaneamente. Tale NFA si chiamerà $\epsilon$-NFA
+Un estensione degli automa è la capacità di poter ammettere come input la stringa vuota $\epsilon$. È come se l'NFA compisse una transizioni spontaneamente. Tale NFA si chiamerà $\epsilon$-NFA
 
 \subsection{Uso delle epsilon-transizioni}
 L'esempio di seguito tratta le $\epsilon$ come invisibili, possono mutare lo stato ma non sono contante nella catena. 
@@ -416,128 +417,50 @@ Un $\epsilon$-chiusura è un cammino fatto solo di transizioni $\epsilon$. Forma
 
 \subsection{Transizioni estese di epsilon-NFA}
 Grazie alle $\epsilon$-chiusure possiamo definire cosa significa accettare un input.
-
-
-
-
-
-
-\section{Esercitazioni} 
-\subsection{Esercitazione 09/21/23}
-\subsubsection{Costruzione DFA}
-Consideriamo l'alfabeto \{a,b\}. 
-Realizzare dei DFA che riconoscono i seguenti linguaggi:
+\\ 
+Supponiamo $E = (Q, \Sigma, \delta, q_0, F)$ un $\sigma$-NFA, \circumdelta(q,w) è la funzione di transizione estesa le cui etichette concatenate descrivono la stringa w.
+\\ 
+\textbf{BASE} \circumdelta(q,w) = ENCLOSE(q), se l'etichetta è $\epsilon$ posso seguire solo cammini $\epsilon$, definizione di ENCLOSE.
+\\
+\textbf{INDUZIONE} Supponiamo \emph{w} abbia forma \emph{xa}, dove \emph{a} è l'ultimo simbolo, che non può essere $\epsilon$ perché non appartiene a $\Sigma$: 
 \begin{enumerate}
-  \item stringhe con un numero dispari di a 
-\\ SI ab,aaa,bba,aaba
-\\ NO $\epsilon$,aa
+  \item Poniamo \circumdelta(q,x) = $\{p_1, p_2,...,p_k\}$ in questo modo tutti i cammini $p_i$ sono tutti gli stati raggiungibili da q a x. Questi stati possono terminare con $\epsilon$ oppure contenere altre $\epsilon$ transizioni
+  \item Sia $\bigcup^k_{i=1}\delta(p_i,a)$ l'insieme $\{r_1, r_2, ...,r_m\}$, ovvero tutte le transizioni da \emph{a} a \emph{x}. 
+  \item Infine \circumdelta(q,w) = $\bigcup^m_{j=1}ENCLOSE(r_j)$, questo chiude gli archi rimasti dopo \emph{a}
+\end{enumerate}
+Forma contratta 
+\[\circumdelta(q,xa) = \bigcup_{p\in\circumdelta(q,x)}(\bigcup_{t\in\delta(q,a)}ENCLOSE(t))\]
+Il linguaggio accettato è L(E) = $\{w|\circumdelta(q_0,w) \cap F \ne 0\}$
 
-\begin{figure}[h]
-  \includegraphics[scale = 0.5]{media/09_21_es1.png}
-  \centering
-\end{figure}
-
-\item 
-stringhe che terminano con bb
-\\ SI bb,babb
-\\ NO $\epsilon$,ba,a,aba
-
-\begin{figure}[h]
-  \includegraphics[scale = 0.5]{media/09_21_es2.png}
-  \centering
-\end{figure}
-
-\newpage
-\item stringhe che non terminano con bb
-\\ SI $\epsilon$,ba,a,aba
-\\ NO bb,babb
-
-\begin{figure}[h]
-  \includegraphics[scale = 0.5]{media/09_21_es3.png}
-  \centering
-\end{figure}
+\subsection{Da epsilon-NFA a DFA}
+Dato un $\epsilon$-NFA possiamo costruire un equivalente DFA per sottoinsiemi. Sia $E = (Q_E, \Sigma, \delta_E, q_0, F_E)$ un $\epsilon$-NFA il suo equivalente DFA è 
+\[ D = (Q_D, \Sigma, \delta_D, q_0, F_D) \]
+ovvero: 
+\begin{enumerate}
+  \item $Q_D$ è l'insieme di sottoinsiemi $Q_E$. Ogni stato accessibile in D è un sottoinsieme $\epsilon$-chiuso di $Q_E$, in termini formali S$\subseteq Q_E$ tale che S = ENCLOSE(S).
+  \item $q_D$=ENCLOSE$(q_0)$
+  \item $F_D$ contiene almeno uno stato accettante in E. 
+    \\ $F_D=\{S|S$ è in $Q_D$ e $S \cap F_E\neq0\}$
+  
+  \item $\circumdelta(q,xa) = \bigcup_{p\in\circumdelta(q,x)}(\bigcup_{t\in\delta(q,a)}ENCLOSE(t))$
+    \end{enumerate}
+\textbf{Teorema} Un linguaggio è linguaggio L è accetto da un $\epsilon$-NFA se è solo se è accettato da un DFA.
 
 \newpage
-\item stringhe con un numero pari di a ed almeno 3 b
-\\ SI bbb,bababb
-\\ NO $\epsilon$,bbaa,bababa
-
-\begin{figure}[h]
-  \includegraphics[scale = 0.5]{media/09_21_es4.png}
-  \centering
-\end{figure}
-
-\newpage
-\item stringhe che contengono la sottostringa aaa o la sottostringa aba (contengono almeno una delle due)
-\\ SI babab,aaaa,aaaba
-\\ NO $\epsilon$,abba,a,b,ab
-
-\begin{figure}[h]
-  \includegraphics[scale = 0.5]{media/09_21_es5.png}
-  \centering
-\end{figure}
-
-\item Realizzare un DFA che riconosca il seguente linguaggio su alfabeto \{0,1\}: stringhe che interpretate come numero binario risultano un multiplo di 5 
-\\
-SI 101,1010,1111,0
-\\
-NO 111,1,10
-
-\begin{figure}[h]
-  \includegraphics[scale = 0.25]{media/09_21_es6.jpg}
-  \centering
-\end{figure}
-NB: Devi considerare tutti i numeri fino a 5!
-
-\item Sempre considerando alfabeto \{0,1\}, realizzare un DFA che controlla la correttezza delle somme binarie: data la stringa: $a_0 b_0 c_0 a_1 b_1 c_1 ... a_n b_n c_n$ controlla se $a_n...a_1 a_0 + b_n...b_1 b_0 = c_n...c_1 c_0$ (cioè a+b=c con a,b,c numeri binari con stessa lunghezza) 
-
-\begin{figure}[h]
-  \includegraphics[scale = 0.4]{media/09_21_es7.jpg}
-  \centering
-\end{figure}
-
-Non mi torna...
-
+\section{Espressioni regolari}
+Le espressioni regolari definiscono gli stessi linguaggi definiti dai vari automi: \emph{linguaggi regolari}. A differenza degli automi, le espressioni regolari descrivono linguaggi in maniera dichiarativa. Per questo motivo le espressioni regolari sono molto diffuse, per esempio nel commando unix \emph{grep} oppure negli analizzatori lessicali.
+\subsection{Operatori lessicali}
+L'espressione lessicale 01*+10* denota il linguaggio 0 seguito da qualsiasi numero di 1 oppure 1 seguito da qualsiasi numero di 0.
+\\ Per poter definire le operazioni sulle regex (sinonimo di espressione regolare) dobbiamo definire tali operazioni sui linguaggi che esse rappresentano: 
+\begin{enumerate}
+  \item \emph{Unione} di due linguaggi L ed M, L$\cup$M, indica tutte le stringhe che appartengono ad L e ad M oppure a entrambi.
+  \item \emph{Concatenazione} di due linguaggi L ed M è l'insieme di stringhe formate dalla concatenazione di una qualsiasi stringa L con una qualsiasi stringa M. Tale operazione è indicata così: L$\cdot M$ oppure semplicemente LM. 
+     Per L=\{001,10,111\} e M=\{$\epsilon$,001\} 
+     LM=\{001,10,111,001001, 10001, 111001\}
+   \item \emph{Chiusura}(o \emph{star} o chiusura di Kleene) di un linguaggio L, indicata come L*, rappresenta l'insieme delle stringhe che si possono formare tramite concatenazione e ripetizione di qualsiasi stringa in L. Nel caso L=\{0,1\} L* rappresenta l'alfabeto binario, qualsiasi combo di 0 e 1. Nel caso L=\{0, 11\} L* rappresenta qualsiasi stringa che abbia una o più coppie di 1, NB 011 è valido ma come 01111, mentre 101 non è valido, non abbiamo né la stringa 10 né la stringa 01. Formalmente L* è l'unione infinita $\bigcup_{i>0}L_i$ dove $L^0=\{\epsilon\}$, $L^1=L$, $L^i=LL...L$.
 \end{enumerate}
 
+$e$
 \newpage
-\subsubsection{NFA}
-\begin{enumerate}
-  \item 
-    Dato l'alfabeto \{a,b\} realizzare un NFA che riconosce le stringhe che 
-    contengono aaa oppure aba
-    \\
-    SI babab,aaaa,aaaba
-    \\
-    NO $\epsilon$,abba,a,b,ab
-
-\begin{figure}[h]
-  \includegraphics[scale = 0.5]{media/es8.jpg}
-  \centering
-\end{figure}
-
-  \item Realizzare un NFA che riconosce le stringhe non vuote sull'alfabeto \{0,1,2\} in cui l'ultima cifra appare almeno una volta in precedenza
-    \\
-    SI 011,121,22,0120
-    \\
-    NO $\epsilon$,012,20,1
-
-\begin{figure}[h]
-  \includegraphics[scale = 0.5]{media/es9.jpg}
-  \centering
-\end{figure}
-
-\newpage
-\item Realizzare un NFA che riconosce le stringhe non vuote sull'alfabeto {0,1,2} in cui l'ultima cifra NON appare in precedenza
-\\
-SI 012,20,1
-\\
-NO $\epsilon$,011,121,22,0120
-
-\begin{figure}[h]
-  \includegraphics[scale = 0.5]{media/es10.jpg}
-  \centering
-\end{figure}
-
-\end{enumerate}
+\import{}{esercizi}
 \end{document}
