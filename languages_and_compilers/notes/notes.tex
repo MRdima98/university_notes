@@ -2,6 +2,7 @@
 \usepackage[hidelinks]{hyperref}
 \newtheorem{theorem}{Theorem}
 \usepackage{import}
+\setlength\parindent{0pt}
 \usepackage{xcolor}
 \usepackage{textcomp}
 \usepackage[italian]{babel}
@@ -24,83 +25,83 @@
 \newpage
 
 \section{Introduzione}
-\subsection{Motivazione} 
+\subsection{Motivazione}
 Un linguaggio è uno strumento per descrivere come risolvere i problemi in maniera rigorosa, in modo tale che sia eseguibile da un calcolatore
-Perché è utile studiare come creare un linguaggio di programmazione? 
+Perché è utile studiare come creare un linguaggio di programmazione?
 \begin{itemize}
-  \item non rimanere degli utilizzatori passivi
-  \item capire il funzionamento dietro le quinte di un linguaggio
-  \item domain-specific language (DSL): è un linguaggio pensato per uno specifico problema
-  \item model drivern software development: modo complesso per dire UML e simili
-  \item model checking
+	\item non rimanere degli utilizzatori passivi
+	\item capire il funzionamento dietro le quinte di un linguaggio
+	\item domain-specific language (DSL): è un linguaggio pensato per uno specifico problema
+	\item model drivern software development: modo complesso per dire UML e simili
+	\item model checking
 \end{itemize}
 
 
-\subsection{Definizioni base} 
+\subsection{Definizioni base}
 Un linguaggio è composto da:
 \begin{itemize}
-  \item lessico e sintassi
-  \item compilatore: parser + generatore di codice oggetto
+	\item lessico e sintassi
+	\item compilatore: parser + generatore di codice oggetto
 \end{itemize}
 La generazione automatica di codice può essere dichiarativa lessico
 (espressioni regolari o automa a stati finite) o sintassi(grammatiche o automa a pile).
 Un automa a stati finiti consuma informazioni una alla volta, ne salva una quantità finita. Alcuni esempi di applicazione di automa a stati finiti: software di progettazione di circuiti, analizzatore lessicale, ricerca di parole sul web e protocolli di comunicazione.
 
 \begin{figure}[h]
-\includegraphics[scale = 0.3]{media/semplice_automa.png}
-\centering
-\caption{Semplice automa}
+	\includegraphics[scale = 0.3]{media/semplice_automa.png}
+	\centering
+	\caption{Semplice automa}
 \end{figure}
 
 \subsection{Contenuti del corso}
 \begin{outline}
-  \1 Linguaggi formali e Automi:
-    \2 Automi a stati finiti, espressioni regolari, grammatiche libere, automi a pila, Macchine di Turing, calcolabilità
-  \1 Compilatori:
-    \2 Analisi lessicale, analisi sintattica, analisi semantica, generazione di codice
-  \1 Logica di base:
-    \2 Logica delle proposizioni e dei predicati
-  \1 Modelli computazionali:
-    \2 Specifica di sistemi tramite sistemi di transizione, logiche temporali per la specifica e verifica di proprietà dei sistemi (model checking), sistemi concorrenti (algebre di processi e reti di Petri)
+	\1 Linguaggi formali e Automi:
+	\2 Automi a stati finiti, espressioni regolari, grammatiche libere, automi a pila, Macchine di Turing, calcolabilità
+	\1 Compilatori:
+	\2 Analisi lessicale, analisi sintattica, analisi semantica, generazione di codice
+	\1 Logica di base:
+	\2 Logica delle proposizioni e dei predicati
+	\1 Modelli computazionali:
+	\2 Specifica di sistemi tramite sistemi di transizione, logiche temporali per la specifica e verifica di proprietà dei sistemi (model checking), sistemi concorrenti (algebre di processi e reti di Petri)
 \end{outline}
 
 \subsection{Informazioni utili}
 Parte integrante del corso:
 \begin{outline}
-  \1 Supporto alla parte teorica usando tool specifici.
-  \2 JFLAP 7.1: http://www.jflap.org (automi/grammatiche)
-  \2 Tina 3.7.5: http://projects.laas.fr/tina
-  (model checking di sistemi di transizione e reti di Petri)
-  \2 LTSA 3.0: http://www.doc.ic.ac.uk/ltsa
-  (sistemi di transizione definiti tramite algebre di processi)
-  \1 Nel resto del corso utilizzeremo un ambiente di sviluppo per
-  generare parser/compilatori
-  \2 IntelliJ esteso con plug-in ANTLRv4, ultima versione 1.20
-  (generatore ANTLR: http://www.antlr.org/)
+	\1 Supporto alla parte teorica usando tool specifici.
+	\2 JFLAP 7.1: http://www.jflap.org (automi/grammatiche)
+	\2 Tina 3.7.5: http://projects.laas.fr/tina
+	(model checking di sistemi di transizione e reti di Petri)
+	\2 LTSA 3.0: http://www.doc.ic.ac.uk/ltsa
+	(sistemi di transizione definiti tramite algebre di processi)
+	\1 Nel resto del corso utilizzeremo un ambiente di sviluppo per
+	generare parser/compilatori
+	\2 IntelliJ esteso con plug-in ANTLRv4, ultima versione 1.20
+	(generatore ANTLR: http://www.antlr.org/)
 \end{outline}
 
 \newpage
 Libri di testo suggeriti:
 \begin{outline}
- \1 J. E. Hopcroft, R. Motwani e J. D. Ullman:
-Automi, linguaggi e calcolabilita’,
-Addison-Wesley, Terza Edizione, 2009. Cap. 1–9
-\1 A. V. Aho, M. S. Lam, R. Sethi e J. D. Ullman:
-Compilatori: principi tecniche e strumenti,
-Addison Wesley, Seconda Edizione, 2009. Cap. 1–5
-\1 M. Huth e M. Ryan:
-Logic in Computer Science: Modelling and Reasoning about
-Systems,
-Cambridge University Press, Second Edition, 2004. Cap. 1–3 
+	\1 J. E. Hopcroft, R. Motwani e J. D. Ullman:
+	Automi, linguaggi e calcolabilita’,
+	Addison-Wesley, Terza Edizione, 2009. Cap. 1–9
+	\1 A. V. Aho, M. S. Lam, R. Sethi e J. D. Ullman:
+	Compilatori: principi tecniche e strumenti,
+	Addison Wesley, Seconda Edizione, 2009. Cap. 1–5
+	\1 M. Huth e M. Ryan:
+	Logic in Computer Science: Modelling and Reasoning about
+	Systems,
+	Cambridge University Press, Second Edition, 2004. Cap. 1–3
 \end{outline}
 
 \section{Linguaggi regolari}
 \subsection{Alfabeti}
-Un \emph{alfabeto} è un insieme finito e non vuoto di simboli, comunemente indicato con $\Sigma$. Seguono alcuni esempi di alfabeti: 
+Un \emph{alfabeto} è un insieme finito e non vuoto di simboli, comunemente indicato con $\Sigma$. Seguono alcuni esempi di alfabeti:
 \begin{outline}
-  \1 $\Sigma$ = \{0,1\} alfabeto binario
-  \1 $\Sigma$ = \{a,b,...,z\} alfabeto di tutte lettere minuscole
-  \1 L'insieme ASCII
+	\1 $\Sigma$ = \{0,1\} alfabeto binario
+	\1 $\Sigma$ = \{a,b,...,z\} alfabeto di tutte lettere minuscole
+	\1 L'insieme ASCII
 \end{outline}
 
 \subsubsection{Stringhe}
@@ -110,8 +111,8 @@ Una stringa/parola è un insieme di simboli di un alfabeto, 0010 è una stringa 
 
 \subsubsection*{Potenze di un alfabeto}
 Se $\Sigma$ è un alfabeto si può esprimere l'insieme di tutte le stringhe di una certa lunghezza con una notazione esponenziale: $\Sigma^k$ denota tutte le stringhe di lunghezza k con simboli che appartengono a $\Sigma$. \\
-Per esempio: 
-\\ $\Sigma^1$ = \{0,1\} 
+Per esempio:
+\\ $\Sigma^1$ = \{0,1\}
 \\ $\Sigma^2$ = \{00, 01, 10, 11\}
 \\ $\Sigma^2$ = \{000, 001, 010, 011, 100, 101, 110, 111\}
 \\ L'insieme delle stringhe meno quella vuota è segnato come $\Sigma^+$, mentre l'insieme che include la stringa vuota è $\Sigma^*$,
@@ -120,28 +121,28 @@ Per esempio:
 Siano x e y stringhe, dove i è la lunghezza di x e j è la lunghezza di y, la stringa xy è la stringa risultata dalla concatenazione delle stringhe xy di lunghezza i+j.
 
 \subsection{Definizione di linguaggio}
-Un insieme di stringhe a scelta L $\subseteq\Sigma^*$ si definisce linguaggio su $\Sigma$. 
+Un insieme di stringhe a scelta L $\subseteq\Sigma^*$ si definisce linguaggio su $\Sigma$.
 \\ Un modo formale per definire un alfabeto è il seguente \{w $|$ enunciato su w\}, che si traduce in "w tale che enunciato su w".
-\\ $\{0^n 1^n | n \ge 1 \}$ si traduce in "l’insieme di 0 elevato alla n, 1 alla n tale che n è maggiore o uguale a 1" 
+\\ $\{0^n 1^n | n \ge 1 \}$ si traduce in "l’insieme di 0 elevato alla n, 1 alla n tale che n è maggiore o uguale a 1"
 
 \section{Automa a stati finiti deterministico}
-Un automa a stati finiti deterministico consiste in: 
+Un automa a stati finiti deterministico consiste in:
 \begin{enumerate}
-  \item Un insieme di stati finiti Q
-  \item Un insieme di simboli di input, $\Sigma$
-  \item Una funzione di transizione, che prende in input uno stato e un simbolo e restituisce uno stato. Tale funzione è spesso indicato con $\delta$ ed è usata per rappresentare i archi nella rappresentazione grafica. Ovvero sia \emph{q} uno stato, \emph{a} un input allora $\delta$(q,a) è lo stato \emph{p} tale che esista un arco da q a p.
-  \item Uno stato iniziale (naturalmente che appartiene a Q)
-  \item Un insieme di stati accettati finali F. Questo è un sottoinsieme di Q.
+	\item Un insieme di stati finiti Q
+	\item Un insieme di simboli di input, $\Sigma$
+	\item Una funzione di transizione, che prende in input uno stato e un simbolo e restituisce uno stato. Tale funzione è spesso indicato con $\delta$ ed è usata per rappresentare i archi nella rappresentazione grafica. Ovvero sia \emph{q} uno stato, \emph{a} un input allora $\delta$(q,a) è lo stato \emph{p} tale che esista un arco da q a p.
+	\item Uno stato iniziale (naturalmente che appartiene a Q)
+	\item Un insieme di stati accettati finali F. Questo è un sottoinsieme di Q.
 \end{enumerate}
-Un automa a stati finiti deterministico è spesso chiamato con l'acronimo DFA e viene può essere rappresentato nella seguente maniera concisa: 
+Un automa a stati finiti deterministico è spesso chiamato con l'acronimo DFA e viene può essere rappresentato nella seguente maniera concisa:
 \[A = (Q, \Sigma, \delta, q\textsubscript{0}, F)\]
 Dove A rappresenta il DFA.
 
 \subsection{ Elaborazione di stringhe }
-Per elaborare una stringa è si definisce lo stato iniziale, quello finale e una serie di regole di transizione per poterci arrivare. 
-Se dovessi decodificare la stringa 01 il DFA risulterebbe: 
+Per elaborare una stringa è si definisce lo stato iniziale, quello finale e una serie di regole di transizione per poterci arrivare.
+Se dovessi decodificare la stringa 01 il DFA risulterebbe:
 \[A = (Q=\{q1,q2,q3\}, \{0,1\}, \delta, q\textsubscript{0}, \{q1\})\]
-I stati sono i sequenti: 
+I stati sono i sequenti:
 \\ $\delta(q\textsubscript{0},1)=q\textsubscript{0}$: leggo come primo stato 1, nessun progresso fatto
 \\ $\delta(q\textsubscript{0},0)=q\textsubscript{2}$: leggo come primo stato 0, posso andare avanti e cercare un 1
 \\ $\delta(q\textsubscript{2},1)=q\textsubscript{1}$: leggo 1 dopo lo 0, ho trovato la stringa
@@ -150,43 +151,43 @@ I stati sono i sequenti:
 
 \subsubsection{ Notazioni semplici per DFA }
 \subsubsection*{ Diagramma di transizione }
-Dato un DFA $A = (Q, \Sigma, \delta, q\textsubscript{0}, F)$ un suo diagramma di transizione è composto da: 
+Dato un DFA $A = (Q, \Sigma, \delta, q\textsubscript{0}, F)$ un suo diagramma di transizione è composto da:
 \begin{outline}
-  \1 Ogni stato Q è un nodo 
-  \1 Ogni funzione $\delta$ è una freccia
-  \1 La freccia Start che denota il primo input 
-  \1 Gli stati accettati F hanno un doppio cerchio
+	\1 Ogni stato Q è un nodo
+	\1 Ogni funzione $\delta$ è una freccia
+	\1 La freccia Start che denota il primo input
+	\1 Gli stati accettati F hanno un doppio cerchio
 \end{outline}
 \begin{figure}[h]
-\includegraphics[scale = 0.3]{media/diagramma_stato.png}
-\centering
-\caption{Diagramma di transizione}
+	\includegraphics[scale = 0.3]{media/diagramma_stato.png}
+	\centering
+	\caption{Diagramma di transizione}
 \end{figure}
 
 \subsubsection*{ Tabelle di transizione }
 Una tabella di transizione è costituita nelle riga dalle funzioni $\delta$ e nelle colonne dagli input. Ogni incrocio equivale a uno stato della funzione $\delta$ con un input generico \emph{a}.
 
 \begin{table}[h]
-\centering
-\begin{tabular}{c | c | c}
-& 0 & 1 \\
-\hline
-$\rightarrow$  q\textsubscript{0} & q\textsubscript{2} & q\textsubscript{0} \\
-$*$q\textsubscript{1} & q\textsubscript{1} & q\textsubscript{1} \\
-q\textsubscript{2} & q\textsubscript{2} & q\textsubscript{1} \\
-\end{tabular}
-\caption{Esempio di tabella}
+	\centering
+	\begin{tabular}{c | c | c}
+		                                  & 0                  & 1                  \\
+		\hline
+		$\rightarrow$  q\textsubscript{0} & q\textsubscript{2} & q\textsubscript{0} \\
+		$*$q\textsubscript{1}             & q\textsubscript{1} & q\textsubscript{1} \\
+		q\textsubscript{2}                & q\textsubscript{2} & q\textsubscript{1} \\
+	\end{tabular}
+	\caption{Esempio di tabella}
 \end{table}
 
 La freccia è lo start e l'asterisco è lo stato finale.
 
 \subsubsection{ Estensione della funzione di transizione di stringhe }
 Allo scopo di poter seguire una sequenza di input ci serve definire una funzione di transizione estesa. Se $\delta$ è una funzione di transizione, chiameremo \circumdelta\space la sua funzione estesa.
-La funzione estesa prende in input \emph{q} e una stringa \emph{w} e ritorna uno stato \emph{p}. 
+La funzione estesa prende in input \emph{q} e una stringa \emph{w} e ritorna uno stato \emph{p}.
 \\ Ogni stato viene calcolato grazie allo stato esteso precedente: \[\circumdelta(\emph{q,w}) = \delta(\circumdelta(\emph{q,x}), \emph{a})\]
 \subsubsection*{Esempio}
 L = \{ \emph{w} $|$ \emph{w} ha un numero pari di 0 e di 1 \}
-\\ Nota bene: 0 (numero di simboli) è pari quindi conta come stato accettato, ed è l'unico stato accettato. 
+\\ Nota bene: 0 (numero di simboli) è pari quindi conta come stato accettato, ed è l'unico stato accettato.
 \\ \hspace*{0.4cm} q\textsubscript{0}: 0 e 1 sono pari
 \\ \hspace*{0.4cm} q\textsubscript{1}: 0 pari 1 dispari
 \\ \hspace*{0.4cm} q\textsubscript{2}: 1 pari 0 dispari
@@ -194,34 +195,34 @@ L = \{ \emph{w} $|$ \emph{w} ha un numero pari di 0 e di 1 \}
 \[A = (\{q0,q1,q2,q3\}, \{0,1\}, \delta, q\textsubscript{0}, \{q\textsubscript{0}\})\]
 
 \begin{figure}[h]
-\includegraphics[scale = 0.5]{media/stringhe_pari.png}
-\centering
-\caption{Diagramma}
+	\includegraphics[scale = 0.5]{media/stringhe_pari.png}
+	\centering
+	\caption{Diagramma}
 \end{figure}
 
 \begin{table}[ht]
-\centering
-\begin{tabular}{c | c | c}
-& 0 & 1 \\
-\hline
-$\rightarrow *$ q\textsubscript{0} & q\textsubscript{2} & q\textsubscript{1} \\
-q\textsubscript{1} & q\textsubscript{3} & q\textsubscript{0} \\
-q\textsubscript{2} & q\textsubscript{0} & q\textsubscript{3} \\
-q\textsubscript{3} & q\textsubscript{1} & q\textsubscript{2} \\
-\end{tabular}
-\caption{Esempio funzioni}
+	\centering
+	\begin{tabular}{c | c | c}
+		                                   & 0                  & 1                  \\
+		\hline
+		$\rightarrow *$ q\textsubscript{0} & q\textsubscript{2} & q\textsubscript{1} \\
+		q\textsubscript{1}                 & q\textsubscript{3} & q\textsubscript{0} \\
+		q\textsubscript{2}                 & q\textsubscript{0} & q\textsubscript{3} \\
+		q\textsubscript{3}                 & q\textsubscript{1} & q\textsubscript{2} \\
+	\end{tabular}
+	\caption{Esempio funzioni}
 \end{table}
 
 \newpage
-Ora applichiamo le funzione di transizione estesa per verificare che 110101 abbia 0 e 1 pari: 
+Ora applichiamo le funzione di transizione estesa per verificare che 110101 abbia 0 e 1 pari:
 \begin{itemize}
-\item  \circumdelta$(q\textsubscript{0}, \epsilon)$ = q\textsubscript{0}
-\item  \circumdelta$(q\textsubscript{0}, 1)$ = $\delta(\circumdelta(q\textsubscript{0}, \epsilon),1)$ = $\delta(q\textsubscript{0},1)$ =  q\textsubscript{1}
-\item  \circumdelta$(q\textsubscript{0}, 11)$ = $\delta(\circumdelta(q\textsubscript{0}, 1),1)$ = $\delta(q\textsubscript{1},1)$ =  q\textsubscript{0}
-\item  \circumdelta$(q\textsubscript{0}, 110)$ = $\delta(\circumdelta(q\textsubscript{1}, 11),0)$ = $\delta(q\textsubscript{0},1)$ =  q\textsubscript{2}
-\item  \circumdelta$(q\textsubscript{0}, 1101)$ = $\delta(\circumdelta(q\textsubscript{0}, 110),1)$ = $\delta(q\textsubscript{2},1)$ =  q\textsubscript{3}
-\item  \circumdelta$(q\textsubscript{0}, 11010)$ = $\delta(\circumdelta(q\textsubscript{0}, 1101),0)$ = $\delta(q\textsubscript{3},0)$ =  q\textsubscript{1}
-\item  \circumdelta$(q\textsubscript{0}, 110101)$ = $\delta(\circumdelta(q\textsubscript{0}, 11010),1)$ = $\delta(q\textsubscript{1},1)$ =  q\textsubscript{0}
+	\item  \circumdelta$(q\textsubscript{0}, \epsilon)$ = q\textsubscript{0}
+	\item  \circumdelta$(q\textsubscript{0}, 1)$ = $\delta(\circumdelta(q\textsubscript{0}, \epsilon),1)$ = $\delta(q\textsubscript{0},1)$ =  q\textsubscript{1}
+	\item  \circumdelta$(q\textsubscript{0}, 11)$ = $\delta(\circumdelta(q\textsubscript{0}, 1),1)$ = $\delta(q\textsubscript{1},1)$ =  q\textsubscript{0}
+	\item  \circumdelta$(q\textsubscript{0}, 110)$ = $\delta(\circumdelta(q\textsubscript{1}, 11),0)$ = $\delta(q\textsubscript{0},1)$ =  q\textsubscript{2}
+	\item  \circumdelta$(q\textsubscript{0}, 1101)$ = $\delta(\circumdelta(q\textsubscript{0}, 110),1)$ = $\delta(q\textsubscript{2},1)$ =  q\textsubscript{3}
+	\item  \circumdelta$(q\textsubscript{0}, 11010)$ = $\delta(\circumdelta(q\textsubscript{0}, 1101),0)$ = $\delta(q\textsubscript{3},0)$ =  q\textsubscript{1}
+	\item  \circumdelta$(q\textsubscript{0}, 110101)$ = $\delta(\circumdelta(q\textsubscript{0}, 11010),1)$ = $\delta(q\textsubscript{1},1)$ =  q\textsubscript{0}
 
 \end{itemize}
 A ogni simbolo aggiunto posso usare la funzione estesa precedente per calcolare il prossimo stato, in questo caso la sequenza ha un numero pari di 0 e 1.
@@ -232,19 +233,19 @@ Un NFA (nondeterministic finite automaton) può trovarsi contemporaneamente in d
 
 \newpage
 \subsection{Descrizione informale}
-A differenza di un DFA, una funzione di stato in un NFA può restituire 0 o più stati. Immaginiamo di dover identificare se una stringa finisce con 01. 
+A differenza di un DFA, una funzione di stato in un NFA può restituire 0 o più stati. Immaginiamo di dover identificare se una stringa finisce con 01.
 \\ Di seguito il diagramma di transizione sarà il seguente.
 \begin{figure}[h]
-\includegraphics[scale = 0.5]{media/01_end.png}
-\centering
-\caption{NFA che accetta stringa che finisce con 01}
+	\includegraphics[scale = 0.5]{media/01_end.png}
+	\centering
+	\caption{NFA che accetta stringa che finisce con 01}
 \end{figure}
-Come è possibile notare q\textsubscript{0} può può restituire due stati se riceve uno 0. Il NFA esegue molteplici stadi alla ricerca del pattern (simile a un processo che si moltiplica). 
+Come è possibile notare q\textsubscript{0} può può restituire due stati se riceve uno 0. Il NFA esegue molteplici stadi alla ricerca del pattern (simile a un processo che si moltiplica).
 
 \begin{figure}[h]
-\includegraphics[scale = 0.5]{media/NFA_es.png}
-\centering
-\caption{Gli stati del NFA}
+	\includegraphics[scale = 0.5]{media/NFA_es.png}
+	\centering
+	\caption{Gli stati del NFA}
 \end{figure}
 Ogni volta che il NFA accetta uno stato 0 crea due processi, un q\textsubscript{1} e q\textsubscript{0}
 A ogni successivo input tutti i processi vanno avanti, nel nostro caso il q\textsubscript{1} "muore". Al secondo giro viene creato q\textsubscript{1} che muore alla quarta iterazione perché non è l'ultimo simbolo. Durante la quarta iterazione nasce q\textsubscript{1} che alla quinta ci porta uno stato accettato.
@@ -254,264 +255,488 @@ A ogni successivo input tutti i processi vanno avanti, nel nostro caso il q\text
 Formalmente un NFA si definisce come un DFA.
 \[A = (Q, \Sigma, \delta, q\textsubscript{0}, F)\]
 \begin{enumerate}
-  \item Un insieme di stati finiti Q
-  \item Un insieme di simboli di input, $\Sigma$
-  \item Una funzione di transizione, che prende in input uno stato e un simbolo e restituisce \emph{\textbf{un insieme di stati}}. Questa è l'unica differenza rispetto al DFA, dove ci viene restituito un singolo stato.
-  \item Uno stato iniziale (naturalmente che appartiene a Q)
-  \item Un insieme di stati accettati finali F. Questo è un sottoinsieme di Q.
+	\item Un insieme di stati finiti Q
+	\item Un insieme di simboli di input, $\Sigma$
+	\item Una funzione di transizione, che prende in input uno stato e un simbolo e restituisce \emph{\textbf{un insieme di stati}}. Questa è l'unica differenza rispetto al DFA, dove ci viene restituito un singolo stato.
+	\item Uno stato iniziale (naturalmente che appartiene a Q)
+	\item Un insieme di stati accettati finali F. Questo è un sottoinsieme di Q.
 \end{enumerate}
 
 \begin{table}[ht]
-\centering
-\begin{tabular}{c || c | c}
-& 0 & 1 \\
-\hline\hline
-  $\rightarrow$ q\textsubscript{0} & \{q\textsubscript{0}, q\textsubscript{1}\} & \{q\textsubscript{0}\} \\
-q\textsubscript{1} & $\emptyset$ & \{q\textsubscript{2}\} \\
-$*$q\textsubscript{2} & $\emptyset$ & $\emptyset$ \\
-\end{tabular}
-\caption{Tabella di transizione di una NFA che accetta una stringa che finisce con 01}
+	\centering
+	\begin{tabular}{c || c | c}
+		                                 & 0                                          & 1                      \\
+		\hline\hline
+		$\rightarrow$ q\textsubscript{0} & \{q\textsubscript{0}, q\textsubscript{1}\} & \{q\textsubscript{0}\} \\
+		q\textsubscript{1}               & $\emptyset$                                & \{q\textsubscript{2}\} \\
+		$*$q\textsubscript{2}            & $\emptyset$                                & $\emptyset$            \\
+	\end{tabular}
+	\caption{Tabella di transizione di una NFA che accetta una stringa che finisce con 01}
 \end{table}
 L'unica differenza con una tabella DFA è che negli incroci ci sono dei insiemi di stati di output (singoletto quanto è uno solo), mentre se la transizione non esiste viene segnata con $\emptyset$.
 
 \newpage
 \subsection{Funzione di transizione estesa}
-Come per i DFA bisogna prendere la funzione di transizione e renderla estesa. In questo caso lo stato precedente può ritorna un insieme di stati, quindi bisognare fare l'unione di questi. La funzione estesa di $\delta$ si chiamerà \circumdelta. 
+Come per i DFA bisogna prendere la funzione di transizione e renderla estesa. In questo caso lo stato precedente può ritorna un insieme di stati, quindi bisognare fare l'unione di questi. La funzione estesa di $\delta$ si chiamerà \circumdelta.
 \[\bigcup^k_{x=2}\delta(p_i,a) = \{r_1,r_2,... ,r_m\} \]
-Usiamo \circumdelta\space per calcolare se la stringa 00101 finisce con 01. 
+Usiamo \circumdelta\space per calcolare se la stringa 00101 finisce con 01.
 
 \begin{enumerate}
-  \item $\circumdelta(q_0, \epsilon) = \{q_0\}$
-  \item $\circumdelta(q_0, 0) = \delta(q_0,0) = \{q_0, q_1\}$
-  \item $\circumdelta(q_0, 00) = \delta(q_0,0) \cup \delta(q_1,0)  = \{q_0, q_1\} \cup \emptyset = \{q_0, q_1\} $
-  \item $\circumdelta(q_0, 001) = \delta(q_0,1) \cup \delta(q_1, 1) = \{q_0\} \cup \{q_2\} = \{q_0, q_2\}$
-  \item $\circumdelta(q_0, 0010) = \delta(q_0,0) \cup \delta(q_2, 0) = \{q_0, q_1\} \cup \emptyset = \{q_0, q_1\}$
-  \item $\circumdelta(q_0, 00101) = \delta(q_0,1) \cup \delta(q_1, 1) = \{q_0\} \cup \{q_2\} = \{q_0, q_2\}$
+	\item $\circumdelta(q_0, \epsilon) = \{q_0\}$
+	\item $\circumdelta(q_0, 0) = \delta(q_0,0) = \{q_0, q_1\}$
+	\item $\circumdelta(q_0, 00) = \delta(q_0,0) \cup \delta(q_1,0)  = \{q_0, q_1\} \cup \emptyset = \{q_0, q_1\} $
+	\item $\circumdelta(q_0, 001) = \delta(q_0,1) \cup \delta(q_1, 1) = \{q_0\} \cup \{q_2\} = \{q_0, q_2\}$
+	\item $\circumdelta(q_0, 0010) = \delta(q_0,0) \cup \delta(q_2, 0) = \{q_0, q_1\} \cup \emptyset = \{q_0, q_1\}$
+	\item $\circumdelta(q_0, 00101) = \delta(q_0,1) \cup \delta(q_1, 1) = \{q_0\} \cup \{q_2\} = \{q_0, q_2\}$
 \end{enumerate}
 Abbiamo un risultato positivo, $q_2$ mentre $q_0$ viene scartato
 
-\subsection{Linguaggio NFA} 
-Come abbiamo visto sopra, il fatto di avere uno stato non accettabile al termine dell'operazione non significa che non abbia avuto successo. 
-\\ Formalmente se $A = (Q, \Sigma, \delta, q\textsubscript{0}, F)$ è un NFA allora: 
+\subsection{Linguaggio NFA}
+Come abbiamo visto sopra, il fatto di avere uno stato non accettabile al termine dell'operazione non significa che non abbia avuto successo.
+\\ Formalmente se $A = (Q, \Sigma, \delta, q\textsubscript{0}, F)$ è un NFA allora:
 \[L(A) = \{ w | \circumdelta(q_0, w) \cap \emph{F} \ne \emptyset \}\]
 In parole povere L(A) è l'insieme delle stringhe w in $\Sigma^*$ tale che \circumdelta($q_0,w)$ contenga almeno uno stato accettante.
 
-\newpage
-\subsection{Equivalenza tra DFA e NFA}
-Di solito è più facile ottenere un NFA piuttosto che un DFA per un linguaggio. Nel migliori dei casi un DFA ha circa tanti stati quanti un NFA, ma più transizioni. Nel caso peggiore un DFA ha $2^n$ stati, mentre un NFA n.
-\\ Come detto in precedenza ogni NFA può essere ricondotto a un DFA, questo andrà dimostrato costruendo un DFA per insiemi a partire da un NFA. 
-\\ Dato un NFA $A = (Q_N, \Sigma, \delta_N, q\textsubscript{0}, F_N)$ possiamo costruire un DFA \\ $A = (Q_D, \Sigma, \delta_D, \{q_0\}, F_D)$ tale che L(D)=L(N) (che i linguaggio sono uguali).
-\\ Si noti che i due linguaggi condividono lo stesso alfabeto.
-\\ Gli altri D componenti sono fatti nel seguente modo: 
-\begin{outline}
-  \1 $Q_D$ è formato da un insieme di insiemi di $Q_N$, in termini formali $Q_D$ è l'insieme potenza di $Q_N$. Quindi se $Q_N$ ha \emph{n} stati allora $Q_D$ ha $2^n$ stati, questo è vero nella teoria, nella pratica gli stati non raggiungibili non contano quindi tendono a essere meno di $2^n$.
-  \1 $F_D$ è l'insieme dei sottoinsiemi di S di $Q_N$ tale che \emph{S}$ \cap F_N \ne \emptyset$. $F_D$ è quindi formato dagli sottoinsiemi di stati \emph{N} che includono almeno uno stato accettante.
-  \1 Per ogni insieme \emph{S} $\subseteq Q_N$ e per ogni simbolo \emph{a} in $\Sigma$, 
-  \[\delta_D(S,a) = \bigcup_{p\;in\;S} \delta_N(p,a)\]
-\end{outline}
-  Ovvero l'insieme $\delta_D(S,a)$ è calcolato tramite l'unione di tutti gli insiemi p in S.
-\begin{table}[ht]
-\centering
-\begin{tabular}{c || c | c}
-& 0 & 1 \\
-\hline \hline
-  $ \emptyset $ & $ \emptyset $ & $ \emptyset $ \\
-  $ \rightarrow \{q_0\} $ & $ \{q_0, q_1\} $ & $ \{q_0\} $ \\
-  $ \{q_1\} $ & $ \emptyset $ & $ \{q_2\} $ \\
-  $ *\{q_2\} $ & $ \emptyset $ & $ \emptyset $ \\
-  $ \{q_0,q_1\} $ & $  \{q_0, q_1\} $ & $ \{q_0,q_2\} $ \\
-  $ *\{q_0,q_2\} $ & $ \{q_0, q_1\} $ & $ \{q_0\} $ \\
-  $ *\{q_1,q_2\} $ & $ \emptyset $ & $ \{q_2\} $ \\
-  $ *\{q_0, q_1, q_2\} $ & $ \{q_0,q_1\} $ & $ \{q_0,q_2\} $ \\
-\end{tabular}
-\caption{Stringa che termina con 01, NFA $\rightarrow$ DFA}
-\end{table}
+	\newpage
+	\subsection{Equivalenza tra DFA e NFA}
+	Di solito è più facile ottenere un NFA piuttosto che un DFA per un linguaggio. Nel migliori dei casi un DFA ha circa tanti stati quanti un NFA, ma più transizioni. Nel caso peggiore un DFA ha $2^n$ stati, mentre un NFA n.
+	\\ Come detto in precedenza ogni NFA può essere ricondotto a un DFA, questo andrà dimostrato costruendo un DFA per insiemi a partire da un NFA.
+	\\ Dato un NFA $A = (Q_N, \Sigma, \delta_N, q\textsubscript{0}, F_N)$ possiamo costruire un DFA \\ $A = (Q_D, \Sigma, \delta_D, \{q_0\}, F_D)$ tale che L(D)=L(N) (che i linguaggio sono uguali).
+	\\ Si noti che i due linguaggi condividono lo stesso alfabeto.
+	\\ Gli altri D componenti sono fatti nel seguente modo:
+	\begin{outline}
+		\1 $Q_D$ è formato da un insieme di insiemi di $Q_N$, in termini formali $Q_D$ è l'insieme potenza di $Q_N$. Quindi se $Q_N$ ha \emph{n} stati allora $Q_D$ ha $2^n$ stati, questo è vero nella teoria, nella pratica gli stati non raggiungibili non contano quindi tendono a essere meno di $2^n$.
+		\1 $F_D$ è l'insieme dei sottoinsiemi di S di $Q_N$ tale che \emph{S}$ \cap F_N \ne \emptyset$. $F_D$ è quindi formato dagli sottoinsiemi di stati \emph{N} che includono almeno uno stato accettante.
+		\1 Per ogni insieme \emph{S} $\subseteq Q_N$ e per ogni simbolo \emph{a} in $\Sigma$,
+		\[\delta_D(S,a) = \bigcup_{p\;in\;S} \delta_N(p,a)\]
+	\end{outline}
+	Ovvero l'insieme $\delta_D(S,a)$ è calcolato tramite l'unione di tutti gli insiemi p in S.
+	\begin{table}[ht]
+		\centering
+		\begin{tabular}{c || c | c}
+			                        & 0                 & 1               \\
+			\hline \hline
+			$ \emptyset $           & $ \emptyset $     & $ \emptyset $   \\
+			$ \rightarrow \{q_0\} $ & $ \{q_0, q_1\} $  & $ \{q_0\} $     \\
+			$ \{q_1\} $             & $ \emptyset $     & $ \{q_2\} $     \\
+			$ *\{q_2\} $            & $ \emptyset $     & $ \emptyset $   \\
+			$ \{q_0,q_1\} $         & $  \{q_0, q_1\} $ & $ \{q_0,q_2\} $ \\
+			$ *\{q_0,q_2\} $        & $ \{q_0, q_1\} $  & $ \{q_0\} $     \\
+			$ *\{q_1,q_2\} $        & $ \emptyset $     & $ \{q_2\} $     \\
+			$ *\{q_0, q_1, q_2\} $  & $ \{q_0,q_1\} $   & $ \{q_0,q_2\} $ \\
+		\end{tabular}
+		\caption{Stringa che termina con 01, NFA $\rightarrow$ DFA}
+	\end{table}
 
-La tabella precedente era deterministica nonostante fosse formata da insiemi, \emph{ogni insieme è uno stato}, e non sono insieme di stati. Per rendere più chiara l'idea possiamo cambiare notazione.
-\begin{table}[ht]
-\centering
-\begin{tabular}{c || c | c}
-& 0 & 1 \\
-\hline \hline
-  \hphantom{*$\rightarrow$}A& A & A \\
-  \hphantom{*}$\rightarrow$B & E & B \\
-  \hphantom{*$\rightarrow$}C & A & D \\
-  \hphantom{$\rightarrow$}$*$D & A & A \\
-  \hphantom{*$\rightarrow$}E & E & F \\
-  \hphantom{$\rightarrow$}$*$F & E & B \\
-  \hphantom{$\rightarrow$}$*$G & A & D \\
-  \hphantom{$\rightarrow$}$*$H & E & F \\
-\end{tabular}
-\caption{Stringa che termina con 01, notazione nuova}
-\end{table}
-\\ Tra gli 8 stati presenti in tabella possiamo raggiungere: B, E e F. Gli atri stati sono irraggiungibili o non esistenti. È possibile evitare di costruire questi stati compiendo una "valuta differita".
-\\ Trattando i l'insieme di stati come un unico stato composto da un insieme è possibile riscrivere la DFA in questo modo: 
+	La tabella precedente era deterministica nonostante fosse formata da insiemi, \emph{ogni insieme è uno stato}, e non sono insieme di stati. Per rendere più chiara l'idea possiamo cambiare notazione.
+	\begin{table}[ht]
+		\centering
+		\begin{tabular}{c || c | c}
+			                             & 0 & 1 \\
+			\hline \hline
+			\hphantom{*$\rightarrow$}A   & A & A \\
+			\hphantom{*}$\rightarrow$B   & E & B \\
+			\hphantom{*$\rightarrow$}C   & A & D \\
+			\hphantom{$\rightarrow$}$*$D & A & A \\
+			\hphantom{*$\rightarrow$}E   & E & F \\
+			\hphantom{$\rightarrow$}$*$F & E & B \\
+			\hphantom{$\rightarrow$}$*$G & A & D \\
+			\hphantom{$\rightarrow$}$*$H & E & F \\
+		\end{tabular}
+		\caption{Stringa che termina con 01, notazione nuova}
+	\end{table}
+	\\ Tra gli 8 stati presenti in tabella possiamo raggiungere: B, E e F. Gli atri stati sono irraggiungibili o non esistenti. È possibile evitare di costruire questi stati compiendo una "valuta differita".
+	\\ Trattando i l'insieme di stati come un unico stato composto da un insieme è possibile riscrivere la DFA in questo modo:
 
-\begin{figure}[h]
-  \includegraphics[scale = 0.5]{media/nfa_to_dfa.png}
-\centering
-\caption{Grafico DFA convertito da NFA}
-\end{figure}
+	\begin{figure}[h]
+		\includegraphics[scale = 0.5]{media/nfa_to_dfa.png}
+		\centering
+		\caption{Grafico DFA convertito da NFA}
+	\end{figure}
 
-\newpage
-\subsection*{} 
-\subsubsection*{Teorema}
-Se $D = (Q_N, \Sigma, \delta_N, q\textsubscript{0}, F_N)$ è il DFA trovato per costruzione a partire dal NFA $N = (Q_D, \Sigma, \delta_D, \{q_0\}, F_D)$ allora L(D)=L(N).
+	\newpage
+	\subsection*{}
+	\subsubsection*{Teorema}
+	Se $D = (Q_N, \Sigma, \delta_N, q\textsubscript{0}, F_N)$ è il DFA trovato per costruzione a partire dal NFA $N = (Q_D, \Sigma, \delta_D, \{q_0\}, F_D)$ allora L(D)=L(N).
 
-\subsubsection*{Teorema}
-Un linguaggio L è accettato da un DFA se e solo se L è accettato da un NFA.
+	\subsubsection*{Teorema}
+	Un linguaggio L è accettato da un DFA se e solo se L è accettato da un NFA.
 
-\section{Automa con epsilon-transazioni}
-Un estensione degli automa è la capacità di poter ammettere come input la stringa vuota $\epsilon$. È come se l'NFA compisse una transizioni spontaneamente. Tale NFA si chiamerà $\epsilon$-NFA
+	\section{Automa con epsilon-transazioni}
+	Un estensione degli automa è la capacità di poter ammettere come input la stringa vuota $\epsilon$. È come se l'NFA compisse una transizioni spontaneamente. Tale NFA si chiamerà $\epsilon$-NFA
 
-\subsection{Uso delle epsilon-transizioni}
-L'esempio di seguito tratta le $\epsilon$ come invisibili, possono mutare lo stato ma non sono contante nella catena. 
+	\subsection{Uso delle epsilon-transizioni}
+	L'esempio di seguito tratta le $\epsilon$ come invisibili, possono mutare lo stato ma non sono contante nella catena.
 
-\begin{figure}[h]
-\includegraphics[scale = 0.5]{media/epsilon_nfa.png}
-\centering
-\caption{epsilon-NFA che accetta numeri decimali}
-\end{figure}
+	\begin{figure}[h]
+		\includegraphics[scale = 0.5]{media/epsilon_nfa.png}
+		\centering
+		\caption{epsilon-NFA che accetta numeri decimali}
+	\end{figure}
 
-L'$\epsilon$-NFA in figura accetta numeri decimali formati da: 
-\begin{enumerate}
-  \item un segno +,- facoltativo
-  \item una sequenza di cifre
-  \item un punto decimale
-  \item una seconda sequenza di cifre
-\end{enumerate}
-È possibile avere input vuoti prima della virgola $\delta(q_1, .) = q_2$ e dopo la virgola $\delta(q_4, .) = q_3$ ma non entrambi. Il segno è facoltativo $\delta(q_0, \epsilon) = q_1$.
-\\ In $q_3$ l'automa può "scommettere" che la sequenza sia finita oppure può andare avanti a leggere.
+	L'$\epsilon$-NFA in figura accetta numeri decimali formati da:
+	\begin{enumerate}
+		\item un segno +,- facoltativo
+		\item una sequenza di cifre
+		\item un punto decimale
+		\item una seconda sequenza di cifre
+	\end{enumerate}
+	È possibile avere input vuoti prima della virgola $\delta(q_1, .) = q_2$ e dopo la virgola $\delta(q_4, .) = q_3$ ma non entrambi. Il segno è facoltativo $\delta(q_0, \epsilon) = q_1$.
+	\\ In $q_3$ l'automa può "scommettere" che la sequenza sia finita oppure può andare avanti a leggere.
 
-\newpage
-\subsection{Notazione formale di epsilon-NFA}
-La definizione forma di un $\epsilon$-NFA è uguale a quella di un NFA, va solo specificate le informazioni relative alla transizione $\epsilon$.
-\\ Una $\epsilon$-NFA è definita con $A = (Q, \Sigma, \delta, q_0, F)$, dove $\delta$ è una funzione di transizione che richiede come input: 
-\begin{enumerate}
-  \item uno stato \emph{Q}
-  \item un elemento $\Sigma \cup \{\epsilon\}$, ovvero un simbolo di input oppure il simbolo $\epsilon$. Questa distinzione viene fatta per evitare confusione. 
-\end{enumerate}
+	\newpage
+	\subsection{Notazione formale di epsilon-NFA}
+	La definizione forma di un $\epsilon$-NFA è uguale a quella di un NFA, va solo specificate le informazioni relative alla transizione $\epsilon$.
+	\\ Una $\epsilon$-NFA è definita con $A = (Q, \Sigma, \delta, q_0, F)$, dove $\delta$ è una funzione di transizione che richiede come input:
+	\begin{enumerate}
+		\item uno stato \emph{Q}
+		\item un elemento $\Sigma \cup \{\epsilon\}$, ovvero un simbolo di input oppure il simbolo $\epsilon$. Questa distinzione viene fatta per evitare confusione.
+	\end{enumerate}
 
 $\epsilon$-NFA per riconoscere un numero decimale
-\[ E = (\{q_0,q_1,...,q_5\}, \{.,+,-,1,...,9\},\delta, q_0, \{q_5\})\]
+	\[ E = (\{q_0,q_1,...,q_5\}, \{.,+,-,1,...,9\},\delta, q_0, \{q_5\})\]
 
-\begin{table}[ht]
-\centering
-\begin{tabular}{c || c | c | c | c}
-& $\epsilon$ & +,- & . & 0,1,...,9 \\
-\hline \hline
-  $q_0$ & $\{q_1\}$ & $\{q_1\}$ & $\emptyset$ & $\emptyset$ \\
-$q_1$ & $\emptyset$ & $\emptyset$ & $\{q_2\}$ & $\{q_1, q_4\}$ \\
-$q_2$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\{q_3\}$ \\
-$q_3$ & $\{q_5\}$ & $\emptyset$ & $\emptyset$ & $\{q_3\}$ \\
-$q_4$ & $\emptyset$ & $\emptyset$ & $\{q_3\}$ & $\emptyset$ \\
-$q_5$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$ \\
-\end{tabular}
-\caption{Tabella di transizione per un numero decimale}
-\end{table}
+	\begin{table}[ht]
+		\centering
+		\begin{tabular}{c || c | c | c | c}
+			      & $\epsilon$  & +,-         & .           & 0,1,...,9      \\
+			\hline \hline
+			$q_0$ & $\{q_1\}$   & $\{q_1\}$   & $\emptyset$ & $\emptyset$    \\
+			$q_1$ & $\emptyset$ & $\emptyset$ & $\{q_2\}$   & $\{q_1, q_4\}$ \\
+			$q_2$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\{q_3\}$      \\
+			$q_3$ & $\{q_5\}$   & $\emptyset$ & $\emptyset$ & $\{q_3\}$      \\
+			$q_4$ & $\emptyset$ & $\emptyset$ & $\{q_3\}$   & $\emptyset$    \\
+			$q_5$ & $\emptyset$ & $\emptyset$ & $\emptyset$ & $\emptyset$    \\
+		\end{tabular}
+		\caption{Tabella di transizione per un numero decimale}
+	\end{table}
 
-\subsection{Epsilon chiusure}
-Un $\epsilon$-chiusura è un cammino fatto solo di transizioni $\epsilon$. Formalmente tale stato si scrive ENCLOSE(q) = {insieme di stati.}
+	\subsection{Epsilon chiusure}
+	Un $\epsilon$-chiusura è un cammino fatto solo di transizioni $\epsilon$. Formalmente tale stato si scrive ENCLOSE(q) = {insieme di stati.}
 
-\subsection{Transizioni estese di epsilon-NFA}
-Grazie alle $\epsilon$-chiusure possiamo definire cosa significa accettare un input.
-\\ 
-Supponiamo $E = (Q, \Sigma, \delta, q_0, F)$ un $\sigma$-NFA, \circumdelta(q,w) è la funzione di transizione estesa le cui etichette concatenate descrivono la stringa w.
-\\ 
-\textbf{BASE} \circumdelta(q,w) = ENCLOSE(q), se l'etichetta è $\epsilon$ posso seguire solo cammini $\epsilon$, definizione di ENCLOSE.
-\\
-\textbf{INDUZIONE} Supponiamo \emph{w} abbia forma \emph{xa}, dove \emph{a} è l'ultimo simbolo, che non può essere $\epsilon$ perché non appartiene a $\Sigma$: 
-\begin{enumerate}
-  \item Poniamo \circumdelta(q,x) = $\{p_1, p_2,...,p_k\}$ in questo modo tutti i cammini $p_i$ sono tutti gli stati raggiungibili da q a x. Questi stati possono terminare con $\epsilon$ oppure contenere altre $\epsilon$ transizioni
-  \item Sia $\bigcup^k_{i=1}\delta(p_i,a)$ l'insieme $\{r_1, r_2, ...,r_m\}$, ovvero tutte le transizioni da \emph{a} a \emph{x}. 
-  \item Infine \circumdelta(q,w) = $\bigcup^m_{j=1}ENCLOSE(r_j)$, questo chiude gli archi rimasti dopo \emph{a}
-\end{enumerate}
-Forma contratta 
-\[\circumdelta(q,xa) = \bigcup_{p\in\circumdelta(q,x)}(\bigcup_{t\in\delta(q,a)}ENCLOSE(t))\]
-Il linguaggio accettato è L(E) = $\{w|\circumdelta(q_0,w) \cap F \ne 0\}$
+	\subsection{Transizioni estese di epsilon-NFA}
+	Grazie alle $\epsilon$-chiusure possiamo definire cosa significa accettare un input.
+	\\
+	Supponiamo $E = (Q, \Sigma, \delta, q_0, F)$ un $\sigma$-NFA, \circumdelta(q,w) è la funzione di transizione estesa le cui etichette concatenate descrivono la stringa w.
+	\\
+	\textbf{BASE} \circumdelta(q,w) = ENCLOSE(q), se l'etichetta è $\epsilon$ posso seguire solo cammini $\epsilon$, definizione di ENCLOSE.
+	\\
+	\textbf{INDUZIONE} Supponiamo \emph{w} abbia forma \emph{xa}, dove \emph{a} è l'ultimo simbolo, che non può essere $\epsilon$ perché non appartiene a $\Sigma$:
+	\begin{enumerate}
+		\item Poniamo \circumdelta(q,x) = $\{p_1, p_2,...,p_k\}$ in questo modo tutti i cammini $p_i$ sono tutti gli stati raggiungibili da q a x. Questi stati possono terminare con $\epsilon$ oppure contenere altre $\epsilon$ transizioni
+		\item Sia $\bigcup^k_{i=1}\delta(p_i,a)$ l'insieme $\{r_1, r_2, ...,r_m\}$, ovvero tutte le transizioni da \emph{a} a \emph{x}.
+		\item Infine \circumdelta(q,w) = $\bigcup^m_{j=1}ENCLOSE(r_j)$, questo chiude gli archi rimasti dopo \emph{a}
+	\end{enumerate}
+	Forma contratta
+	\[\circumdelta(q,xa) = \bigcup_{p\in\circumdelta(q,x)}(\bigcup_{t\in\delta(q,a)}ENCLOSE(t))\]
+	Il linguaggio accettato è L(E) = $\{w|\circumdelta(q_0,w) \cap F \ne 0\}$
 
-\subsection{Da epsilon-NFA a DFA}
-Dato un $\epsilon$-NFA possiamo costruire un equivalente DFA per sottoinsiemi. Sia $E = (Q_E, \Sigma, \delta_E, q_0, F_E)$ un $\epsilon$-NFA il suo equivalente DFA è 
-\[ D = (Q_D, \Sigma, \delta_D, q_0, F_D) \]
-ovvero: 
-\begin{enumerate}
-  \item $Q_D$ è l'insieme di sottoinsiemi $Q_E$. Ogni stato accessibile in D è un sottoinsieme $\epsilon$-chiuso di $Q_E$, in termini formali S$\subseteq Q_E$ tale che S = ENCLOSE(S).
-  \item $q_D$=ENCLOSE$(q_0)$
-  \item $F_D$ contiene almeno uno stato accettante in E. 
-    \\ $F_D=\{S|S$ è in $Q_D$ e $S \cap F_E\neq0\}$
-  
-  \item $\circumdelta(q,xa) = \bigcup_{p\in\circumdelta(q,x)}(\bigcup_{t\in\delta(q,a)}ENCLOSE(t))$
-    \end{enumerate}
-\textbf{Teorema} Un linguaggio è linguaggio L è accetto da un $\epsilon$-NFA se è solo se è accettato da un DFA.
+	\subsection{Da epsilon-NFA a DFA}
+	Dato un $\epsilon$-NFA possiamo costruire un equivalente DFA per sottoinsiemi. Sia $E = (Q_E, \Sigma, \delta_E, q_0, F_E)$ un $\epsilon$-NFA il suo equivalente DFA è
+	\[ D = (Q_D, \Sigma, \delta_D, q_0, F_D) \]
+	ovvero:
+	\begin{enumerate}
+		\item $Q_D$ è l'insieme di sottoinsiemi $Q_E$. Ogni stato accessibile in D è un sottoinsieme $\epsilon$-chiuso di $Q_E$, in termini formali S$\subseteq Q_E$ tale che S = ENCLOSE(S).
+		\item $q_D$=ENCLOSE$(q_0)$
+		\item $F_D$ contiene almeno uno stato accettante in E.
+		      \\ $F_D=\{S|S$ è in $Q_D$ e $S \cap F_E\neq0\}$
 
-\section{Espressioni regolari}
-Le espressioni regolari definiscono gli stessi linguaggi definiti dai vari automi: \emph{linguaggi regolari}. A differenza degli automi, le espressioni regolari descrivono linguaggi in maniera dichiarativa. Per questo motivo le espressioni regolari sono molto diffuse, per esempio nel commando unix \emph{grep} oppure negli analizzatori lessicali.
-\subsection{Operatori lessicali}
-L'espressione lessicale 01*+10* denota il linguaggio 0 seguito da qualsiasi numero di 1 oppure 1 seguito da qualsiasi numero di 0.
-\\ Per poter definire le operazioni sulle regex (sinonimo di espressione regolare) dobbiamo definire tali operazioni sui linguaggi che esse rappresentano: 
-\begin{enumerate}
-  \item \emph{Unione} di due linguaggi L ed M, L$\cup$M, indica tutte le stringhe che appartengono ad L e ad M oppure a entrambi.
-  \item \emph{Concatenazione} di due linguaggi L ed M è l'insieme di stringhe formate dalla concatenazione di una qualsiasi stringa L con una qualsiasi stringa M. Tale operazione è indicata così: L$\cdot M$ oppure semplicemente LM. 
-     Per L=\{001,10,111\} e M=\{$\epsilon$,001\} 
-     LM=\{001,10,111,001001, 10001, 111001\}
-   \item \emph{Chiusura}(o \emph{star} o chiusura di Kleene) di un linguaggio L, indicata come L*, rappresenta l'insieme delle stringhe che si possono formare tramite concatenazione e ripetizione di qualsiasi stringa in L. Nel caso L=\{0,1\} L* rappresenta l'alfabeto binario, qualsiasi combo di 0 e 1. Nel caso L=\{0, 11\} L* rappresenta qualsiasi stringa che abbia una o più coppie di 1, NB 011 è valido ma come 01111, mentre 101 non è valido, non abbiamo né la stringa 10 né la stringa 01. Formalmente L* è l'unione infinita $\bigcup_{i>0}L_i$ dove $L^0=\{\epsilon\}$, $L^1=L$, $L^i=LL...L$.
-\end{enumerate}
+		\item $\circumdelta(q,xa) = \bigcup_{p\in\circumdelta(q,x)}(\bigcup_{t\in\delta(q,a)}ENCLOSE(t))$
+	\end{enumerate}
+	\textbf{Teorema} Un linguaggio è linguaggio L è accetto da un $\epsilon$-NFA se è solo se è accettato da un DFA.
 
-\newpage
-\subsection{Costruzione di regex}
-Servono modi per raggruppare le espressioni regolari, in questo caso vengono usati operatori algebrici comuni. Di seguito verranno definite regex lecite E con il loro corrispondente linguaggio L(E). 
-\\ \textbf{BASE}
-\begin{enumerate}
-  \item le costanti $\epsilon$ e $\emptyset$ sono regex, rispettivamente del linguaggio \{$\epsilon$\} e \{$\emptyset$\}, in altri termini L($\epsilon$) =\{ $\epsilon$\} e L($\emptyset$) = \{$\emptyset$\}.
-  \item Se a è un simbolo allora \textbf{a} è una regex che denota il linguaggio \{a\}, ovvero L(\textbf{a}) = \{a\}. (si usa il grassetto per distinguere simboli da regex)
-  \item Una lettera maiuscola qualsiasi, di solito \emph{L}, viene usata per indicare un linguaggio arbitrario
-\end{enumerate}
-\textbf{INDUZIONE}
-\begin{enumerate}
-  \item Data \emph{E} ed \emph{L} regex, allora \emph{E} + \emph{L} è una regex che indica l'unione dei due linguaggi L(\emph{E}) e L(\emph{L}), in altre parole L(\emph{E+F}) = L(\emph{E}) $\cup$ L(\emph{F})
-  \item Date \emph{E} e \emph{F} due regex, \emph{EF} indica la concatenazione tra i due linguaggio L(\emph{E}) e L(\emph{F}), in altri termini L(\emph{EF}) = L(E)L(F).
-  \item Data \emph{E} una regex, \emph{E}* indica la chiusura del linguaggio L(\emph{E}), in altri termini L(\emph{E}*) = (L(\emph{E}))*
-  \item Data \emph{E} una regex, allora anche (\emph{E}) è una regex valida che appartiene sempre al linguaggio \emph{E}, in termini formali L((\emph{E})) = L(\emph{E})
-\end{enumerate}
-\textbf{Esempio di regex} 
-\\ Si crei una regex che descriva una linguaggio che è fatto di 0 e 1 alternati.
-\\ Intuitivamente si potrebbe provare \textbf{01}*, che è errato, questo indica tutte le stringhe che hanno uno 0 e un numero arbitrario di 1. (\textbf{01})* è corretto, però indica per forza un linguaggio di 01 alternati, quindi 101010 non sarebbe valido 
-\\ Uniamo regex per descrivere il caso: (\textbf{10}*) 10 alternato, 
-\textbf{0(10)*} 10 con 0 all'inizio, 
-\textbf{1(01)*} 01 con 1 all'inizio,
-in conclusione 
-\[\textbf{(01)*+(10)*+0(10)*+1(01)*}\]
-Un modo più contratto sarebbe quello di aggiungere un 1 facoltativo all'inizio e uno 0 facoltativo alla fine
-\[\textbf{($\epsilon$+1)(01)*)($\epsilon$+0)}\]
+	\section{Espressioni regolari}
+	Le espressioni regolari definiscono gli stessi linguaggi definiti dai vari automi: \emph{linguaggi regolari}. A differenza degli automi, le espressioni regolari descrivono linguaggi in maniera dichiarativa. Per questo motivo le espressioni regolari sono molto diffuse, per esempio nel commando unix \emph{grep} oppure negli analizzatori lessicali.
 
-\subsection{Precedenza degli operatori}
-\begin{enumerate}
-  \item Star ha la precedenza massima
-  \item concatenazione
-  \item unione
-\end{enumerate}
-Naturalmente si possono usare parentesi per decidere il proprio ordine e inoltre è consigliato farlo anche se non fosse necessario per rendere più chiara l'espressione.
+	\subsection{Operatori lessicali}
+	L'espressione lessicale 01*+10* denota il linguaggio 0 seguito da qualsiasi numero di 1 oppure 1 seguito da qualsiasi numero di 0.
+	\\ Per poter definire le operazioni sulle regex (sinonimo di espressione regolare) dobbiamo definire tali operazioni sui linguaggi che esse rappresentano:
+	\begin{enumerate}
+		\item \emph{Unione} di due linguaggi L ed M, L$\cup$M, indica tutte le stringhe che appartengono ad L e ad M oppure a entrambi.
+		\item \emph{Concatenazione} di due linguaggi L ed M è l'insieme di stringhe formate dalla concatenazione di una qualsiasi stringa L con una qualsiasi stringa M. Tale operazione è indicata così: L$\cdot M$ oppure semplicemente LM.
+		      Per L=\{001,10,111\} e M=\{$\epsilon$,001\}
+		      LM=\{001,10,111,001001, 10001, 111001\}
+		\item \emph{Chiusura}(o \emph{star} o chiusura di Kleene) di un linguaggio L, indicata come L*, rappresenta l'insieme delle stringhe che si possono formare tramite concatenazione e ripetizione di qualsiasi stringa in L. Nel caso L=\{0,1\} L* rappresenta l'alfabeto binario, qualsiasi combo di 0 e 1. Nel caso L=\{0, 11\} L* rappresenta qualsiasi stringa che abbia una o più coppie di 1, NB 011 è valido ma come 01111, mentre 101 non è valido, non abbiamo né la stringa 10 né la stringa 01. Formalmente L* è l'unione infinita $\bigcup_{i>0}L_i$ dove $L^0=\{\epsilon\}$, $L^1=L$, $L^i=LL...L$.
+	\end{enumerate}
 
-\section{Automa a stati finite e regex}
-Abbiamo visto che le regex e gli automi a stati finiti possono descrive gli stessi linguaggi, va solo dimostrato che formalmente. 
-\\ Dobbiamo dimostrare che:
-\begin{enumerate}
-  \item Ogni linguaggio definito da un automa è definito anche da una regex, useremo un DFA per comodità 
-  \item Ogni linguaggio definito da una regex è definita da un automa, useremo un $\epsilon$-NFA per comodità
-\end{enumerate}
+	\newpage
+	\subsection{Proprietà regex}
+	\begin{outline}
+		\1 $L\cup M=M\cup L$ L'unione è commutativa
+		\1 $(L\cup M) \cup M= L\cup (M\cup L)$ L'unione è associativa
+		\1 $(LM) M= L (M L)$ La concatenazione è associativa (LM $\neq$ ML)
+		\1 $\emptyset \cup L= L \cup \emptyset=L$
+		\1 $\{\epsilon\} \cup L= L \cup \{\epsilon\}=L$
+		\1 $\emptyset L= L \emptyset=\emptyset$
+		\1 $L(M\cup N)= LM \cup LN$
+		\1 $(M\cup N)L=ML\cup NL$
+		\1 $L\cup L=L$
+		\1 $\emptyset^*=\{\epsilon\}, \{\epsilon\}^* =\{\epsilon\}$
+		\1 $L^+=LL^*=L^*L,\;L^*=L^*\cup \{\epsilon\}$
+	\end{outline}
+
+	\newpage
+	\subsection{Costruzione di regex}
+	Servono modi per raggruppare le espressioni regolari, in questo caso vengono usati operatori algebrici comuni. Di seguito verranno definite regex lecite E con il loro corrispondente linguaggio L(E).
+	\\ \textbf{BASE}
+	\begin{enumerate}
+		\item le costanti $\epsilon$ e $\emptyset$ sono regex, rispettivamente del linguaggio \{$\epsilon$\} e \{$\emptyset$\}, in altri termini L($\epsilon$) =\{ $\epsilon$\} e L($\emptyset$) = \{$\emptyset$\}.
+		\item Se a è un simbolo allora \textbf{a} è una regex che denota il linguaggio \{a\}, ovvero L(\textbf{a}) = \{a\}. (si usa il grassetto per distinguere simboli da regex)
+		\item Una lettera maiuscola qualsiasi, di solito \emph{L}, viene usata per indicare un linguaggio arbitrario
+	\end{enumerate}
+	\textbf{INDUZIONE}
+	\begin{enumerate}
+		\item Data \emph{E} ed \emph{L} regex, allora \emph{E} + \emph{L} è una regex che indica l'unione dei due linguaggi L(\emph{E}) e L(\emph{L}), in altre parole L(\emph{E+F}) = L(\emph{E}) $\cup$ L(\emph{F})
+		\item Date \emph{E} e \emph{F} due regex, \emph{EF} indica la concatenazione tra i due linguaggio L(\emph{E}) e L(\emph{F}), in altri termini L(\emph{EF}) = L(E)L(F).
+		\item Data \emph{E} una regex, \emph{E}* indica la chiusura del linguaggio L(\emph{E}), in altri termini L(\emph{E}*) = (L(\emph{E}))*
+		\item Data \emph{E} una regex, allora anche (\emph{E}) è una regex valida che appartiene sempre al linguaggio \emph{E}, in termini formali L((\emph{E})) = L(\emph{E})
+	\end{enumerate}
+	\textbf{Esempio di regex}
+	\\ Si crei una regex che descriva una linguaggio che è fatto di 0 e 1 alternati.
+	\\ Intuitivamente si potrebbe provare \textbf{01}*, che è errato, questo indica tutte le stringhe che hanno uno 0 e un numero arbitrario di 1. (\textbf{01})* è corretto, però indica per forza un linguaggio di 01 alternati, quindi 101010 non sarebbe valido
+	\\ Uniamo regex per descrivere il caso: (\textbf{10}*) 10 alternato,
+	\textbf{0(10)*} 10 con 0 all'inizio,
+	\textbf{1(01)*} 01 con 1 all'inizio,
+	in conclusione
+	\[\textbf{(01)*+(10)*+0(10)*+1(01)*}\]
+	Un modo più contratto sarebbe quello di aggiungere un 1 facoltativo all'inizio e uno 0 facoltativo alla fine
+	\[\textbf{($\epsilon$+1)(01)*)($\epsilon$+0)}\]
+
+	\subsection{Precedenza degli operatori}
+	\begin{enumerate}
+		\item Star ha la precedenza massima
+		\item concatenazione
+		\item unione
+	\end{enumerate}
+	Naturalmente si possono usare parentesi per decidere il proprio ordine e inoltre è consigliato farlo anche se non fosse necessario per rendere più chiara l'espressione.
+
+	\section{Automa a stati finite e regex}
+	Abbiamo visto che le regex e gli automi a stati finiti possono descrive gli stessi linguaggi, va solo dimostrato che formalmente.
+	\\ Dobbiamo dimostrare che:
+	\begin{enumerate}
+		\item Ogni linguaggio definito da un automa è definito anche da una regex, useremo un DFA per comodità
+		\item Ogni linguaggio definito da una regex è definita da un automa, useremo un $\epsilon$-NFA per comodità
+	\end{enumerate}
+
+	\begin{figure}[h]
+		\includegraphics[scale = 0.7]{media/regex_conv.png}
+		\centering
+		\caption{Conversioni}
+	\end{figure}
+
+	\subsection{Da DFA a regex}
+	\textbf{Teorema}
+	\\ Se L = L(A) per un DFA A, allora esiste una regex \emph{R} tale che L = L(\emph{R}).
+	\\ Il procedimento formale e matematico è formato dal espansione di ogni singolo stato tramite la formula:
+	\[ R^{k}_{ij} =  R^{k-1}_{ij} + R^{k-1}_{ik} (R^{k-1}_{kk} R^{k-1}_{kj})\]
+	In parole povere sto calcolando l'espressione regolare da uno stato j a uno stato i k volte, una per ogni stato.
+	\\ Questo procedimento è molto lungo, perché l'espressione va effettuata per ogni transizione, unita e poi ridotta.
+	\\ Tenendo però a mente questa formalità è possibile usare un metodo più gestibile, ovvero \emph{l'eliminazione per stati}.
+
+	\newpage
+
+	\begin{figure}[h]
+		\includegraphics[scale = 0.5]{media/regex_dfa.png}
+		\centering
+		\caption{Eliminazione per stati}
+	\end{figure}
+
+	\begin{outline}
+		\1 \emph{s} è lo stato generico che sta per essere eliminato
+		\1 $q_1, q_2,...,q_k$ sono i k stati precedenti a \emph{s}
+		\1 $Q_i$ sono tutte le transizioni precedenti
+		\1 $p_1, p_2,...,p_k$ sono i k stati successi a \emph{s}
+		\1 $P_i$ sono tutte le transizioni successive
+		\1 $R_{ij}$ sono tutte le transizioni tramite regex, bisogna definirne una per ogni direzione \emph{ij} ma se non dovesse esistere basterà scrivere $\emptyset$
+	\end{outline}
+
+	\begin{figure}[ht]
+		\includegraphics[scale = 0.5]{media/removed_s.png}
+		\centering
+		\caption{Eliminazione di s}
+	\end{figure}
+
+	A questo punto possiamo iniziare a costruire l'espressione regolare a partire dall'automa.
+	\newpage
+	\begin{enumerate}
+		\item Bisogna eliminare tutti gli stati intermedi ad eccezione di $q_0$.
+		\item Se $q_0\neq q_1$ allora questo stato può essere espresso come $E_q$ = (R + SU*T)*SU*, un cammino generico illustrato in figura.
+
+		      \begin{figure}[ht]
+			      \includegraphics[scale = 0.5]{media/automa_generico.png}
+			      \centering
+			      \caption{Automa generico 2 stati}
+		      \end{figure}
+
+		\item Se $q_0$ è accettante allora la regex è data da R*
+
+		      \begin{figure}[ht]
+			      \includegraphics[scale = 0.5]{media/automa_q0.png}
+			      \centering
+			      \caption{Automa generico 1 stato}
+		      \end{figure}
+
+	\end{enumerate}
+
+	\newpage
+	Dato un NFA come segue.
+
+	\begin{figure}[ht]
+		\includegraphics[scale = 0.5]{media/dfa_s1.png}
+		\centering
+		\caption{NFA esempio}
+	\end{figure}
+
+	Esprimiamo le sue funzioni di transizioni come regex
+
+	\begin{figure}[ht]
+		\includegraphics[scale = 0.5]{media/dfa_s2.png}
+		\centering
+		\caption{NFA con archi regex}
+	\end{figure}
+
+	Il primo stato che rimuoviamo è B, applicando la fromula. $R_{11} + Q_1 S^* P_1$, in questo caso risulta $\emptyset + 1\emptyset$*(0+1), che si può  ridurre in 1(0+1).
+	\\ NB $\emptyset$* equivale a $\epsilon$, non annulla le regex, mentre $\emptyset$ sì
+
+
+	\begin{figure}[ht]
+		\includegraphics[scale = 0.5]{media/dfa_s3.png}
+		\centering
+		\caption{B rimosso}
+		\label{b rimosso}
+	\end{figure}
+
+	\newpage
+	Eliminiamo C
+
+	\begin{figure}[ht]
+		\includegraphics[scale = 0.5]{media/dfa_s4.png}
+		\centering
+		\caption{C rimosso}
+	\end{figure}
+
+	Ora possiamo applicare (R + SU*T)*SU*, quindi
+	\begin{itemize}
+		\item R=(0+1)
+		\item S=1(0+1)(0+1)
+		\item T=$\emptyset$
+		\item U=$\emptyset$.
+	\end{itemize}
+	\[((0+1) + 1(0+1)(0+1)\emptyset^*\emptyset)^*1(0+1)(0+1)\emptyset\]
+	Possiamo semplificare U* perché è equivalente a $\epsilon$ e possiamo eliminare SU*T perché è T è $\emptyset$.
+	\[(0+1)^*1(0+1)(0+1)\]
+	Questo è lo stato accettante D, è necessario calcolare lo stato accettante C. Ripartendo dalla fig.\ref{b rimosso} applichiamo di nuovo $E_Q$ ottenendo (0+1)*1(0+1).
+	\\ L'espressione finale è data dalla \textbf{somma} delle 2 espressioni.
+	\[(0+1)*1(0+1) + (0+1)^*1(0+1)(0+1)\]
+
+	\newpage
+	\subsection{Da regex a automi}
+	\textbf{Teorema} Per ogni rex R possiamo costruire un $\epsilon$-NFA A tale che L(R)=L(A).
+	\\ Questo si dimostra per induzione strutturale, prendendo come base gli automi $\epsilon$, $\emptyset$ e \emph{a}.
+
+	\begin{figure}[ht]
+		\includegraphics[scale = 0.5]{media/epsilon.png}
+		\includegraphics[scale = 0.5]{media/empty.png}
+		\includegraphics[scale = 0.5]{media/simple_a.png}
+		\centering
+		\caption{Stati base}
+	\end{figure}
+
+
+	\begin{figure}[ht]
+		\includegraphics[scale = 0.4]{media/RS.png} \\ \\
+		\includegraphics[scale = 0.4]{media/RSmult.png} \\ \\
+		\includegraphics[scale = 0.4]{media/RSstar.png}
+		\centering
+		\caption{R+S, RS e R*}
+	\end{figure}
+
+	R+S significa che viene percorso 1 dei 2 espressioni. RS significa che una volta percorso R, quello diventa lo stato iniziale di S. R* va in loop su se stesso.
+
+	\newpage
+	Usando i blocchi precedenti convertiamo (0+1)*1(0+1)
+
+	\begin{figure}[ht]
+		\includegraphics[scale = 0.4]{media/01.png} \\ \\
+		\includegraphics[scale = 0.4]{media/01star.png} \\ \\
+		\includegraphics[scale = 0.4]{media/01star01.png}
+		\centering
+		\caption{R+S, RS e R*}
+	\end{figure}
+
+	\section{Proprietà dei linguaggi regolari}
+	\begin{outline}
+		\1 \emph{Pumping Lemma}: Ogni linguaggio regolare soddisfa il pumping di lemma
+		\1 \emph{Proprietà di chiusura}: Possibilità di costruire un nuovo automa a partire da altri automi, seguendo specifiche operazioni
+		\1 \emph{Proprietà di decisione}: Analisi di automi, come l'equivalenza
+		\1 \emph{Tecniche di minimizzazione}: Possiamo ridurre un automa
+	\end{outline}
+
+	\subsection{Pumping Lemma}
+	Un linguaggio non è detto che sia regolare.
+	\\ Immaginiamo di avere un linguaggio $L_{01}=\{0^n\;1^n|n\geq 1\}$. Questo è un linguaggio che accetta una stringa con tanti 1 quanti 0. Perché questo linguaggio possa essere un DFA deve avere un numero finito di stati, diciamo $k$. Quindi dopo $k+1$ simboli, $\epsilon,0,00,...,0^k$ ci troviamo in un qualche stato. Poiché gli stati sono limitati esistono 2 strade diverse per cui ci troviamo nello stesso stato, chiamiamoli $0^j$ e $0^i$.
+	\\ Ora immaginiamo dallo stato $j$ di iniziare a leggere 1, l'automa deve fermarsi quando ha letto $j$ quantità di 1, ma non può farlo perché non ricorda lo stato, potrebbe finire dopo $i$ quantità di 1, $L_{01}$ non è regolare.
+	\\ \textbf{Teorema} Sia L un linguaggio regolare, allora esiste una costante $n$ tale che, per ogni stringa $w$ in $L$ dove $|w|\geq n$ possiamo scomporre $w$ in 3 stringhe $w=xyz$ tale che:
+	\begin{enumerate}
+		\item $y \neq \epsilon$
+		\item $|x,y| \leq n$
+		\item per ogni $k \geq 0$ anche $xy^kz$ è in $L$
+	\end{enumerate}
+	Ovvero c'è una stringa non vuota replicabile da qualche parte, senza uscire dal linguaggio.
+	\\ \textbf{Dimostrazione} Supponiamo che $L$ sia regolare. Allora L=L(A) e supponiamo che $A$ abbia $n$ stati. Ora consideriamo una stringa $w$ dove $w=a_1,a_2,...,a_m \; m \geq n$ e ogni $a_i$ è un simbolo di input. Definiamo la sua funzione $\delta(a_1,a_2,...,a_n)$ che descrivere tutte le $p_i$ transizioni, e $q_0=p_0$.
+	\\ Per il principio della piccionata tutti gli stati non possono essere distinti, quindi esistono due stati $p_i$ e $p_j$ dove $0 \leq i \leq j \leq n$ tale che $p_i = p_j$. Possiamo scomporre w in w=xyz:
+
+	\begin{enumerate}
+		\item $x=a_1,a_2,...,a_i$
+		\item $y=a_{i+1},a_{i+2},...,a_j$
+		\item $x=a_{j+1},a_{j+2},...,a_m$
+	\end{enumerate}
+
+	\begin{figure}[h]
+		\includegraphics[scale = 0.5]{media/pump.png}
+		\centering
+		\caption{A un certo punto i stati si ripetono}
+	\end{figure}
+
+	Se k=0 siamo allo stato accettante, se $k \geq 0$ allora dobbiamo necessariamente fare dei loop, perché l'input è $xy^kz$.
+
+	\newpage
+	\subsection{Chiusura dei linguaggi regolari}
+	Sia $L$ e $M$ due linguaggi regolari allora i seguenti sono a loro volta linguaggi regolari.
+	\begin{outline}
+		\1 \emph{Unione}: $L \cup M$
+		\1 \emph{Intersezione}: $L \cap M$
+		\1 \emph{Complemento}: $N$
+		\1 \emph{Differenza}: $L$ \ $M$
+		\1 \emph{Inversione}: $LR = \{wR : w \in L\}$
+		\1 \emph{Chiusura}: $L^*$
+		\1 \emph{Concatenazione}: $L.M$
+	\end{outline}
+	\textbf{Teorema} Sia L e M linguaggi regolari allora anche L $\cup$ M è un linguaggio regolare.
+	\\ \textbf{Dimostrazione} L ed M sono linguaggi descritti dalle espressioni regolari S ed R, quindi L=L(S) e M=L(R) quindi L$\cup$M=L(R+S).
+  \vspace{5mm}
+
+\textbf{Teorema} Se L è un linguaggio regolare sull'alfabeto $\Sigma$ allora anche $\overline{L}=\Sigma^*-L$.
+\\ \textbf{Dimostrazione} Sia L=L(A) per un DFA A=$(Q,\Sigma,\delta,q_0,F)$, allora $\overline{L}$=L(B) dove B è il DFA $(Q,\Sigma,\delta,q_0,Q-F)$, quindi B ha gli stati accentanti opposti a quelli di A. In questo caso l'unico modo per cui $w$ è in L(B) se e solo se $\delta(q_0,w)$ è in $Q-F$, ovvero \textbf{non} è in L(A).
 
 \begin{figure}[h]
-\includegraphics[scale = 0.7]{media/regex_conv.png}
-\centering
-\caption{Conversioni}
+  \includegraphics[scale = 0.5]{media/prop1.png}
+  \centering
+  \caption{Diagramma di A}
 \end{figure}
 
-\subsection{Da DFA a regex}
-\textbf{Teorema} 
-\\ Se L = L(A) per un DFA A, allora esiste una regex \emph{R} tale che L = L(\emph{R}. 
+\newpage
+Il diagramma di B risulta opposto
+\begin{figure}[h]
+  \includegraphics[scale = 0.5]{media/prop2.png}
+  \centering
+  \caption{Diagramma di B}
+\end{figure}
 
-
-
+\textbf{Teorema} 4.8. Se $L$ e $M$ sono regolari, allora anche $L \cap M$ è regolare.
+\vspace{5mm}
+\textbf{Dimostrazione} Le 3 operazioni booleane sono interdipendenti, quindi possiamo usare le due precedenti per dimostrare l'Intersezione
+\[L\cap M = \overline{\overline{L} \cup \overline{M}}\]
 \newpage
 \import{}{esercizi}
 \end{document}
