@@ -2,7 +2,7 @@
 \usepackage[hidelinks]{hyperref}
 \newtheorem{theorem}{Theorem}
 \usepackage{import}
-\setlength\parindent{0pt}
+\usepackage{mathtools}
 \usepackage{xcolor}
 \usepackage{textcomp}
 \usepackage[italian]{babel}
@@ -47,7 +47,7 @@ La generazione automatica di codice può essere dichiarativa lessico
 (espressioni regolari o automa a stati finite) o sintassi(grammatiche o automa a pile).
 Un automa a stati finiti consuma informazioni una alla volta, ne salva una quantità finita. Alcuni esempi di applicazione di automa a stati finiti: software di progettazione di circuiti, analizzatore lessicale, ricerca di parole sul web e protocolli di comunicazione.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\includegraphics[scale = 0.3]{media/semplice_automa.png}
 	\centering
 	\caption{Semplice automa}
@@ -158,7 +158,7 @@ Dato un DFA $A = (Q, \Sigma, \delta, q\textsubscript{0}, F)$ un suo diagramma di
 	\1 La freccia Start che denota il primo input
 	\1 Gli stati accettati F hanno un doppio cerchio
 \end{outline}
-\begin{figure}[h]
+\begin{figure}[ht]
 	\includegraphics[scale = 0.3]{media/diagramma_stato.png}
 	\centering
 	\caption{Diagramma di transizione}
@@ -167,7 +167,7 @@ Dato un DFA $A = (Q, \Sigma, \delta, q\textsubscript{0}, F)$ un suo diagramma di
 \subsubsection*{ Tabelle di transizione }
 Una tabella di transizione è costituita nelle riga dalle funzioni $\delta$ e nelle colonne dagli input. Ogni incrocio equivale a uno stato della funzione $\delta$ con un input generico \emph{a}.
 
-\begin{table}[h]
+\begin{table}[ht]
 	\centering
 	\begin{tabular}{c | c | c}
 		                                  & 0                  & 1                  \\
@@ -194,7 +194,7 @@ L = \{ \emph{w} $|$ \emph{w} ha un numero pari di 0 e di 1 \}
 \\ \hspace*{0.4cm} q\textsubscript{3}: 0 dispari 1 dispari
 \[A = (\{q0,q1,q2,q3\}, \{0,1\}, \delta, q\textsubscript{0}, \{q\textsubscript{0}\})\]
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\includegraphics[scale = 0.5]{media/stringhe_pari.png}
 	\centering
 	\caption{Diagramma}
@@ -235,14 +235,14 @@ Un NFA (nondeterministic finite automaton) può trovarsi contemporaneamente in d
 \subsection{Descrizione informale}
 A differenza di un DFA, una funzione di stato in un NFA può restituire 0 o più stati. Immaginiamo di dover identificare se una stringa finisce con 01.
 \\ Di seguito il diagramma di transizione sarà il seguente.
-\begin{figure}[h]
+\begin{figure}[ht]
 	\includegraphics[scale = 0.5]{media/01_end.png}
 	\centering
 	\caption{NFA che accetta stringa che finisce con 01}
 \end{figure}
 Come è possibile notare q\textsubscript{0} può può restituire due stati se riceve uno 0. Il NFA esegue molteplici stadi alla ricerca del pattern (simile a un processo che si moltiplica).
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\includegraphics[scale = 0.5]{media/NFA_es.png}
 	\centering
 	\caption{Gli stati del NFA}
@@ -348,7 +348,7 @@ In parole povere L(A) è l'insieme delle stringhe w in $\Sigma^*$ tale che \circ
 	\\ Tra gli 8 stati presenti in tabella possiamo raggiungere: B, E e F. Gli atri stati sono irraggiungibili o non esistenti. È possibile evitare di costruire questi stati compiendo una "valuta differita".
 	\\ Trattando i l'insieme di stati come un unico stato composto da un insieme è possibile riscrivere la DFA in questo modo:
 
-	\begin{figure}[h]
+	\begin{figure}[ht]
 		\includegraphics[scale = 0.5]{media/nfa_to_dfa.png}
 		\centering
 		\caption{Grafico DFA convertito da NFA}
@@ -368,7 +368,7 @@ In parole povere L(A) è l'insieme delle stringhe w in $\Sigma^*$ tale che \circ
 	\subsection{Uso delle epsilon-transizioni}
 	L'esempio di seguito tratta le $\epsilon$ come invisibili, possono mutare lo stato ma non sono contante nella catena.
 
-	\begin{figure}[h]
+	\begin{figure}[ht]
 		\includegraphics[scale = 0.5]{media/epsilon_nfa.png}
 		\centering
 		\caption{epsilon-NFA che accetta numeri decimali}
@@ -518,7 +518,7 @@ $\epsilon$-NFA per riconoscere un numero decimale
 		\item Ogni linguaggio definito da una regex è definita da un automa, useremo un $\epsilon$-NFA per comodità
 	\end{enumerate}
 
-	\begin{figure}[h]
+	\begin{figure}[ht]
 		\includegraphics[scale = 0.7]{media/regex_conv.png}
 		\centering
 		\caption{Conversioni}
@@ -535,7 +535,7 @@ $\epsilon$-NFA per riconoscere un numero decimale
 
 	\newpage
 
-	\begin{figure}[h]
+	\begin{figure}[ht]
 		\includegraphics[scale = 0.5]{media/regex_dfa.png}
 		\centering
 		\caption{Eliminazione per stati}
@@ -692,7 +692,7 @@ $\epsilon$-NFA per riconoscere un numero decimale
 		\item $x=a_{j+1},a_{j+2},...,a_m$
 	\end{enumerate}
 
-	\begin{figure}[h]
+	\begin{figure}[ht]
 		\includegraphics[scale = 0.5]{media/pump.png}
 		\centering
 		\caption{A un certo punto i stati si ripetono}
@@ -707,11 +707,12 @@ $\epsilon$-NFA per riconoscere un numero decimale
 		\1 \emph{Unione}: $L \cup M$
 		\1 \emph{Intersezione}: $L \cap M$
 		\1 \emph{Complemento}: $N$
-		\1 \emph{Differenza}: $L$ \ $M$
+		\1 \emph{Differenza}: $L \backslash M$
 		\1 \emph{Inversione}: $LR = \{wR : w \in L\}$
 		\1 \emph{Chiusura}: $L^*$
-		\1 \emph{Concatenazione}: $L.M$
+		\1 \emph{Concatenazione}: $L\cdot M$
 	\end{outline}
+
 	\textbf{Teorema} Sia L e M linguaggi regolari allora anche L $\cup$ M è un linguaggio regolare.
 	\\ \textbf{Dimostrazione} L ed M sono linguaggi descritti dalle espressioni regolari S ed R, quindi L=L(S) e M=L(R) quindi L$\cup$M=L(R+S).
   \vspace{5mm}
@@ -719,7 +720,7 @@ $\epsilon$-NFA per riconoscere un numero decimale
 \textbf{Teorema} Se L è un linguaggio regolare sull'alfabeto $\Sigma$ allora anche $\overline{L}=\Sigma^*-L$.
 \\ \textbf{Dimostrazione} Sia L=L(A) per un DFA A=$(Q,\Sigma,\delta,q_0,F)$, allora $\overline{L}$=L(B) dove B è il DFA $(Q,\Sigma,\delta,q_0,Q-F)$, quindi B ha gli stati accentanti opposti a quelli di A. In questo caso l'unico modo per cui $w$ è in L(B) se e solo se $\delta(q_0,w)$ è in $Q-F$, ovvero \textbf{non} è in L(A).
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \includegraphics[scale = 0.5]{media/prop1.png}
   \centering
   \caption{Diagramma di A}
@@ -727,7 +728,7 @@ $\epsilon$-NFA per riconoscere un numero decimale
 
 \newpage
 Il diagramma di B risulta opposto
-\begin{figure}[h]
+\begin{figure}[ht]
   \includegraphics[scale = 0.5]{media/prop2.png}
   \centering
   \caption{Diagramma di B}
@@ -735,8 +736,134 @@ Il diagramma di B risulta opposto
 
 \textbf{Teorema} 4.8. Se $L$ e $M$ sono regolari, allora anche $L \cap M$ è regolare.
 \vspace{5mm}
-\textbf{Dimostrazione} Le 3 operazioni booleane sono interdipendenti, quindi possiamo usare le due precedenti per dimostrare l'Intersezione
+\\ \textbf{Dimostrazione} Le 3 operazioni booleane sono interdipendenti, quindi possiamo usare le due precedenti per dimostrare l'Intersezione
 \[L\cap M = \overline{\overline{L} \cup \overline{M}}\]
+\\ \textbf{Dimostrazione alternativa} Sia L il linguaggio $L = (Q_L, \Sigma, \delta_L, q\textsubscript{0}, F_L)$ e M il linguaggio
+$M = (Q_M, \Sigma, \delta_M, q\textsubscript{0}, F_M)$ assumiamo per semplicità che siano dei DFA
+Se $A_L$ passa da $p$ a $s$ e $A_M$ passa da $q$ a $t$ (sono tutti stati) allora $A_{L\cap M}$ passera da $(p,s) a (q,t)$ quando legge una stringa $a$.
+\\ Formalmente il linguaggio risultante dall'intersezione diventa 
+\[A = (Q_M \times Q_L, \Sigma, \delta_{M\cap L}, (q_M, q_L), F_L \times F_M)\]
+Si può dimostrare che $\circumdelta((q_M,q_L),w) = (\circumdelta(q_M, w), \circumdelta(q_L,w))$, questo perché A accetta solo quando entrambi gli stati sono accettanti, quindi accetta per forza anche l'intersezione. 
+
+\subsubsection{Chiusura rispetto alla differenza} 
+\textbf{Teorema} Sia $L$ e $M$ dei linguaggi regolari allora anche $L-M$ è un linguaggio regolare
+\vspace{5mm}
+\\ \textbf{Dimostrazione} $L-M=L\cap \overline{M}$, ma sappiamo che $\overline{M}$ è regolare e l'intersezione di 2 linguaggi è regolae, quindi $L-M$ è anche esso regolare.
+
+\subsubsection{Inversione}
+L'inversione di una strina $a_1, a_2, ...,a_n$ è la stringa $a_n,..., a_2, a_1$ questa stringa la denotiamo come $w^R$ e notiamo che $\epsilon^R=\epsilon$.
+\\ Un linguaggio $L^R$ inverso di $L$ presenta tutte le stringe al suo interno inverse. Se $L$ è un linguaggio regolare allora lo è anche $L^R$.
+
+\subsection{Proprietà di decisione}
+Questi non scontanti che vanno affrontate:
+\begin{itemize}
+  \item Un linguaggio descritto è vuoto?
+  \item Una stringa appartiene al linguaggio?
+  \item Due linguaggi equivalenti?
+\end{itemize}
+
+\subsubsection{Verificare se un linguaggio è vuoto}
+Se il linguaggio $A$ è rappresentato da un automa finito posso attraversare tutti i nodi, se trovo uno stato accettante allora il linguaggio \textbf{non} è vuoto. Quest'operazione richiede O($n^2$) perché è un semplice attraversamento di grafo. 
+\\ Se iniziamo da un espressione regolare, possiamo trasformarla in un $\epsilon$-NFA e poi effettuare i cammini a costo O(n).
+\\ È possibile anche determinare se il linguaggio è vuoto in base alla regex direttamente. Se il linguaggio non ha $\emptyset$ sicuramente non può essere vuoto, altrimenti posso determinarlo ricorsivamente seguendo le regole algebriche delle regex. 
+\\ Di seguito elenco i casi: 
+\begin{itemize}
+  \item $R= \emptyset$. $L(\emptyset)$ è vuoto
+  \item $R= \epsilon$. $L(\epsilon)$ \textbf{non} è vuoto
+  \item $R=a$ (qualsiasi stringa $a$) L(a) non è vuoto
+  \item $R=R_1+R_2$. $L(R)$ è vuoto se sia $L(R_1)$ che $L(R_2)$ siano vuoti
+  \item $R=R_1R_2$. $L(R)$ è vuoto se $L(R_1)$ o $L(R_2)$ è vuoto
+  \item $R=R_1*$. $L(R)$ non è mai vuoto, al massimo è $\epsilon$
+  \item $R=R_1$. $L(R)$ è vuoto solo se $L(R_1)$ è vuoto, sono lo stesso linguaggio
+\end{itemize}
+
+\subsubsection{Appartenenza a un linguaggio}
+Per controllare se una qualsiasi stringa $w\in L(A)$ per un DFA è sufficiente simulare w su A, se $|w|=n$ il tempo risulta O(n).
+\vspace{5mm} \\
+Se $A$ è un NFA e ha $s$ stati, allora O($ns^2$), vale lo stesso epr $\epsilon$-NFA.
+\vspace{5mm} \\
+Se L=L(R) è una regex, la converto in $\epsilon$-NFA ovvero O($ns^2$)
+
+\subsubsection{Equivalenza e minimizzazione di automi}
+Dobbiamo esplorare la possibilità di dire che 2 DFA sono equivalenti, un modo per farlo è minimizzarli, se sono equivalenti basterà cambiare etichette finché non coincidono.
+\\ Iniziamo definendo cosa rende equivalenti 2 stati $p$ e $q$. Data una stringa $w$, $p$ e $q$ sono equivalenti se \circumdelta$(q,w)$ e \circumdelta$(p,w)$ sono entrambi accentanti oppure non accentanti. 
+\\ Nel caso in cui uno sia accentante e l'altro no, allora si dicono distinti. NB. 2 stati equivalenti non ci dicono niente sulla stringa $w$ e non ci dice se i due stati sono lo stesso. 
+\\ Possiamo raggruppare le nostre distinzioni degli stati in una tabella, tramite l'algoritmo $riempit-tabella$.
+
+\begin{figure}[ht]
+	\includegraphics[scale = 0.3]{media/riemp_tab.png}
+	\centering
+	\caption{Algoritmo riempi tabella}
+\end{figure}
+Ogni x è uno stato distinguibile, un quadrato vuoto significo stati equivalenti.
+\\ Per testare se 2 linguaggi L e M sono equivalenti dobbiamo: 
+\begin{itemize}
+  \item Convertire L e M in DFA 
+  \item Costruire il DFA unione dei 2 linguaggi
+  \item Se l'algoritmo dice che i 2 stati iniziali sono equivalenti allora L=M, altrimenti L$\ne$M
+\end{itemize}
+
+Partendo da 2 DFA costruisco un DFA $B$ che ha lo stato iniziale che contiene quello di $A$ e lo stato accentante che contiene quello di $A$. Ogni altra funzione di un blocco deve essere equivalente.
+\\ L'algoritmo non può essere applicato a un NFA.
+
+\section{Grammatiche libere da contesto}
+\textbf{Esempio informale}
+\vspace{5mm}
+\\ Definiamo un linguaggio delle palindrome. Una stringa è palindroma se si legge allo stesso modo in entrambi i versi, come $otto$ oppure $madamimadam$ (madame I'm Adam). Perciò $w$ è palindroma se $w=w^R$. 
+\\ Si può facilmente dimostrare che questo linguaggio non è regolare usando il pumping lemma. Scegliamo $w=0^n10^n$, scomponiamo in $w=xyz$ tale che y sia fatto di vari 0 e scegliamo k=0, $xz$ dovrebbe adesso appartenere a $L_{pal}$ ma non è così, perché ho meno 0 a sinistra rispetto che a destra. 
+\\ Posso definire le stringhe che appartengono a $L_{pal}$ in maniera ricorsiva. 
+\vspace{2mm}
+\\ \textbf{Base} $\epsilon$, 0 e 1 sono palindrome
+\\ \textbf{Induzione} Se $w$ è palindroma allora $0w0$ e $1w1$ sono palindrome
+\vspace{2mm}
+\\ Una \textbf{grammatica libera} è una notazione formale per esprimere linguaggi ricorsivamente. Una grammatica consiste in una o più serie di variabili che rappresentano classi di stringhe, ovvero linguaggi.
+\\ Ogni classe definisce come costruire le stringhe in ogni classe. Definiamo le classi del linguaggio palindroma:
+\begin{enumerate}
+  \item $P\rightarrow\epsilon$
+  \item $P\rightarrow0$
+  \item $P\rightarrow1$
+  \item $P\rightarrow 0P0$
+  \item $P\rightarrow 1P1$
+\end{enumerate}
+0 e 1 sono terminali, P è una variabile, P è anche la categoria iniziale, 1-5 sono produzioni.
+
+\newpage
+\subsection{Definzione formale di CFG}
+Un CFG è formato da 4 elementi: 
+\begin{enumerate}
+  \item Un insieme di simboli detti \emph{terminali}
+  \item Un insieme di variabili, detti \emph{non termali} oppure \emph{categorie sintattiche}
+  \item Una variabile detto \emph{simbolo iniziale}
+  \item Un insieme finito di \emph{produzioni} o \emph{regole} che definiscono il linguaggio ricorsivamente. Ogni produzione consiste in 3 parti 
+    \begin{enumerate}
+      \item Una variabile che è definita parzialmente dalla produzione, \emph{testa}
+      \item Il simbolo di produzione $\rightarrow$
+      \item Il \emph{corpo} della produzione, ovvero la stringa o il terminale che la forma. Le stringhe vengono formate sostituendo le variabili.
+    \end{enumerate}
+\end{enumerate}
+In maniera contratta, CFG=(V,T,P,S) rispettivamente variabile, terminale, produzioni e simbolo iniziale. 
+\\ Il linguaggio palindromo descritto come CFG è $G_{pal}=(\{P\}, \{0,1\},A,P)$ A è l'insieme delle produzioni del linguaggio.
+
+\subsection{Derivazione in CFG}
+Possiamo definire le stringhe tramite concatenazione delle produzione, \emph{inferenza ricorsiva} 
+\\ Il secondo modo per \emph{derivazione}, ovvero uso le produzioni fino a quanto ho solo simboli terminali. Noi studieremo la derivazione.
+\\ Sia $G=(V,T,P,S)$ una grammatica libera e sia $\alpha AB$ una stringa mista di terminali e variabili, dove $A$ è variabile e $\alpha B \in (V \cup T)$ allora se $G$ risulta chiara nel contesto, posso scrivere: 
+\[\alpha A B \xRightarrow[G] \; \alpha \gamma B\]
+$A$ è una derivazione di $G$, $A \Rightarrow \gamma $. Posso usare il simbolo * per denotare "zero o più passi"(chiusura transitiva). 
+\\ \textbf{Base} $\alpha \xRightarrow[G]{*} \alpha$, vale per ogni stringa terminale o variabile, ovvero ogni stringa deriva se stessa 
+\\ \textbf{Induzione} Se $\alpha \xRightarrow[G]{*} \beta$ e $\beta \xRightarrow[G]{} \gamma$ significa che $\alpha \xRightarrow[G]{*} \gamma$
+\\ Se la grammatica è chiara posso scrivere $\xRightarrow{*}$
+
+\subsection{Derivazione a sinistra e a destra}
+È possibile arrivare a diverse conclusioni a seconda della scelta di quali produzioni fare, quindi per evitare di avere incertezze si può scegliere un verso di come derivare ogni volta.
+\\ Derivazione a destra: $\xRightarrow[rm]{}$
+\\ Derivazione a sinistra: $\xRightarrow[lm]{}$
+
+\subsection{Linguaggio di una grammatica}
+Se $G(V,T,P,S)$ è una CFG allora il suo linguaggio è:
+\[L(G)=\{ w \in T^*:S \xRightarrow[G]{*} w \}\]
+Ovvero l'insieme delle stringhe $T^*$ derivabili da $w$
+
 \newpage
 \import{}{esercizi}
 \end{document}
