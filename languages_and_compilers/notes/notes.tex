@@ -864,6 +864,250 @@ Se $G(V,T,P,S)$ è una CFG allora il suo linguaggio è:
 \[L(G)=\{ w \in T^*:S \xRightarrow[G]{*} w \}\]
 Ovvero l'insieme delle stringhe $T^*$ derivabili da $w$
 
+\subsection{Alberi sintattici}
+Data una grammatica $G=(V,T,S,P)$, gli alberi sintattici di $G$ soddisfano i seguenti requisiti: 
+\begin{enumerate}
+  \item Ogni nodo interno è una variabile $V$
+  \item Ogni foglia è un variabili, terminale o $\epsilon$. Quando è $\epsilon$ deve essere l'unico figlio
+  \item Se un nodo $A$ con i figli $X_1,X_2,...,X_k$ allora $A \rightarrow X_1,X_2,...,X_k$ è una produzione in $P$. $X$ può essere $\epsilon$ solo nel caso in qui $A \rightarrow \epsilon$
+\end{enumerate}
+
+Nella grammatica seguente: 
+\begin{enumerate}
+  \item $E \rightarrow I$
+  \item $E \rightarrow E+E$
+  \item $E \rightarrow E*E$
+  \item $E \rightarrow (E)$
+\end{enumerate}
+
+\begin{figure}[ht]
+  \includegraphics[scale = 0.5]{media/produzione.png}
+  \centering
+  \caption{Parsing tree}
+\end{figure}
+\newpage
+Questo albero sintattico rappresenta la produzione 
+$E \xRightarrow[]{*} I + E$
+
+\subsubsection{Prodotto di un albero sintattico} 
+Se concateniamo le foglie di un albero otteniamo una stringa, ovvero il \emph{prodotto}. Inoltre la radice deve essere il simbolo iniziale e ogni foglia è $\emptyset$ oppure un terminale. 
+
+\begin{figure}[ht]
+	\includegraphics[scale = 0.3]{media/prod_concat.png}
+	\centering
+	\caption{Produzione}
+  \label{prod}
+\end{figure}
+\newpage
+Il risultato della produzione è $a*(a+b00)$
+
+\subsubsection{Inferenza, derivazione e alberi sintattici}
+Sia $G=(V,T,P,S)$ una CFG e $A \in V$ allora i seguenti sono equivalenti: 
+\begin{enumerate}
+  \item $A \xRightarrow[]{*} w$ 
+  \item $A \xRightarrow[lm]{*} w$ 
+  \item $A \xRightarrow[rm]{*} w$ 
+  \item C'è un albero sintattico $G$ con radice $A$ e prodotto $w$
+\end{enumerate}
+Costruiamo il prodotto della fig. \ref{prod} per derivazione sinistra: 
+\begin{itemize}
+  \item $ E \xRightarrow[lm]{} E * E \xRightarrow[lm]{}$
+  \item $ I * E \xRightarrow[lm]{} $
+  \item $ a * E \xRightarrow[lm]{} $
+  \item $ a * (E) \xRightarrow[lm]{} $
+  \item $ a * (E+E) \xRightarrow[lm]{} $
+  \item $ a * (I+E) \xRightarrow[lm]{} $
+  \item $ a * (a+E) \xRightarrow[lm]{} $
+  \item $ a * (a+I) \xRightarrow[lm]{} $
+  \item $ a * (a+I0) \xRightarrow[lm]{} $
+  \item $ a * (a+I00) \xRightarrow[lm]{} $
+  \item $ a * (a+b00) \xRightarrow[lm]{} $
+\end{itemize}
+
+\subsection{Ambiguità in grammatiche e linguaggi}
+Nella grammatica: 
+\begin{itemize}
+  \item $E \rightarrow I$ 
+  \item $E \rightarrow E+E$ 
+  \item $E \rightarrow E*E$ 
+  \item $E \rightarrow (E)$ 
+\end{itemize}
+L'espressione $E+E*E$ ha due possibili derivazioni: 
+$E \Rightarrow E + E \Rightarrow E + E * E$ oppure 
+$E \Rightarrow E * E \Rightarrow E + E * E$, da qui i due alberi sintattici
+
+\begin{figure}[ht]
+  \includegraphics[scale = 0.5]{media/ambigua.png}
+  \centering
+  \caption{Semplice automa}
+\end{figure}
+
+\newpage 
+Queste sono 2 operazioni diverse, usiamo i valori $1+2*3$, dal primo albero troviamo $1+(2*3)=7$ mentre dal secondo albero troviamo $(1+2)*3=9$.
+\\ \textbf{Definizione} Sia $G=(V,T,P,S)$ una CFG. Diciamo che G è ambigua se esiste almeno una stringa T* che ha più di un albero sintattico. 
+
+\subsubsection{Rimuovere ambiguità}
+È possibile, in alcuni casi, rimuovere l'ambiguità. Non esiste però un modo sistematico e alcuni CFL hanno solo CFG ambigue. 
+\\ Studiamo la grammatica 
+\[ E \rightarrow I \;|\; E + E \;|\; E * E \;|\; (E)\]
+\[ I \rightarrow a \;|\; b \;|\; Ia \;|\; Ib \;|\; I0 \; | \; I1\]
+Dobbiamo decidere: 
+\begin{enumerate}
+  \item Chi ha precedenza tra + e *
+  \item Come raggruppare un operatore
+\end{enumerate}
+Una soluzione è l'introduzione di una gerarchia di variabili: 
+\begin{enumerate}
+  \item espressioni E: composizione di uno o più termini T tramite +
+  \item termini T: composizione di uno o più fattori F tramite *
+  \item fattori F:
+    \begin{enumerate}
+      \item identificatori I
+      \item espressioni E racchiuse tra parentesi
+    \end{enumerate}
+\end{enumerate}
+Ogni più è costretto a essere una T, ogni T può generare E solo chiuse nelle parentesi, questo significa che * ha precedenza rispetto al +. 
+\\ La seguente grammatica risulta quindi non ambigua: 
+\begin{enumerate}
+  \item $E \rightarrow T | E + T$
+  \item $E \rightarrow F | T * F$
+  \item $F \rightarrow I | (E) $
+  \item $E \rightarrow a | b | Ia | Ib | I0 | I1$
+\end{enumerate}
+
+\subsubsection{Ambiguità inerente} 
+Un CFL è inerentemente ambiguo se tutte le grammatiche per L sono ambigue. 
+\[ L = \{a^n b^n c^m d^m :n \geq 1, m \geq 1\} \cup \{a^n b^m c^m d^n : n \geq 1, m \geq 1\} \]
+Il linguaggio è inerentemente ambiguo.
+
+\section{Automi a pila}
+Un automa a pila (PDA - pushdown automaton) è un $\epsilon$-NFA con una pila che è la sua memoria.
+\\ Durante le transizione:
+\begin{enumerate}
+  \item Consuma un simbolo di input o esegue una transizione $\epsilon$
+  \item Va in un nuovo stato o rimane dov'è
+  \item Rimpiazza la cima della pila con una stringa (lo stack è cambiato), con $\epsilon$ (c'è stato un pop) oppure con lo stesso simbolo (nessun cambiamento)
+\end{enumerate}
+
+\begin{figure}[ht]
+	\includegraphics[scale = 0.4]{media/pda.png}
+	\centering
+	\caption{PDA, automa con pila}
+\end{figure}
+Esempio: Consideriamo il linguaggio palindromo: 
+\[ L_{wwr} = \{ ww^R : w \in \{0,1\}^*\}\]
+Una PDA per $L_{wwr}$ ha 3 stati: 
+\begin{enumerate}
+  \item In $q_0$ si presume l'input non sia esaurito, quindi leggo 1 alla volta tutti i simboli di input e li accumulo nello stack.
+  \item Scommettiamo di aver trovato la sequenza corretta, quindi passiamo in $q_1$ ma continuando a leggere input
+  \item Confronta la cima della pila con il simbolo in $q_1$, se sono uguali consumiamo l'elemento, altrimenti il ramo muore
+  \item Se lo stack è vuoto passiamo in $q_2$
+\end{enumerate}
+
+\subsection{Definizione formale PDA}
+Un PDA è una tupla di 7:
+\[ P = (Q,\Sigma, \Gamma, \delta, q_0, Z_0,F)\]
+dove 
+\begin{itemize}
+  \item Q è un insiemi di stati finiti
+  \item $\Sigma$ è un alfabeto finito di input
+  \item $\Gamma$ è un alfabeto finito di pila
+  \item ($\delta$ è una funzione di transizione da $Q\times(\Sigma \cup \{\epsilon\}) \times \Gamma$ a sottoinsieme di $Q \times \Gamma^*$ - definizione del prof, poco chiara)
+    \\ $\delta$ è un funzione di transizione che prende 3 input $(q,a, X)$ dove: 
+    \begin{itemize}
+      \item q è uno stato in Q
+      \item a è un simbolo in $\Sigma$ oppure la $\epsilon$, NB $\epsilon$ non fa parte dell'input
+      \item X è un simbolo in $\Gamma$, ovvero è un simbolo \textbf{sullo stack}
+    \end{itemize}
+    L'output di $\sigma$ è una coppia $(p, \gamma)$, dove p è uno stato e $\gamma$ è una nuova stringa che rimpiazza $X$ sullo stack. 
+    Se $\gamma = \epsilon$ $X$ viene eliminato, se $\gamma = X$ non cambia nulla e se $\gamma = YZ$ allora $Y$ sostituisce $X$ e $Z$ viene aggiunto allo stack
+
+  \item $q_0$ stato iniziale 
+  \item $Z_0 \in \Gamma$ simbolo iniziale per la pila
+  \item $F \subseteq Q$ è l'insieme degli stati di accettazione
+\end{itemize}
+
+\newpage
+Prendiamo come esempio il PDA di $L_{wwr}$: 
+\[P=(\{q_0, q_1, q_2\}, \{0,1\}, \{Z_0, 0, 1\}, \delta, q_0, Z_0, \{ q_2 \}\]
+
+\begin{figure}[ht]
+	\includegraphics[scale = 0.4]{media/pda_diag.png}
+	\centering
+\end{figure}
+
+dove $\delta$ è definita dalle seguenti regole: 
+\begin{enumerate}
+  \item $\delta(q_0,0,Z_0)$ = $\{(q_0, 0Z_0)\}$ 
+        $\delta(q_0,1,Z_0)$ = $\{(q_0, 1Z_0)\}$ 
+        una di queste regole è applicata all'inizio, l'input viene inserito lasciando $Z_0$ come indice del fondo.
+  \item 
+        $\delta(q_0,0,0)$ = $\{(q_0, 00)\}$,
+        $\delta(q_0,0,1)$ = $\{(q_0, 01)\}$,
+        \\ $\delta(q_0,1,0)$ = $\{(q_0, 10)\}$,
+        $\delta(q_0,1,1)$ = $\{(q_0, 11)\}$
+        \\ leggo un input, lo salvo nello stack e continuo a leggere 
+  \item 
+        $\delta(q_0,\epsilon,Z_0)$ = $\{(q_1, Z_0)\}$,
+        \\ $\delta(q_0,\epsilon,0)$ = $\{(q_1, 0)\}$ 
+        \\ $\delta(q_0,\epsilon,1)$ = $\{(q_1, 1)\}$ 
+        \\ passiamo da $q_0$ a $q_1$ lasciando intantto lo stack
+  \item 
+        $\delta(q_1,0,0)$ = $\{(q_1, \epsilon)\}$,
+        \\ $\delta(q_1,1,1)$ = $\{(q_1, \epsilon)\}$
+        \\ rimaniamo su $q_1$ ma eliminiamo un membro dallo stack, se sono uguali
+  \item 
+        $\delta(q_1,\epsilon,Z_0)$ = $\{(q_2, Z_0)\}$
+        se non ho niente nello stack, passo alla soluzione accettante
+
+\end{enumerate}
+
+\newpage
+\subsection{Descrizioni istantanee}
+Un PDA passa da una configurazione all'altra consumando un simbolo in input oppure la cima della stack.
+\\ Possiamo rappresentare una configurazione tramite \emph{descrizioni istantanee} (ID) che sono un tupla $(q, w,\gamma)$ dove: q è lo stato, w è l'input rimanente e $\gamma$ è il contenuto della pila. 
+\\ Sia $P=(Q,\Sigma, \Gamma, \delta, q_0, Z_0, F)$ un PDA, allora $\forall w \in \Sigma^*, \beta \in \Gamma^*: (p,\alpha) \in \delta(q,a,X) \Rightarrow (q, aw, X\beta) \vdash (p,w,\alpha, \beta)$
+\\ Il simbolo $\vdash$ significa "deduzione logica", mentre definiamo $\overset{*}{\vdash}$ come la chiusura transitiva di $\vdash$ 
+
+	\begin{figure}[ht]
+		\includegraphics[scale = 0.5]{media/diagramma_pda.png}
+		\centering
+    \caption{Diagramma PDA}
+	\end{figure}
+
+\subsection{Accettazione per stato finale} 
+Sia $P=(Q,\Sigma, \Gamma, \delta, q_0, Z_0, F)$ un PDA, il \emph{linguaggio accettato} da P per stato finale è: 
+\[L(P)=\{w:(q_0,w,Z_0) \overset{*}{\vdash}(q,\epsilon,\alpha, q \in F)\}\]
+In altre parole una volta che $w$ è in uno stato accettante il contenuto della pila è irrilevante
+
+\subsection{Accettazione per pila vuota} 
+Sia $P=(Q,\Sigma, \Gamma, \delta, q_0, Z_0, F)$ un PDA, il \emph{linguaggio accettato} da P per pila vuota è: 
+\[N(P)=\{w:(q_0,w,Z_0) \overset{*}{\vdash}(q,\epsilon,\epsilon)\}\]
+NB $q$ è un generico stato, dunque $N(P)$ è degli input $w$ che svuotano la stack
+
+\newpage
+\subsection{Da stack vuota a stato finale} 
+Dimostriamo ora che i due per pila vuota o per stato finale sono linguaggi equivalenti. 
+\\ \textbf{Teorema}: Se $L=N(P_N)$ per un PDA $P=(Q,\Sigma, \Gamma, \delta, q_0, Z_0)$ allora $\exists$ PDA $P_F$ tale che $L=N(P_F)$.
+\\ \textbf{A parole}: L'idea è avere un simbolo nuovo $X_0$ che che specifica arrivano allo stato finale sia $P_F$ che $P_N$. $p_0$ ci server per inserire il primo simbolo nello stack ed andare in $q_0$. Andiamo in $p_F$ quando $P_N$ svuota la stack. 
+\begin{figure}[ht]
+	\includegraphics[scale = 0.4]{media/PNPF.png}
+	\centering
+\end{figure}
+\\
+\textbf{Dimostrazione} Sia: 
+\[P_F = \{Q \cup \{p_0, p_f\}, \Sigma, \Gamma \cup \{ X_0\}, \delta_F, p_0, X_0, \{p_f\}\}\]
+dove $\sigma$ è definita come: 
+\begin{enumerate}
+  \item $\delta(p_0,\epsilon, X_0)=\{(q_0,Z_0, X_0)\}$
+    transazione spontanea da $P_F$ a $P_N$
+  \item $\forall q \in Q,a \in \Sigma \cup \{\epsilon\}, Y \in \Gamma: \delta_F(q,a,Y) =\delta_N(q,a,Y)$
+  \item $\delta_F(q,a,Y)$ contiene 2 $(p_j, \epsilon)$ per ogni $q$ in $Q$
+\end{enumerate}
+
+22-10 20 pag
+22-11 20 pag
+22-12 20 pag
 \newpage
 \import{}{esercizi}
 \end{document}
