@@ -1087,9 +1087,9 @@ NB $q$ è un generico stato, dunque $N(P)$ è degli input $w$ che svuotano la st
 
 \newpage
 \subsection{Da stack vuota a stato finale} 
-Dimostriamo ora che i due per pila vuota o per stato finale sono linguaggi equivalenti. 
+Dimostriamo ora che per pila vuota o per stato finale sono linguaggi equivalenti. 
 \\ \textbf{Teorema}: Se $L=N(P_N)$ per un PDA $P=(Q,\Sigma, \Gamma, \delta, q_0, Z_0)$ allora $\exists$ PDA $P_F$ tale che $L=N(P_F)$.
-\\ \textbf{A parole}: L'idea è avere un simbolo nuovo $X_0$ che che specifica arrivano allo stato finale sia $P_F$ che $P_N$. $p_0$ ci server per inserire il primo simbolo nello stack ed andare in $q_0$. Andiamo in $p_F$ quando $P_N$ svuota la stack. 
+\\ \textbf{A parole}: L'idea è avere un simbolo nuovo $X_0$ che specifica quando arrivano allo stato finale sia $P_F$ che $P_N$. $p_0$ ci server per inserire il primo simbolo nello stack ed andare in $q_0$. Andiamo in $p_F$ quando $P_N$ svuota la stack. 
 \begin{figure}[ht]
 	\includegraphics[scale = 0.4]{media/PNPF.png}
 	\centering
@@ -1097,17 +1097,61 @@ Dimostriamo ora che i due per pila vuota o per stato finale sono linguaggi equiv
 \\
 \textbf{Dimostrazione} Sia: 
 \[P_F = \{Q \cup \{p_0, p_f\}, \Sigma, \Gamma \cup \{ X_0\}, \delta_F, p_0, X_0, \{p_f\}\}\]
-dove $\sigma$ è definita come: 
+dove $\delta$ è definita come: 
 \begin{enumerate}
   \item $\delta(p_0,\epsilon, X_0)=\{(q_0,Z_0, X_0)\}$
     transazione spontanea da $P_F$ a $P_N$
   \item $\forall q \in Q,a \in \Sigma \cup \{\epsilon\}, Y \in \Gamma: \delta_F(q,a,Y) =\delta_N(q,a,Y)$
-  \item $\delta_F(q,a,Y)$ contiene 2 $(p_j, \epsilon)$ per ogni $q$ in $Q$
+  \item $\delta_F(q,a,Y)$ contiene $(p_j, \epsilon)$ per ogni $q$ in $Q$
 \end{enumerate}
 
-22-10 20 pag
-22-11 20 pag
-22-12 20 pag
+\newpage
+Consideriamo un automa \emph{if} \emph{else} in C, dobbiamo leggere tanti if quanti else quindi usiamo Z per contare la differenza tra i 2 simboli.
+
+\begin{figure}[ht]
+	\includegraphics[scale = 0.4]{media/if_else.png}
+	\centering
+\end{figure}
+
+Leggendo i inseriamo una Z, leggendo e rimuoviamo una Z.Formalmente: 
+\[ P_N = (\{q\}, \{i,e\}, \{Z\}, \delta_N,q,Z) \]
+dove $\delta$: 
+\begin{enumerate}
+  \item $\delta(q,i,Z) = \{(q,ZZ)\}$ leggo i aggiungo Z 
+  \item $\delta(q,e,Z) = \{(q,\epsilon)\}$ leggo e rimuovo Z
+\end{enumerate}
+A partire da $P_N$ costruiamo $P_F$:
+\[ P_F = (\{p,q,r\}, \{i,e\}, \{Z,X_0\}, \delta_F,p,X_0, \{r\}) \]
+dove $\delta$:
+\begin{enumerate}
+  \item $\delta_F(p,\epsilon, X_0) = \{(q,ZX_0)\}$ simulo lettura primo simbolo, $X_0$ va in fondo allo stack
+  \item $\delta_F(q, i, Z) = \{(q,ZZ)\}$ leggo i aggiungo Z
+  \item $\delta_F(q, e, Z) = \{(q,\epsilon)\}$ leggo e rimuovo z
+  \item $\delta_F(q, \epsilon, X_0) = \{(r,\epsilon)\}$ $P_F$ accetta quando $P_N$ si svuota
+\end{enumerate}
+
+\begin{figure}[ht]
+	\includegraphics[scale = 0.4]{media/if_else_pf.png}
+	\centering
+  \caption{Diagramma P\textsubscript{F}}
+\end{figure}
+
+\subsection{Da stato finale a pila vuota}
+Facciamo il percorso inverso $P_F \rightarrow P_N$. Si aggiunge un $\epsilon$-transizione da ogni stato accettante di $P_F$ a un nuovo stato p. Quando siamo in p, consumo lo stack senza leggere input. 
+\\ Per evitare di svuotare lo stack per stringhe non valide uso $X_0$ come indicatore di fondo. Il nuovo stato $p_0$ serve solo ad arrivare allo stato iniziale $q_0$ e mettere $X_0$ in fondo allo stack. 
+\\ \textbf{Teorema}: Se $L=N(P_F)$ per un PDA $P_F=(Q,\Sigma, \Gamma, \delta_F, q_0, Z_0, F)$ allora $\exists$ PDA $P_N$ tale che $L=N(P_N)$.
+\\ \textbf{Dimostrazione}: 
+\[ P_N = (Q \cup \{p_0, p\}, \Sigma,\Gamma \cup \{X_0\}, \delta_N,p_0,X_0) \]
+dove $\delta_N$ è:
+\begin{enumerate}
+  \item $\delta_N(p,\epsilon, X_0) = \{(q,ZX_0)\}$ simulo lettura primo simbolo, $X_0$ va in fondo allo stack
+  \item $\delta_N(q, i, Z) = \{(q,ZZ)\}$ leggo i aggiungo Z
+  \item $\delta_N(q, e, Z) = \{(q,\epsilon)\}$ leggo e rimuovo z
+  \item $\delta_N(q, \epsilon, X_0) = \{(r,\epsilon)\}$ $P_F$ accetta quando $P_N$ si svuota
+\end{enumerate}
+
+
+
 \newpage
 \import{}{esercizi}
 \end{document}
