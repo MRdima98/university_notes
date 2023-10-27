@@ -1145,11 +1145,133 @@ Facciamo il percorso inverso $P_F \rightarrow P_N$. Si aggiunge un $\epsilon$-tr
 dove $\delta_N$ è:
 \begin{enumerate}
   \item $\delta_N(p,\epsilon, X_0) = \{(q,ZX_0)\}$ simulo lettura primo simbolo, $X_0$ va in fondo allo stack
-  \item $\delta_N(q, i, Z) = \{(q,ZZ)\}$ leggo i aggiungo Z
-  \item $\delta_N(q, e, Z) = \{(q,\epsilon)\}$ leggo e rimuovo z
-  \item $\delta_N(q, \epsilon, X_0) = \{(r,\epsilon)\}$ $P_F$ accetta quando $P_N$ si svuota
+  \item $\forall \; q$ in $Q$, $a$ in $\Sigma$ e ogni $Y$ in $\Gamma$: $\delta_N(q,a,Y)$ contiene tutte le coppie  in $\delta_F(q,a,Y)$. Ovvero $P_N$ simula $P_F$.
+  \item $\forall \; q$ in $F$ e ogni $Y$ in $\Gamma$: $\delta(q,a,Y)$ contiene $(p,\epsilon)$. Ogni volta che $P_F$ accetta $P_N$ può svuotare lo stack
+  \item $\forall \; Y$ in $\Gamma$: $\delta(q,a,Y) = \{p, \epsilon\}$ quando arrivo a $p$, quindi $P_F$ ha accettato, $P_N$ svuota lo stack senza leggere input
 \end{enumerate}
 
+\begin{figure}[ht]
+  \includegraphics[scale = 0.4]{media/cfg_pda.png}
+  \centering
+\end{figure}
+
+\newpage
+\subsection{Equivalenza tra PDA e CFG} 
+Un linguaggio è
+generato da una CFG
+se e solo se è
+accettato da un PDA per pila vuota
+se e solo se è
+accettato da un PDA per stato finale
+
+\subsection{Da CFG a PDA}
+Data una CFG costruiamo una PDA che simula la derivazione a sinistra. Ogni espressione non terminale si può scrivere come $xA\alpha$, dove $A$ è la variabile più a sinistra, $x$ sono gli simboli terminali a sinistra di $A$ e $\alpha$ sono le variabili alla destra di $A$.
+\\ 
+Chiamiamo $A\alpha$ la coda della forma/espressione. Una coda di terminali è da considerarsi $\epsilon$. Dobbiamo simulare un PDA, dove accettiamo una stringa terminale $w$. La coda di $xA\alpha$ compare sullo stack con A in cima, $x$ è quello che consumiamo per aggiungere una stack, $w=xy$.
+\\ Quindi data la transazione $(q,y,A\alpha)$, che rappresenta $xA\alpha$, l'automa sceglie di espandere $A \rightarrow \beta$. $\beta$ va in cima allo stack entrando nella ID $(q,y,\beta \alpha)$, il PDA ha un unico stato $q$.
+\\ Non è detto però che $\beta$ sia terminale, e potrebbe avere dei terminali che lo precedono, quindi dobbiamo eliminare ogni terminale all'inizio di $\beta \alpha$. Confronto i terminali con i successi input per verificare correttezza, altrimenti il processo muore. 
+\\ Nel caso in cui tutto vada bene, lo stack è vuoto e abbiamo la $w$ corretta. 
+\\ Formalmente: Sia $G=(V,T,Q,S)$ una CFG, costruiamo il PDA $P$ che accetta $L(G)$ per stack vuoto: 
+\[ P = (\{q\},T,V \cup T, \delta, q, S) \]
+dove $\delta$ è definita come segue 
+\[\delta(q,\epsilon,A) = \{(q,\beta): A \rightarrow \beta \in Q\}\]
+per ogni terminale a, $\delta(q,a,a) = \{(q, \epsilon)\}$
+\\ \textbf{Esempio:} 
+\\ Considero la grammatica $S \rightarrow \epsilon|SS|iS|iSe$. Il PDA corrispondente è: 
+\[ P = (\{q\}, \{i,e\}, \{S,i,e\},\delta,q,S)\]
+dove $\delta(q,\epsilon,S)=\{(q,\epsilon),(q,SS),(q,iS),(q,iSe)\}, \delta(q,i,i)=\{(q,\epsilon)\} 
+\\ \delta(q,e,e)=\{(q,\epsilon)\}$.
+
+\subsection{Da PDA a CFG}
+Per ogni PDA $P$ possiamo costruire un CFG $G$ il cui linguaggio coincide con quello accettato dallo stack vuoto di $P$. Dobbiamo prendere atto del momento più importante di una PDA, ovvero quando viene fatto il pop di un elemento dello stack, perché è cambiato lo stato. Nel nostro caso server tenere traccia dello stato passato. Ogni stato che cambia "scendo" nello stack.
+
+\begin{figure}[ht]
+	\includegraphics[scale = 0.4]{media/grafico_pda.png}
+	\centering
+\end{figure}
+Nel grafico si può notare che ogni eliminazione $Y_1,Y_2,...,Y_k$ coincide con la lettura di un input $x$. Non importa quanti passaggi siano stati fatti, qua viene visto lo step finale, quando $Y$ esce.
+\\ Inoltre viene visto anche il passaggio di stato, che anche esso coincide con l'eliminazione.
+\\ Per costruire una CFG a partire dal PDA usiamo variabile che rappresentano un "evento" con due parti: 
+\begin{enumerate}
+  \item l'eliminazione definitiva dallo stack di $X$
+  \item il passaggio da $p$ a $q$, dopo che scambio $X$ con $\epsilon$ sullo stack
+\end{enumerate}
+Questa variabile la rappresentiamo come $[pXq]$. 
+\\ \textbf{Formalmente}: Sia $P=(Q,\Sigma,\Gamma, \delta,q_0,Z_0)$ un PDA. \\ Definiamo $G=(V,\Sigma,R,S)$ con:
+\begin{itemize}
+  \item $V=\{[pXq]:\{p,q\} \subseteq Q,X \in \Gamma\} \cup \{S\}$ ovvero V contiene il simbolo iniziale $S$ e tutti i simboli in $Q$ e in $\Gamma$
+  \item $R= \{S \rightarrow [q_0 Z_0 p]:p \in Q \} \cup$ \\ $\{q X r_k] \rightarrow a[r Y_1 r_1]...[r_{k-1} Y_k r_k]:$
+  \\ $a \in \Sigma \cup \{\epsilon\}$,
+  \\ $\{r_1,...,r_k\} \subseteq Q$, 
+  \\ $(r,Y_1 Y_2...Y_k) \in \delta(q,a,X)\}$
+  \begin{itemize}
+      \item $[q_0 Z_0 p]$ genera tutte le stringhe $w$ e passa dallo stato $q_0$ a $p$. Al termine dell'operazione lo stack P sarà svuotato
+      \item $\{q X r_k] \rightarrow a[r Y_1 r_1]...[r_{k-1} Y_k r_k]:$ è una produzione che indica il passaggio $q$ a $r_k$ e il susseguirsi di passaggi per arrivarci. Al primo passaggio leggo l'input $a$ e itero k volte finché non ho eliminato Y. $a$ può essere $\epsilon$
+        \item se k=0 allora $Y_1 Y_2 ... Y_k = \epsilon$ e $r_k = r$
+  \end{itemize}
+\end{itemize}
+\textbf{Esempio}: Convertiamo
+
+\begin{figure}[ht]
+	\includegraphics[scale = 0.4]{media/if_else.png}
+	\centering
+\end{figure}
+\[ P_N = (\{q\}, \{i,e\}, \{Z\}, \delta_N,q,Z) \]
+dove 
+\begin{itemize}
+  \item $\delta(q,i,Z) = \{(q,ZZ)\}$ 
+  \item $\delta(q,e,Z) = \{(q,\epsilon)\}$ 
+\end{itemize}
+in una grammatica 
+\[G=(V,\{i,e\},R,S)\]
+dove 
+\begin{itemize}
+  \item $V=\{[qZq],S\}$
+  \item $R=\{S \rightarrow [qZq],[qZq] \rightarrow i[qZq[qZq], [qZq] \rightarrow e \}$
+\end{itemize}
+Per semplicità $[qZq]=A$ quindi $S \rightarrow A$ e $A=iAA|e$
+
+\textbf{Esempio}: Convertiamo 
+\[ P = \{p,q\}, \{0,1\},\{X,Z_0\},\delta, q, Z_0) \]
+dove $\delta$ è data da: 
+\begin{enumerate}
+  \item $\delta(q,1,Z_0) = \{(q,XZ_0)\}$
+  \item $\delta(q,1,X) = \{(q,XX)\}$
+  \item $\delta(q,0,X) = \{(p,X)\}$
+  \item $\delta(q,\epsilon,X) = \{(q,\epsilon)\}$
+  \item $\delta(p,1,X) = \{(p,\epsilon)\}$
+  \item $\delta(p,0,Z_0) = \{(q,Z_0)\}$
+\end{enumerate}
+in una CFG.
+\\ Otteniamo $G=(V,\{0,1\},R,S$, dove 
+\[ V = \{[qZ_0q],[pZ_0q],[qZ_0p],[pZ_0p], [qXq],[pXq],[qXp],[pXp],\} \]
+e le produzioni in R 
+\[ S \rightarrow [q Z_0 q] [qZ_0p]\]
+Dalla transizione (1) $\delta(q,1,Z_0) = \{(q,XZ_0)\}$ si ha:
+\\ $[q Z_0 q] \rightarrow 1[qXq][qZ_0 q]$
+\\ $[q Z_0 q] \rightarrow 1[qXp][pZ_0 q]$
+\\ $[q Z_0 p] \rightarrow 1[qXq][qZ_0 p]$
+\\ $[q Z_0 p] \rightarrow 1[qXp][pZ_0 p]$
+\vspace{2mm}
+\\ Dalla transizione (2) $\delta(q,1,X) = \{(q,XX)\}$
+\\ $[qXq] \rightarrow 1[qXq][qXq]$
+\\ $[qXq] \rightarrow 1[qXp][pXq]$
+\\ $[qXp] \rightarrow 1[qXq][qXp]$
+\\ $[qXp] \rightarrow 1[qXp][pXp]$
+\vspace{2mm}
+\\ Dalla transizione (3) $\delta(q,0,X) = \{(p,X)\}$
+\\ $[qXq] \rightarrow 0[pXq]$
+\\ $[qXp] \rightarrow 0[pXp]$
+\vspace{2mm}
+\\ Dalla transizione (4) $\delta(q,\epsilon,X) = \{(q,\epsilon)\}$
+\\ $[qXq] \rightarrow \epsilon$
+\vspace{2mm}
+\\ Dalla transizione (5) $\delta(p,1,X) = \{(p,\epsilon)\}$
+\\ $[pXp] \rightarrow 1$
+\vspace{2mm}
+\\ Dalla transizione (6) $\delta(p,0,Z_0) = \{(q,Z_0)\}$
+\\ $[pZ_0 q] \rightarrow 0[qZ_0 q]$
+\\ $[pZ_0 p] \rightarrow 0[qZ_0 p]$
 
 
 \newpage
