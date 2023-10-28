@@ -1274,6 +1274,238 @@ Dalla transizione (1) $\delta(q,1,Z_0) = \{(q,XZ_0)\}$ si ha:
 \\ $[pZ_0 p] \rightarrow 0[qZ_0 p]$
 
 
+\section{PDA deterministici}
+I PDA deterministici sono quelli usati per i parser, sono un sotto caso utile per noi.
+\\ 
+Un PDA deterministico non deve avere mosse alternative, se $\delta(q,a,X)$ ha più di una coppia sicuramente non è deterministico. Questo però non è sufficiente però, perché potresti avere due prodotti diversi e bisogna scegliere.
+\\ Definiamo quindi un PDA $P=(Q, \Sigma, \Gamma, \delta, q_0, Z_0, F)$ deterministico se e solo se: 
+\begin{enumerate}
+  \item $\delta(q,a,X)$ ha al massimo un elemento $\forall q \in Q, a \in \Sigma, X \in \Gamma$
+  \item Se $\delta(q,a,X)$ non è vuoto per un $a \in \Sigma$ allora $\delta(q,\epsilon,X)$ deve essere vuoto
+\end{enumerate}
+
+\begin{figure}[ht]
+	\includegraphics[scale = 0.4]{media/pda_det.png}
+	\centering
+  \caption{Esempio di PDA deterministico (DPDA)}
+\end{figure}
+
+\newpage
+\subsection{DPA che accettano per stato finale} 
+Regex $\subset$ L(DPDA) $\subset$ CFL.
+\\ \textbf{Teorema} Se L è regolare allora L=L(P) per un qualsiasi DPDA P.
+\\ \textbf{Prova}: Dato che L è regolare $\exists$ DFA $A$ tale che L=L(A)
+\[A=(Q,\Sigma, \delta_A, q_0, F)\]
+definiamo il DPDA
+\[P=(Q,\Sigma,\{Z_0\},\delta_P,q_0,Z_0,F)\]
+dove
+\[\sigma_P(q,a,Z_0) = \{(\delta_A(q,a),Z_0\}\]
+$\forall \; p,q \in Q$ e $a \in \Sigma$
+\\ applichiamo un induzione su $|w|$
+\[(q_0,w,Z_0) \overset{*}{\vdash} (p,\epsilon, Z_0) \iff \circumdelta(q_0,w)=p\]
+
+\subsection{DPDA che accettano per la pila vuota}
+Si usa la \textbf{proprietà del prefisso}: un linguaggio ha la proprietà del prefisso se NON esistono due stringhe uguali una che è il prefisso dell'altra. 
+\\ $L_{pal}$ ha la proprietà del prefisso
+\\ $\{0\}^*$ non ha la proprietà del prefisso
+\\ \textbf{Teorema} L è N(P) per un qualche DPDA P se e solo se L ha la proprietà del prefisso e L è $L(P')$ per qualche DPDA $P'$
+
+\subsection{DPDA e non ambiguità}
+L(DPDA) non per forza coincide con CFL non ambigue, viceversa invece è vero. 
+\begin{theorem}
+Se $L=N(P)$ per qualche DPDA P, allora L ha una grammatica non ambigua 
+\label{dpda1}
+\end{theorem}
+\textbf{Dimostrazione} stessa dimostrazione che fai da PDA a CFG, solo che parti con un DPDA
+\vspace{2mm}
+\\ L'enunciato può essere rafforzato 
+\begin{theorem}
+ Se $L=L(P)$ per qualche DPDA P, allora L ha una grammatica non ambigua 
+ \label{dpda2}
+\end{theorem}
+\textbf{Dimostrazione}
+\\ Sia \$ un simbolo non presente in $L$, e sia $L'=L\$$. In altri termini L' sono le stringhe L seguite da \$.
+Dal Teorema. \ref{dpda1} L' ha la proprietà di prefisso.
+Dal Teorema. \ref{dpda2} esiste una grammatica $G'$ che genera un linguaggio $N(P')$ che è $L'$.
+\\ Costruiamo quindi una grammatica $G$ tale che $L(G)=L$, dobbiamo solo togliere \$ dalla fine delle stringhe, così che $G'$ coincida con $G$. Introduciamo \$ in $G$
+\[ \$ \rightarrow \epsilon \]
+Visto che $L(G')=L'$ consegue che $L(G)=L$. $G$ non è ambigua.
+
+\section{Proprietà di CFG}
+Elenco delle proprietà: 
+\begin{itemize}
+  \item \emph{Semplificazione} di una CFG. Una CFL ha una grammatica in forma speciale
+  \item \emph{Pumping Lemma} per CFG, simile alle regex
+  \item \emph{Proprietà di chiusura}.
+  \item \emph{Proprietà di decisione}. Verifichiamo l'appartenenza e l'essere vuoto 
+\end{itemize}
+
+\subsection{Forma normale di Chomsky}
+Ogni CFL (senza $\epsilon$) è generato da una CFG dove tutte le forme sono 
+\[A \rightarrow BC, A \rightarrow a\]
+dove $A,B,C$ sono variabili, mentre $a$ è un terminale. Questa è detta forma di Chomsky e per ottenerla dobbiamo pulire la grammatica: 
+\begin{itemize}
+  \item Eliminare i \emph{simboli inutili}, ovvero ogni simbolo che non appartiene a $S \overset{*}\Rightarrow w$
+  \item Eliminare le \emph{produzioni} $\epsilon$, dalla forma $A \rightarrow \epsilon$
+  \item Eliminare le \emph{produzioni unità} ovvero le produzioni $A \rightarrow B$
+\end{itemize}
+
+\subsection{Eliminazione di simboli inutili} 
+Un simbolo $X$ è \emph{utile} per una grammatica $G=(V,T,P,S)$ se esiste una derivazione 
+\[ S \xRightarrow[G]{*} \alpha X \beta \xRightarrow[G]{*} w\]
+per una stringa $w \in T^*$. Possiamo eliminare i simboli inutili senza cambiare il significato della grammatica. Un simbolo utile deve avere 2 caratteristiche: 
+\begin{enumerate}
+  \item $X$ è un \emph{generatore} se esiste una stringa w tale che $X \xRightarrow[]{*} w$. Ogni terminale è un generatore di se stesso in 0 passi
+  \item $X$ è \emph{raggiungibile} se esiste una derivazione $S \xRightarrow[]{*} \alpha X \beta$ per qualche $\{\alpha, \beta\} \subseteq (V \cup T)^*$
+\end{enumerate}
+Un simbolo deve essere sia raggiungibile che generatore, eliminando prima i non generatori e poi i non raggiungibili abbiamo una grammatica solo di simboli utili.
+\\ \textbf{Esempio}: Consideriamo la grammatica 
+\[ S \rightarrow AB | a \]
+\[ A \rightarrow b \]
+A genera b, S genera A, B non è un simbolo generatore. Eliminando B: 
+\[ S \rightarrow a \]
+\[ A \rightarrow b \]
+Adesso solo $a$ è raggiungibile quindi 
+\[ S \rightarrow a \]
+che è la nostra grammatica iniziale
+\\ 
+NB se elimino prima i simboli non raggiungibili non cambia nulla, tutto è raggiungibile
+\[ S \rightarrow AB | a \]
+\[ A \rightarrow b \]
+ora elimino $B$ 
+\[ S \rightarrow a \]
+\[ A \rightarrow b \]
+e ho una grammatica con simboli inutili
+
+\subsection{Eliminazione delle produzioni epsilon}
+Se L è un CFL, allora L \{$\epsilon\}$ ha una grammatica priva di produzioni $\epsilon$.
+\\ La variabile A è annullabile se $A \xRightarrow[]{*}\epsilon$
+\\ Sia a annullabile, rimpiazzo 
+\[ B \rightarrow \alpha A \beta\]
+\\ con
+\[ B \rightarrow \alpha \beta\]
+indico con n(G) l'insieme dei simboli annullabili della grammatica $G=(V,T,P,S)$.
+\\ \textbf{Esempio} Sia la grammatica
+\[ S \rightarrow AB, A \rightarrow aAA|\epsilon, B \rightarrow bBB|\epsilon\]
+Abbiamo $n(G)=\{A,B,S\}$, la prima regola diventa 
+\[ S \rightarrow AB| A |B \]
+la seconda regola diventa
+\[ A \rightarrow aAA| aA | aA |a \]
+la terza regola diventa
+\[ B \rightarrow bBB| bB | bB |b \]
+La nuova grammatica sarà: 
+\[ S \rightarrow AB| A |B 
+A \rightarrow aAA| aA |a
+B \rightarrow bBB| bB |b
+\]
+
+\subsection{Eliminazione produzioni unità}
+\[A \rightarrow B \]
+è una produzione unità nel caso in cui A e B siano variabili. Le produzioni variabili sono eliminabili.
+\\ Data la grammatica 
+\\ $ E \rightarrow T | E + T$
+\\ $ T \rightarrow F | T * F$
+\\ $ F \rightarrow I | (E) $
+\\ $ I \rightarrow a | b | Ia | Ib | I0 | I1 $
+\\ le produzioni unità sono $E \rightarrow T, T \rightarrow F, F \rightarrow I$ 
+\\ Considero la produzione $E \rightarrow T$ e la espando 
+\[ E \rightarrow F, E \rightarrow T * F \]
+poi espando $E \rightarrow F$
+\[ E \rightarrow I, (E), T * F \]
+Infine espando $E \rightarrow I$
+\[ E \rightarrow a | b| Ia |Ib|I0|I1|(E)|T*F\]
+lo stesso applico lo stesso procedimento con $T \rightarrow F$ e $F \rightarrow I$: 
+\[ T \rightarrow a | b| Ia |Ib|I0|I1|(E)\]
+\[ F \rightarrow a | b| Ia |Ib|I0|I1\]
+la nuova grammatica sarà 
+\\ $ E \rightarrow a | b | Ia | Ib | I0 | I1  | (E) | T*F | E+T $
+\\ $ T \rightarrow a | b | Ia | Ib | I0 | I1  | (E) | T * F$
+\\ $ F \rightarrow a | b | Ia | Ib | I0 | I1  | (E) $
+\\ $ I \rightarrow a | b | Ia | Ib | I0 | I1  $
+\\ Questo procedimento non funziona nel caso in cui ci siano dei cicli. Se trovo un unità già espansa la rimuovo.
+\vspace{2mm}
+\\ \textbf{Esempio} Si consideri la grammatica
+\\ $ A \rightarrow B | a$
+\\ $ B \rightarrow C | b$
+\\ $ C \rightarrow A | c$
+\\ Espando $ A \rightarrow B$
+\\ Da $ A \rightarrow B $ ottengo 
+\[ A \rightarrow C | b \]
+\\ Da $ A \rightarrow C $ ottengo 
+\[ A \rightarrow A | c | b \]
+\\ Da $ A \rightarrow A $ ottengo 
+\[ A \rightarrow B \; a | c | b \]
+Qui mi fermo perché tornei a fare le stesse produzioni, mi rimane:
+\[ A \rightarrow a | c | b \]
+eseguo per le altre 3 e la nuova grammatica risulta 
+\[ A \rightarrow a | b | c \]
+\[ B \rightarrow a | b | c \]
+\[ C \rightarrow a | b | c \]
+
+\subsection{Sommario} 
+Per pulire una grammatica bisogna: 
+\begin{enumerate}
+  \item Eliminare le produzioni $\epsilon$
+  \item Eliminare le produzioni unità
+  \item Eliminare simboli inutili
+\end{enumerate}
+in quest'ordine
+
+\subsection{Forma normale di Chomsky, CNF}
+Ogni CNF non vuoto, senza $\epsilon$, ha una grammatica $G$ di simboli inutili nella seguente forma 
+$A \rightarrow BC$ dove $\{A,B,C\} \subseteq V$ oppure
+$A \rightarrow a$ dove $a\in T$ e $A \in V$.
+\\ Per arrivare a questa forma bisogna: 
+\begin{itemize}
+  \item Pulire la grammatica 
+  \item Modificare le produzioni con 2 o più simboli in modo che siano tutte variabili 
+  \item Ridurre le produzioni con più di 2 simboli in catene da 2 simboli
+\end{itemize}
+Quindi per ogni terminale $a$ più lungo di 1 creo una nuova variabile $A \rightarrow a$.
+Mentre per ogni regola 
+\[ A \rightarrow B_1,B_2,...,B_k \]
+$k \geq 3$ creo nuove variabili $C_1, C_2, ..., C_{k-2}$
+\[ A \rightarrow B_1, C_1 \]
+\[ C_1 \rightarrow B_2, C_2 \]
+\[...\]
+\[ C_{k-3} \rightarrow B_{k-2}, C_{k-2} \]
+\[ C_{k-2} \rightarrow B_{k-1}, B_k \]
+\textbf{Esempio}
+Usiamo la grammatica 
+\\ $E\rightarrow | E+F | T*F | (E) | b | Ia | Ib | I0 | I1   $
+\\ $T\rightarrow (E) | T*F | a | b | Ia | Ib | I0 | I1$
+\\ $F\rightarrow (E)| a | b | Ia | Ib | I0 | I1   $
+\\ $I\rightarrow a | b | Ia | Ib | I0 | I1  $
+\vspace{5mm}
+\\ applichiamo il passo 2
+\\ $A \rightarrow a, B \rightarrow b, Z \rightarrow 0, O \rightarrow 1 $
+\\ $P \rightarrow +, M \rightarrow *, L \rightarrow (, R \rightarrow ) $
+\vspace{5mm}
+\\ otteniamo 
+\\ $E\rightarrow EPF | TMF | LER | b | IA | IB | IZ | IO   $
+\\ $T\rightarrow LER | TMF | a | b | IA | IB | IB | IO$
+\\ $F\rightarrow LER | a | b | IA | IB | IZ | IO$
+\\ $I\rightarrow a | b | IA | IB | IZ | IO $
+\\ $A \rightarrow a, B \rightarrow b, Z \rightarrow 0, O \rightarrow 1 $
+\\ $P \rightarrow +, M \rightarrow *, L \rightarrow (, R \rightarrow ) $
+\vspace{5mm}
+\\ Applichiamo il passo 3
+\\ $E \rightarrow EPT$ diventa $E \rightarrow EC_1, C_1 \rightarrow PT$
+\vspace{2mm}
+\\ $E \rightarrow TMF, T \rightarrow TMF$ diventa $E \rightarrow TC_2,T \rightarrow TC_2, C_2 \rightarrow MF$
+\vspace{2mm}
+\\ $E \rightarrow LER, T \rightarrow LER, F \rightarrow LER$ diventa $E \rightarrow LC_3,T \rightarrow TC_3, F \rightarrow LC_3, C_3 \rightarrow ER$
+\vspace{5mm}
+\\ La grammatica finale diventa 
+\\ $E\rightarrow EC_1 | TC_2 | LC_3 | b | IA | IB | IZ | IO   $
+\\ $T\rightarrow LC_3 | TC_2 | a | b | IA | IB | IB | IO$
+\\ $F\rightarrow LC_3 | a | b | IA | IB | IZ | IO$
+\\ $I\rightarrow a | b | IA | IB | IZ | IO $
+\\ $C_1 \rightarrow PT$, $C_2 \rightarrow MF$, $C_3 \rightarrow ER$
+\\ $A \rightarrow a, B \rightarrow b, Z \rightarrow 0, O \rightarrow 1 $
+\\ $P \rightarrow +, M \rightarrow *, L \rightarrow (, R \rightarrow ) $
+
+
 \newpage
 \import{}{esercizi}
 \end{document}
