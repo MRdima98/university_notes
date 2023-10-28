@@ -1505,6 +1505,16 @@ Usiamo la grammatica
 \\ $A \rightarrow a, B \rightarrow b, Z \rightarrow 0, O \rightarrow 1 $
 \\ $P \rightarrow +, M \rightarrow *, L \rightarrow (, R \rightarrow ) $
 
+\subsection{Pumping lemma per CFL}
+\textbf{Pumping lemma per i linguaggi regolari}: per una stringa sufficiente lunga è possibile causare un ciclo e creare un infinità di stringhe che appartengono al linguaggio 
+\\ \textbf{Pumping lemma per CFL}: per una stringa sufficiente lunga è possibile trovare due sottostringhe vicine che si possono iterare "in tandem". Posso iterare $i$ volte per trovare nuove stringhe appartenenti al linguaggio.
+\\ \textbf{Formalmente}: 
+\\ Sia L un CFL. Allora $\exists n \geq 1$ che soddisfa: ogni $z \in L: |z| \geq n$ è composto da 5 stringhe $z=uvwxz$ tali che: 
+\begin{enumerate}
+  \item $|vwx| \leq n$
+  \item $|vx| > 0$
+  \item $\forall i \geq 0, uv^i wx^i y \in L$
+\end{enumerate}
 
 \newpage
 \import{}{esercizi}
