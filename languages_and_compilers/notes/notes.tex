@@ -1515,6 +1515,37 @@ Usiamo la grammatica
   \item $|vx| > 0$
   \item $\forall i \geq 0, uv^i wx^i y \in L$
 \end{enumerate}
+\textbf{Dimostrazione}: 
+\begin{itemize}
+  \item Si consideri una grammatica per $ L \backslash \{\epsilon\}$ in CNF
+  \item Assumiamo che la grammatica abbia $m$ variabili, con $n=2^m$
+  \item Sia $z \in L$ una qualsiasi stringa tale che $|z| \geq 2^m$ allora ogni albero sintattico di $z$ ha un cammino $\geq m + 1$
+  \item Se tutti i cammini dell'albero hanno lunghezza $\leq m$ allora la stringa generata ha lunghezza $\leq 2^{m-1}$
+\end{itemize}
+Prendendo un cammino sufficientemente lungo, a partire da $A$ fino a $A_0$ fino a $A_k$ a un certo punto troverò due sotto alberi $A_i, A_j$ con $i\neq j$ che sono uguali.
+Questo succede perché $k \geq m$, quindi avendo solo $m$ variabili distinte è normale che si ripetano.
+Ora posso radicare l'albero $A_j$ sotto $A_i$ e la stringa finale non cambia, perché rispetta $z=uv^i wx^i y$
+\begin{figure}[ht]
+	\includegraphics[scale = 0.4]{media/tree.png}
+	\centering
+\end{figure}
+Notiamo che: 
+\begin{itemize}
+  \item l'albero in $A_i$ ha altezza $\leq m+1$ quindi la stringa corrispondente ha lunghezza $\leq 2^m = n$ e quindi $(|vwx| \leq n)$
+  \item $v$ e $x$ non possono essere vuote, perché la grammatica genera variabili non terminali perciò $|vx| >0$
+  \item posso ripetere l'albero $A_i$ $n$ volte e creo sempre una stringa valida ($uv^i wx^i y \in L$)
+\end{itemize}
+
+\subsection{Applicazione Pumping lemma}
+Possiamo usarlo per dimostrare che un linguaggio non è libero.
+\\ \textbf{Esempio}: Si consideri $L={0^m 10^m 10^m :m \geq 1}$, dimostra che $L$ non è CFL.
+\\ \textbf{Dimostrazione}: Assumiamo, per assurdo, che L sia CFL. Sia $n$ la costante del Pumping lemma. Si consideri la strina $z=0^n 10^n 10^n$. Si ha che $z \in L$ e $|z| \geq n$. Allora per il Pumping lemma, $z=uvwxy$ con $|uwx| \leq n$, $|vx| >0$ e $uv^i wx^i y \in L$ per ogni $i \geq 0$. Consideriamo i seguenti casi: 
+\begin{itemize}
+  \item $vx$ contiene almeno un 1
+  \item $vx$ contiene almeno un 0
+\end{itemize}
+In entrambi i casi $uwy \notin L$
+
 
 \newpage
 \import{}{esercizi}
