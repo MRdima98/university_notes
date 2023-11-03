@@ -1552,7 +1552,15 @@ In entrambi i casi $uwy \notin L$
 \\ $uv^2wx^2y \in L$ per Pumping Lemma
 \\ (Presumo che qua stiamo contando il numero di 0) $n^2 < |uv^wx^2y| \leq n^2+n < n^2 + 2n + 1 = (n+1)^2$. Non esiste un quadrato perfetto tra $n^2$ e $(n+1)^2$, il numero di 0 non torna, quindi $uv^2wx^2y \notin L$.
 
-
+\subsection{Proprietà di chiusura dei CFL}
+\begin{theorem}
+    I CFL sono chiusi rispetto ai seguenti operatori: unione, concatenazione e chiusura di Kleene (*) e chiusura positiva +
+\end{theorem}
+\vspace{2mm}
+\textbf{Theorem:} se L è CFL allora lo è anche $L^R$
+\\ \textbf{Dimostrazione:} Supponiamo che L sia generato da $G=(V,T,P,S)$. Costruiamo $G^R=(V,T,P^R,S)$ dove 
+\[ P^R = \{ A \rightarrow \alpha^R : A \rightarrow \alpha \in P\} \]
+\\ Si può dimostrare per induzione che $(L(G))^R = L(G^R)$
 
 
 \newpage
