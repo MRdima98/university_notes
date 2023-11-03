@@ -1538,13 +1538,21 @@ Notiamo che:
 
 \subsection{Applicazione Pumping lemma}
 Possiamo usarlo per dimostrare che un linguaggio non è libero.
+\vspace{2mm}
 \\ \textbf{Esempio}: Si consideri $L={0^m 10^m 10^m :m \geq 1}$, dimostra che $L$ non è CFL.
 \\ \textbf{Dimostrazione}: Assumiamo, per assurdo, che L sia CFL. Sia $n$ la costante del Pumping lemma. Si consideri la strina $z=0^n 10^n 10^n$. Si ha che $z \in L$ e $|z| \geq n$. Allora per il Pumping lemma, $z=uvwxy$ con $|uwx| \leq n$, $|vx| >0$ e $uv^i wx^i y \in L$ per ogni $i \geq 0$. Consideriamo i seguenti casi: 
 \begin{itemize}
-  \item $vx$ contiene almeno un 1
-  \item $vx$ contiene almeno un 0
+  \item $vx$ contiene almeno un 1, la catena può essere replicata all'infinito quindi sicuramente per $i>=2$ $|uwx| \notin L$
+  \item $vx$ contiene almeno un 0, in questo caso non viene rispettata $0^n$ perché sia se $vx$ forma un gruppo di 0, sia se ne forma 2, andrà in ogni caso a ridurre il numero di 0 totali
 \end{itemize}
 In entrambi i casi $uwy \notin L$
+\vspace{2mm}
+\\ \textbf{Esempio 2}: Si consideri $L={0^{k^2}:k>1}$, dimostra che $L$ non è CFL.
+\\ \textbf{Dimostrazione}: Assumiamo, per assurdo, che L sia CFL. Sia $n$ la costante del Pumping lemma. Si consideri la strina $z=0^{n^2}$. Si ha che $z \in L$ e $|z| \geq n$. Allora per il Pumping lemma, $z=uvwxy$ con $|uwx| \leq n$, $|vx| >0$ e $uv^i wx^i y \in L$ per ogni $i \geq 0$. Consideriamo il seguente caso:
+\\ $uv^2wx^2y \in L$ per Pumping Lemma
+\\ (Presumo che qua stiamo contando il numero di 0) $n^2 < |uv^wx^2y| \leq n^2+n < n^2 + 2n + 1 = (n+1)^2$. Non esiste un quadrato perfetto tra $n^2$ e $(n+1)^2$, il numero di 0 non torna, quindi $uv^2wx^2y \notin L$.
+
+
 
 
 \newpage
