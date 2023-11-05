@@ -1563,9 +1563,85 @@ In entrambi i casi $uwy \notin L$
 \\ Si può dimostrare per induzione che $(L(G))^R = L(G^R)$
 
 \subsection{I CFL NON sono chiusi rispetto all'intersezione}
-Si
+Sia $L_1 = \{ 0^n1^n2^i:n \geq 1, i \geq i \}$. Allora $L_1$ è CFL con grammatica
+\[ S \rightarrow AB \]
+\[ A \rightarrow 0A1|01 \]
+\[ B \rightarrow 2B|2 \]
+Inoltre $L_2 = \{ 0^i1^n2^n:n \geq 1, i \geq i \}$. Allora $L_1$ è CFL con grammatica
+\[ S \rightarrow AB \]
+\[ A \rightarrow 0A0|0 \]
+\[ B \rightarrow 1B2|12 \]
+Invece, $L_1 \cap L_2 = \{ 0^n1^n2^n:n \geq 1 \} $ non è CFL per pumping lemma.
 
+\subsection{Operazioni su linguaggi liberi e regoli}
+\begin{theorem}
+    Se L è CFL e R è regolare, allora L $\cup$ R è CFL
+\end{theorem}
+\textbf{Prova:} Sia L che accetta PDA 
+\[P=(Q_P, \Sigma, \Gamma, \delta_P, q_P, Z_0, F_P)\]
+per stato finale, e sia R accettato dal DFA 
+\[ A=(Q_A,\Sigma,\delta_A,q_A,F_a) \]
+\newpage 
+Costruiamo un PDA per $L \cup R$: 
 
-\newpage
-\import{}{esercizi}
+\begin{figure}[ht]
+	\includegraphics[scale = 0.3]{media/double_stack.png}
+	\centering
+	\caption{Semplice automa}
+\end{figure}
+Formalmente definiamo 
+\[ P' = (Q_P \times Q_A, \Sigma, \Gamma, \delta, (q_P, q_A), Z_0, F_P \times F_A\]
+dove 
+\[\delta((q,p),a,X) = \{((r, \circumdelta,(p,a)),\gamma):(r,\gamma) \in \delta_P(q,a,X)\}\]
+Per induzione si può provare per induzione su $\overset{*}{\vdash}$ che 
+\[(q_P,w,Z_0)\overset{*}{\vdash}(q,\epsilon,\gamma) \; in \; P\]
+se e solo se 
+\[((q_P,q_A),w,Z_0) \overset{*}{\vdash} ((q, \circumdelta(q_A,w)),\epsilon,\gamma) \; in \; P'\]
+\begin{theorem}
+    Siano $L,L_1,L_2$ CFL e R regolare, Allora 
+    \begin{itemize}
+        \item $L \backslash R$ è CFL
+        \item $\overline{L}$ è per forza CFL
+        \item $L_1 \backslash L_2 $ non è per forza CFL
+    \end{itemize}
+\end{theorem}
+\textbf{Prova:}
+\begin{enumerate}
+  \item $\overline{R}$ è regolare, $R \cap \overline{R}$ è CFL e $L\cap \overline{R}$ è CFL e $L\cap \overline{R} = L \backslash R$
+  \item Se $\overline{L}$ fosse sempre CFL, seguirebbe che 
+    \[ L_1 \cap L_2 = \overline{\overline{L_1} \cup \overline{L_2}}\]
+    è sempre una CFL
+  \item Notare che $\Sigma^*$ è CFL; quindi se $L_1 \backslash L_2$ è CFL allora lo è anche $\Sigma^* \backslash K = \overline{L}$
+\end{enumerate}
+
+\subsection{Proprietà di decisione per CFL}
+Analizziamo i seguenti problemi decidibili:
+\begin{itemize}
+  \item Verificare che $L(G) \neq \emptyset$ per una CFG $G$
+  \item Verificare che $w \in L(G)$, per una stringa $w$ ed una CFG G
+\end{itemize}
+E faremo un elenco di \textbf{problemi indecidibili}
+
+\subsubsection{Verificare se un CFL è vuoto}
+$L(G)$ è non vuoto se il simbolo iniziale $S$ è generante.
+\\ Con un implementazione naive il tempo è $O(n^2)$, ottimizzando si passa $O(n)$
+
+\subsubsection{Appartenenza a un CFL}
+\[w \in L(G)?\]
+\textbf{Tecnica inefficiente}
+\\ Supponiamo che G sia in CNF, e che la stringa $w$ abbia lunghezza $|w|=n$, allora il suo albero binario ha al più $2n-1$ nodi.
+\\ Genero tutti gli alberi sintattico di G e controllo se $w$ è in uno di quelli, tempo esponenziale in $n$
+
+\subsubsection{Problemi indecidibili per CFL}
+Elenco di problemi indecidibili: 
+\begin{enumerate}
+  \item Una data CFG $G$ è ambigua?
+  \item Un dato CFL $L$ è inerentemente ambigua?
+  \item L'intersezione di 2 CFL è vuota?
+  \item 2 CFL sono uguali?
+  \item Un CFL è universale?
+\end{enumerate}
+
+% \newpage
+% \import{}{esercizi}
 \end{document}
