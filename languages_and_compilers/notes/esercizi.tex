@@ -122,7 +122,7 @@ NO $\epsilon$,011,121,22,0120
 \end{enumerate}
 
 \newpage
-\subsection{Esercitazione 28/08/23}
+\subsection{Esercitazione 28/09/23}
 \subsubsection{Pumping lemma}
 Mostrare che i seguenti linguaggi non sono regolari:
 \begin{enumerate}
@@ -215,4 +215,63 @@ Si può concludere che $s \notin L$ quindi L non è regolare.
   Definisci un RE che accetta un numero pari di $a$ seguito da un numero di $b$ che diviso per 3 da' resto 2
 
   (aa)*+bb(bbb)*
+\end{enumerate}
+\subsection{Esercitazione 05/10/23}
+\subsubsection{CFG}
+\begin{enumerate}
+  \item Definire una grammatica libera dal contesto (CFG) per i seguenti linguaggi sull'alfabeto \{a,b,c\}:
+    \begin{enumerate}
+      \item linguaggio delle stringhe $a^n \; b^{2n}$ (mostrare che "aabbbb" è derivabile dalla CFG)
+
+        $S \rightarrow aSbb$
+
+        $S \rightarrow \lambda$
+      \item linguaggio delle stringhe $(abc)^n \; (cba)^n$
+
+        $S \rightarrow abc S cba$
+
+        $S \rightarrow \lambda$
+      \item linguaggio delle stringhe $a^n b^m$ in cui $n \leq m$
+
+        $S \rightarrow a S b$
+
+        $S \rightarrow S b$
+
+        $S \rightarrow \lambda$
+      \item linguaggio delle stringhe $a^n b^m c^n$ con n pari e m dispari
+
+        $S \rightarrow aaScc$
+
+        $S \rightarrow bA$
+
+        $A \rightarrow bbA$
+
+        $S \rightarrow \lambda$
+      \item linguaggio delle stringhe $a^n b^m c^p$ in cui $n \leq m+p$
+
+        $S \rightarrow aSc$
+        
+        $S \rightarrow Sc$
+
+        $B \rightarrow \lambda$
+
+        $S \rightarrow B$
+
+        $B \rightarrow aBb$
+
+        $B \rightarrow Bb$
+    \end{enumerate}
+
+  \item  Dire se la CFG del punto "e" dell'esercizio 3 è ambigua o meno. In caso affermativo mostrare una stringa generata dalla CFG che abbia (almeno) due alberi sitattici/derivazioni canoniche sinistre. Mostrare tali alberi sintattici e le corrispondenti derivazioni canoniche sinistre. 
+
+    È ambigua, ho due derivazioni di $abc$
+
+    $S \rightarrow aSc$ \hspace{3cm} $S \rightarrow Sc$
+
+    $S \rightarrow aBc$ \hspace{3cm} $S \rightarrow aBbc$
+
+    $S \rightarrow abc$ \hspace{3cm} $S \rightarrow abc$
+
+  \item Esercizio su minimizzazione DFA. Effettuare (a mano con l'algoritmo riempi-tabella visto a lezione) la minimizzazione dell'automa in exMinimization.jff
+
 \end{enumerate}
