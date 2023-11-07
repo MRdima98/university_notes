@@ -274,4 +274,32 @@ Si può concludere che $s \notin L$ quindi L non è regolare.
 
   \item Esercizio su minimizzazione DFA. Effettuare (a mano con l'algoritmo riempi-tabella visto a lezione) la minimizzazione dell'automa in exMinimization.jff
 
+      \begin{figure}[ht]
+        \includegraphics[scale = 0.4]{media/exMinimization.jff.png}
+        \centering
+      \end{figure}
+
+      \begin{table}[ht]
+          \centering
+          \begin{tabular}{c c| c | c | c | c | c | c | c | c | c}
+              && $q_0$ & $q_1$ & $q_2$ & *$q_3$ & $q_4$ & $q_5$ & *$q_6$ & $q_7$ & *$q_8$ \\
+              \hline
+              & $q_1$ & \\
+              \hline
+              & $q_2$ &o&o\\
+              \hline
+              & *$q_3$ &x&x&x\\
+              \hline
+              & $q_4$ & & &o&x\\
+              \hline
+              & $q_5$ &o&o&o&x&o\\
+              \hline
+              & *$q_6$ &x&x&x&o&x&x\\
+              \hline
+              & $q_7$ & &o& &x&o& &x\\
+              \hline
+              & *$q_8$ &x&x&x&o&x&x&o&o\\
+          \end{tabular}
+          \caption{Tabella riepita}
+      \end{table}
 \end{enumerate}
