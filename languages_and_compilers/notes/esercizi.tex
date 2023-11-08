@@ -284,22 +284,27 @@ Si può concludere che $s \notin L$ quindi L non è regolare.
           \begin{tabular}{c c| c | c | c | c | c | c | c | c | c}
               && $q_0$ & $q_1$ & $q_2$ & *$q_3$ & $q_4$ & $q_5$ & *$q_6$ & $q_7$ & *$q_8$ \\
               \hline
-              & $q_1$ & \\
+              & $q_1$ &+\\
               \hline
               & $q_2$ &o&o\\
               \hline
-              & *$q_3$ &x&x&x\\
+              &*$q_3$ &x&x&x\\
               \hline
-              & $q_4$ & & &o&x\\
+              & $q_4$ &o& &o&x\\
               \hline
-              & $q_5$ &o&o&o&x&o\\
+              & $q_5$ &o&o& &x&o\\
               \hline
-              & *$q_6$ &x&x&x&o&x&x\\
+              &*$q_6$ &x&x&x& &x&x\\
               \hline
-              & $q_7$ & &o& &x&o& &x\\
+              & $q_7$ &o& &o&x& &o&x\\
               \hline
-              & *$q_8$ &x&x&x&o&x&x&o&o\\
+              &*$q_8$ &x&x&x& &x&x& & \\
           \end{tabular}
           \caption{Tabella riepita}
       \end{table}
+      \begin{enumerate}
+          \item x: primo giro, distinguo gli stati 
+          \item o: secondo giro, trovo lo stato di ogni copia con entrambi i simboli. Se lo stato trovato è una x allora metto una o
+          \item +: terzo giro, ripeto il 2
+      \end{enumerate}
 \end{enumerate}
