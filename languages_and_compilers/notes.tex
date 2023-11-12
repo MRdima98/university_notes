@@ -1,4 +1,5 @@
 \documentclass[12pt]{article}
+\usepackage{listings}
 \usepackage[hidelinks]{hyperref}
 \newtheorem{theorem}{Theorem}
 \usepackage{import}
@@ -8,6 +9,9 @@
 \usepackage[italian]{babel}
 \usepackage{graphicx}
 \usepackage{outlines}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usetikzlibrary{automata, positioning}
 \AddToHook{cmd/section/before}{\clearpage} 
 \newcommand{\circumdelta}{%
   \leavevmode\vbox{
@@ -19,6 +23,28 @@
     }
   }%
 }
+\lstnewenvironment{mycode}[1][]
+{
+  \lstset{
+    language=Java, % Set the programming language
+    basicstyle=\ttfamily, % Set the font for the code
+    numbers=left, % Show line numbers
+    numberstyle=\tiny, % Style of line numbers
+    stepnumber=1, % Step between line numbers
+    numbersep=5pt, % Space between line numbers and code
+    tabsize=4, % Tab size
+    breaklines=true, % Automatically break long lines
+    breakatwhitespace=true, % Break lines at whitespace
+    keywordstyle=\color{blue}, % Keywords in blue
+    commentstyle=\color{gray}, % Comments in gray
+    stringstyle=\color{red}, % Strings in red
+    captionpos=b, % Caption at the bottom
+    frame=single, % Add a frame around the code
+    #1 % Any additional customizations provided when calling the environment
+  }
+}
+{}
+
 
 \begin{document}
 \tableofcontents
@@ -1641,6 +1667,337 @@ Elenco di problemi indecidibili:
   \item 2 CFL sono uguali?
   \item Un CFL è universale?
 \end{enumerate}
+
+\section{Analisi Lessicale e sintattica}
+There are 3 kinds of execution environment (language processor): 
+\begin{itemize}
+    \item Compilers: translate code in a forma that is executable by computers. More generally a compiler can \emph{translate} code into an equivalent code in another language. 
+
+        Compilers also check for errors. If the compiled language is executable the users can add input and get output with the program.
+
+        C and Java are compiled.
+    \item Interpreters: Unlike a compiler the interpreter directly executes a program without producing an executable.
+
+        Interpreters are slower than compilers, but can have better errors recognition since they execute the source statement by statement.
+
+        Scheme, lisp and perl are interpreted
+
+    \item Virtual machines: You can also combine the interpreter and the compiler. This is the case in Java where the code is begin compiled into \emph{bytecode} and executed by the JVM.
+
+        The advantage is you can 2 machines, one for compiling and the other for interpreting thus speeding the interpretation process.
+
+        Some java compilers translate the code \emph{just-in-time} (JIT) for the execution.
+\end{itemize}
+
+The whole process is the following: source -> preprocessor -> compiler -> assembler -> linker/loader.
+
+\subsection{The compiler}
+The operation of the compiler can be divided in 2 parts: \emph{analysis} and \emph{synthesis}. 
+
+The analysis breaks the program into pieces and enforces grammatical structure.
+If there are syntactic errors the user will get an error message.
+If everything goes well then the program is translated it into a intermediate representation. 
+It also creates a \emph{symbol table}, which will be used later.
+
+The synthesis translates into the desired program, using the intermediate representation and the symbol table.  
+
+Here's the steps:
+\begin{itemize}
+    \item Scanning (Lexical analysis)
+    \item Parsing (Syntactic analysis)
+    \item Type checking (Semantic analysis)
+    \item Optimisation
+    \item Code generation
+\end{itemize}
+
+\subsubsection{Lexical analysis}
+Translates words into units. 
+
+Ex. if x==y $\Rightarrow$ if, x, ==, y
+
+\subsubsection{Parsing}
+Once the lexical analysis is over, you can translate it into some kind of representation like \emph{diagram sentences}(it's just a tree).
+
+\subsection{Building a lexer} 
+Our input is this code snippet.
+\begin{mycode}[]
+    if(i==j): 
+        z=0
+    else 
+        z=1
+\end{mycode}
+The compiler actually sees it as such:
+
+\[\backslash tif (i == j)\backslash n\backslash t\backslash tz = 0;\backslash n\backslash telse\backslash n\backslash t\backslash tz = 1;\]
+\\
+We need to partition this string into substrings (lexemes) and classify them into role (tokens).
+\\ 
+Each lexeme has a name and value $<token name, value>$
+\\
+Therefore our input will be split. White spaces don't count and some special tokens will be grouped, line $\backslash$t means newline. 
+\\ 
+It's not a good idea to write a lexer by hand it's: tedious, error prone and non-maintainable. There are \emph{lexer generators} where you can define the lexemes and tokens and it will do the rest.
+\\ 
+This way we can focus on what the lexer should do rather than how. The what is done with declarative programming, while the how with imperative programming.
+\\ 
+First we build the lexer by hand in java, to get the feel of the code that will be hidden. 
+
+\begin{table}[ht]
+	\centering
+    \begin{tabular}{ | c | c | }
+        \hline
+        ID & sequence of alphanumeric that start with a letter \\ 
+        \hline
+        EQUALS & "==" \\ 
+        \hline
+        PLUS & "+" \\ 
+        \hline
+        TIMES & "*" \\ 
+        \hline
+    \end{tabular}
+	\caption{Esempio di tabella}
+\end{table}
+
+\begin{mycode}[title= Imperative lexer]
+    c=nextChar();
+    if (c == '=') { c=nextChar(); if (c == '=') {return EQUALS;}}
+    if (c == '+') { return PLUS; }
+    if (c == '*') { return TIMES; }
+    if (c is a letter) {
+    c=NextChar();
+    while (c is a letter or digit) { c=NextChar(); }
+    undoNextChar(c);
+    return ID;
+}
+\end{mycode}
+undoNextChar() determines if the next character is part of the lexeme or not. Each lexeme is usually partitioned at the maximum match, in order to avoid errors like "iffy" partition into "if" "fy" instead of the whole ID.
+\\ 
+Each comparison is the \emph{how}, but anything else 
+is the \emph{what}.
+We could abstract the how using automata. 
+Each token is an automa or a regex, and the token reading is an automa responsible for the scanning.
+\\ 
+Let's define the automata: 
+\begin{itemize}
+    \item ID: [a-zA-Z][a-zA-Z0-9]*, ovvero legge una lettera e poi legge lettere o numeri
+        \\
+        \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+            \node[state, initial] (q0) {};
+            \node[state, accepting] (q1) [right=of q0] {};
+            \path[->]
+                (q0) edge node {letter} (q1)
+                (q1) edge[loop above] node {letter $|$ digit} (q1);
+        \end{tikzpicture}
+    \item EQUALS: ==
+        \\
+        \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+            \node[state, initial] (q0) {};
+            \node[state] (q1) [right=of q0] {};
+            \node[state, accepting] (q2) [right=of q1] {};
+            \path[->]
+                (q0) edge node {"="} (q1)
+                (q1) edge node {"="} (q2);
+        \end{tikzpicture}
+    \item PLUS: +
+        \\
+        \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+            \node[state, initial] (q0) {};
+            \node[state, accepting] (q1) [right=of q0] {};
+            \path[->]
+                (q0) edge node {"+"} (q1);
+        \end{tikzpicture}
+    \item TIMES: *
+        \\
+        \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+            \node[state, initial] (q0) {};
+            \node[state, accepting] (q1) [right=of q0] {};
+            \path[->]
+                (q0) edge node {"*"} (q1);
+        \end{tikzpicture}
+\end{itemize}
+
+Now let's extend the FA to accept the whole input.
+\\
+\begin{tikzpicture}[shorten >=1pt,node distance=3.5cm,on grid,auto]
+    \node[state, initial] (q0) {S};
+    \node[state] (q1) [right=of q0]{};
+    \node[state, accepting] (q2) [right=of q1] {};
+    \path[->]
+        (q0) edge node {letter} (q1)
+        (q1) edge[loop above] node {letter $|$ digit} (q1)
+        (q1) edge node[align=center] {any char except \\ letter or digit} (q2);
+\end{tikzpicture}
+\\
+By the end of the operation we return a token and reset the automa to S.
+\\ 
+If we put everything together into a single automa: 
+\\ 
+\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+    \node[state] (q0) {S};
+    \node[state] (q1) [below=of q0]{};
+    \node[state] (f1) [below=of q1]{$F_1$};
+    \node[state] (q2) [right=of q0]{ID};
+    \node[state, accepting] (q3) [right=5.5cm of q2]{$F_2$};
+    \node[state, accepting] (q4) [above=of q0]{$F_3$};
+    \node[state, accepting] (q5) [left=of q0]{$F_4$};
+    \path[->]
+        (q0) edge node {letter} (q2)
+        (q0) edge node {"+"} (q4)
+        (q0) edge node {"*"} (q5)
+        (q0) edge node {"="} (q1)
+        (q1) edge node {"="} (f1)
+        (q2) edge[loop above] node {letter $|$ digit} (q2)
+        (q2) edge node[align=center] {any char except \\ letter or digit} (q3);
+        ;
+\end{tikzpicture}
+\vspace{5mm}\\ 
+Let's add the ASSIGN
+\vspace{5mm}\\ 
+\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+    \node[state] (q0) {S};
+    \node[state] (q1) [below=of q0]{};
+    \node[state] (assign) [below=of q2]{};
+    \node[state] (f1) [below=of q1]{$F_1$};
+    \node[state] (q2) [right=of q0]{ID};
+    \node[state, accepting] (q3) [right=5.5cm of q2]{$F_2$};
+    \node[state, accepting] (q4) [above=of q0]{$F_3$};
+    \node[state, accepting] (q5) [left=of q0]{$F_4$};
+    \path[->]
+        (q0) edge node {letter} (q2)
+        (q0) edge node {"="} (assign)
+        (q0) edge node {"+"} (q4)
+        (q0) edge node {"*"} (q5)
+        (q0) edge node {"="} (q1)
+        (q1) edge node {"="} (f1)
+        (q2) edge[loop above] node {letter $|$ digit} (q2)
+        (q2) edge node[align=center] {any char except \\ letter or digit} (q3);
+        ;
+\end{tikzpicture}
+\\ 
+At this point we need to know if the automa is not deterministic, then we convert it to a deterministic one. The only missing piece is remembering the position of the input, if the lexer errors we can return information about where.
+
+Some practical concerns: 
+\begin{itemize}
+    \item Ambiguity: if the input is "if" is it an ID or a keyword? We can solve this by giving priority to the keywords, if has priority over ID.
+    \item Discard white space: final state white space jumps to start
+    \item Error inputs: discard illegal lexemes and return an error token, this token has the lowest priority
+\end{itemize}
+Automata are not the only way to build a lexer, we can also use regex.
+The advantage is that regex are way easier to represent textually, thus being a better specification. 
+Regex also are very compact.
+\\ Let's define the regex for ID:
+[a-zA-Z]. ([a-zA-Z] $|$ [0-9])*
+\begin{itemize}
+    \item . is any character (prof says followed by???), middle priority
+    \item * is 0 or more repetitions, highest priority
+    \item $|$ is the or operator, lowest priority
+    \item () is the grouping operator
+\end{itemize}
+In ANTLR operands corresponds to FA edge labels, which are single char.
+[a-z] is written as 'a'..'z' in ANTLR.
+[0-9] is written as '0'..'9' in ANTLR.
+\\ Let's define the regex for Integer:
+\begin{enumerate}
+    \item in english: $\epsilon$, + or - followed by a digit followed by 0 or more digits
+    \item regex: (+ $|$ - $|$ $\epsilon$).[0-9].[0-9]*
+    \item we can omit the .: (+ $|$ - $|$ $\epsilon$)[0-9][0-9]*
+    \item we can omit the * using +: (+ $|$ - $|$ $\epsilon$)[0-9]+
+\end{enumerate}
+A DFA in practice is implemented as a 2D table T. 
+One dimension is the state, the other is the input symbol. Every transition becomes T[i,a]=k. During execution I check the input the skip to the next state, very efficient.
+\\ 
+We could use flex to generate the lexer, the input is a set of regex and some C instruction. The output is C program that has a function yylex() which reads inputs and executes the C functions.
+
+\subsection{Building a parser}
+A parser checks the syntax of the program and builds a representation of the program.
+\\ After reading the tokens provided by the lexer, the parser generates a parse tree and then the AST. The intermediate step between tokens and AST is rarely explicit, but for out purpose it will be.
+\\ Let's parse this expression 4*(2+3).
+\\ Parser input: NUM(4) TIMES LPAR NUM(2) PLUS NUM(3) RPAR
+\\ Parse output AST
+\\
+\begin{tikzpicture}
+      \Tree [.{$\ast$} 
+    [.{4} ] 
+    [.{$+$} 
+      [.{2} ] 
+      [.{3} ] 
+    ] 
+  ]
+\end{tikzpicture}
+\\ Parse tree
+\\
+\begin{tikzpicture}
+    \Tree
+    [.{EXPR} 
+        [.{NUM(4)} ] 
+        [.{TIMES} ] 
+        [ .{EXPRESS} 
+            [.{LPAR} ] 
+            [.{EXPRESS}
+                [.{NUM(2)} ] 
+                [.{PLUS} ] 
+                [.{NUM(3)} ] 
+            ] 
+            ] 
+            [.{RPAR} ] 
+        ] 
+    ]
+\end{tikzpicture}
+Leaves are tokens.
+\\ 
+The AST is a simplified version of the parse tree, it's more compact and easier to process. You can think of the parse tree as concrete syntax.
+\\ 
+The parser therefore has 2 tasks: syntax checking and AST generation (from parse tree).
+\\ We can a parser by hand but, same as the lexer, it's hard, errore prone and there are parser generators. We will write one manually just to see why it's no fun.
+\\ The first problem is syntax checks: are parentheses balanced? We can't do this using the automa because (this is my guess) the language is non deterministic.
+\\ Define the implementation: 
+\begin{itemize}
+    \item let TOKEN be enums: NUM, LPAR, RPAR, PLUS, MINUS,TIMES, DIV
+    \item in[] is a global with the inputs
+    \item next is a global with the index of next input
+\end{itemize}
+\begin{mycode}[title= Balanced parentheses parser]
+    void Parse() {
+        nextToken = in[next++];
+        if (nextToken == NUM) return;
+    }
+    if (nextToken != LPAR) print("syntax error");
+    Parse();
+    if (in[next++] != RPAR) print("syntax error");
+\end{mycode}
+The output for (((1))) is:
+\\
+\begin{tikzpicture}
+    \Tree [.{Parse()} 
+    [.{(} ] 
+    [.{Parse()} 
+      [.{(} ] 
+      [.{Parse()} 
+          [.{(} ] 
+          [.{Parse()} 1 ]
+          [.{)} ] 
+      ] 
+      [.{)} ] 
+    ] 
+    [.{)} ] 
+  ]
+\end{tikzpicture}
+Let's add subtraction: 
+\begin{mycode}[title= Balanced parentheses parser]
+    void Parse() {
+        if ((nextToken = in[next++]) == NUM) {
+            if (in[next] == MINUS) { next++; Parse(); }
+        } else if (nextToken == LPAR) {
+            Parse();
+            if (in[next++] != RPAR) print("syntax error");
+            if (in[next] == MINUS) { next++; Parse(); }
+        } else print("syntax error");
+    }
+\end{mycode}
+Obviously this is tedious, we will therefore use a parser generator.
+To determine how our language will be generate we will 
+use a CFG. Here's fore example a simple CFG for arithmetic expressions: E $\rightarrow$ n $|$ id $|$ ( E ) $|$ E + E $|$ E * E.
+\\ CFG will guarantee that the there is no syntax error, how? One way is the naive solution, derive any possibile string and check if you program is among them. Actually used in real word (damn).
 
 \newpage
 \import{}{esercizi}
