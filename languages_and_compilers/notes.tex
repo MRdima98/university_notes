@@ -1999,6 +1999,179 @@ To determine how our language will be generate we will
 use a CFG. Here's fore example a simple CFG for arithmetic expressions: E $\rightarrow$ n $|$ id $|$ ( E ) $|$ E + E $|$ E * E.
 \\ CFG will guarantee that the there is no syntax error, how? One way is the naive solution, derive any possibile string and check if you program is among them. Actually used in real word (damn).
 
+\section{Top-down parsing}
+Let's parse a string. 
+Recursive descent parsers try each production in turns, always left most, until there is a mismatch or a match.
+\subsection{ Recursive descent parser}
+Consider the following grammar:
+\begin{itemize}
+    \item E $\rightarrow$ T + E $|$ T
+    \item T $\rightarrow$ (E) * T $|$ (E) $|$ int * T $|$ int
+\end{itemize}
+Let's parse the string $int_5$ * $int_2$, starting with E. 
+\begin{enumerate}
+    \item $E_0$ $\rightarrow$ $T_1 + E_1$
+    \item $T_1$ $\rightarrow$ $(E_2)*T_2$, no token $int_5$
+    \item $T_1$ $\rightarrow$ $(E_2)$, no token $int_5$
+    \item $T_1$ $\rightarrow$ $int*T_2$, now we do all $T_1$ rules until we match. But after 
+\end{enumerate}
+\begin{tikzpicture}
+    \Tree [.{$E_0$} 
+    [.{$T_1$}  
+    [.{$int_5$} ]
+    [.{*} ]
+    [.{$T_2$} [.{$int_2$} ]]
+    ]
+  ]
+\end{tikzpicture}
+\\ Define function that checks the token for match of the following: 
+\begin{itemize}
+    \item a given token terminal 
+        \\ bool term(TOKEN tok) \{ return in[next++] == tok; \}
+    \item a given production of S (the $n^{th}$) 
+        \\ bool Sn() \{ ... \}
+    \item any production of S:
+        \\ bool S() \{ ... \}
+\end{itemize}
+Each function advance next. 
+\\ Now let's get specific:
+\begin{itemize}
+    \item E $\rightarrow$ T + E
+        \\ bool $E_1$() \{ return T() \&\& term(PLUS) \&\& E(); \}
+    \item E $\rightarrow$ T
+        \\ bool $E_2$() \{ return T(); \}
+    \item any production from E: 
+        \\ bool E() \{ 
+            int save = next;
+            return $E_1$() $||$ (next = save,$E_2$()); \}
+\end{itemize}
+Let's define non-terminal T functions: 
+\begin{itemize}
+    \item bool $T_1$() \{ return term(OPEN) \&\& E() \&\& term(CLOSE) \\ \&\& term(TIMES) \&\& T(); \}
+    \item bool $T_2$() \{ return term(OPEN) \&\& E() \&\& term(CLOSE) \}
+    \item bool $T_3$() \{ return term(INT) \&\& term(TIMES) \&\& T() \}
+    \item bool $T_4$() \{ return term(INT) \}
+    \item bool T() \{
+            \\ int save = next;
+            \\ return $T_1$() 
+            \\ $||$ (next = save,$T_2$()) $||$ (next = save,$T_3$()) $||$ (next = save,$T_4$())
+        \}
+\end{itemize}
+To start the parser next have to point to the first token and then you can invoke E(). If we have a special char \$ at the end of our token array, E() shall return true and the pointer to \$.
+\\ This approach is easy to implement, but does not always work. Consider $S \rightarrow Sa$ this is a infinite loop, also called left-recursive grammar. We can fix the recursion. 
+\\ Consider $S \rightarrow aS | b$, we can rewrite it as $S \rightarrow bS'$ and $S' \rightarrow aS' | \epsilon$.
+\\ In general 
+\[ S \rightarrow S\alpha_1 | ... | S\alpha_n | \beta_1 |...| \beta_m \]
+should be rewritten as 
+\[ S \rightarrow \beta_1S' | ... | \beta_mS' \]
+\[ S' \rightarrow \alpha_1S' | ... | \alpha_nS' | \epsilon \]
+ANTLR4 does this automatically.
+\vspace{2mm}
+\\ Another left recursive grammar is 
+\[ S \rightarrow S\alpha | \delta \]
+\[ S \rightarrow S\beta \]
+can be eliminated using this algorithm: 
+\\ List all non terminals symbols $A_1, A_2, ..., A_n$, for i:=1 to n: 
+\begin{itemize}
+    \item replace all $A_i \rightarrow A_j\beta$ such as j<i with $A_i \rightarrow \delta_1 \beta | \delta_2 \beta | ... | \delta_k \beta)$ where $A_j \rightarrow \delta | \delta_2 | ... | \delta_k$
+    \item eliminate direct left recursion in $A_i$
+    \item after i-th steps all productions are $A_i \rightarrow A_k\beta$ where k>1
+\end{itemize}
+This algorithm it's good enough for small languages but inefficient. 
+
+\subsection{Predictive parsing}
+It would be nice if the parse "knew" which production to expand next. 
+\\ Let's try and replace: 
+\begin{mycode}
+return E() || (next = save,E2()) 
+\end{mycode}
+with 
+\begin{mycode}
+switch( something ) {
+    case L1: return E1();
+    case L2: return E2();
+    otherwise: print ("syntax error");
+}
+\end{mycode}
+"something" is the lookahead, the next token.
+\\ This parser: 
+\begin{itemize}
+    \item uses the recursive descent but can predict which production to use
+        \\ the prediction are made by looking the next otkesn
+        \\ no backtracking
+    \item accept LL(k) grammas 
+        \\ L: left to right scan of inputs
+        \\ L: leftmost derivation
+        \\ k: k tokens of lookahead
+    \item we will use LL(1) grammars
+        \\ ANTLR can do LL(*) grammars
+\end{itemize}
+LL(1) means that for each non-terminal and token there is at most 1 production that leads to success. 
+This method can be specified as a 2D table: 
+\begin{itemize}
+    \item one dimensions are non-terminals
+    \item one dimensions are tokens
+    \item each cell contains a production
+\end{itemize}
+For example the grammar: 
+\\ E $\rightarrow$ T + E $|$ T
+\\ T $\rightarrow$ (E) * T $|$ (E) $|$ int * T $|$ int
+\\ is impossibile to predict, because for T 2 productions start with int and (. E is unclear how to predict. 
+\\ In general a language must be \underline{left-factore}(ANTLR does this on it's own).
+The new fixed grammar is:
+\\ E $\rightarrow$ T + X 
+\\ X $\rightarrow$ +E $|$ $\epsilon$
+\\ T $\rightarrow$ (E) * Y $|$ int * Y
+\\ Y $\rightarrow$ *T $|$ $\epsilon$
+
+\subsubsection{LL(1) parser} 
+For simplicity sake we will use a LL(1) \emph{table} and \emph{parse stack}.
+\\ Here's our left-factore grammar 
+\\ E $\rightarrow$ TX
+\\ X $\rightarrow$ +E $| \epsilon$
+\\ T $\rightarrow$ (E)Y $|$ int Y
+\\ Y $\rightarrow$ *T $| \epsilon$
+\newpage
+The corresponding LL(1) parsing table: 
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+        & int & * & + & ( & ) & \$ \\
+        \hline
+        T & int Y &  &  & (E)Y &  &  \\ 
+        \hline
+        E & T X &  &  & TX &  & \\ 
+        \hline
+        X &  &  & +E &  & $\epsilon$ & $\epsilon$ \\ 
+        \hline
+        Y &  & *T & $\epsilon$& & $\epsilon$ & $\epsilon$ \\
+        \hline
+	\end{tabular}
+	\caption{Esempio di tabella}
+\end{table}
+The empty spots are errors. Like [E,*], we can't know that it's a string if it starts with *.
+\\ We use a similar method to recursive descent. The difference is: we choose the production based on the next token. 
+\\ There is a stack used to keep track on pending non terminals . 
+We reject when there is an error and accept when we encounter end of input. 
+\\ Here's the pseudo code of the algorithm: 
+\begin{mycode}
+    // We start the stack with <S,\$>
+    repeat
+        case stack of
+        <X rest> : if T[X,*next] = Y1...Yn
+            then stack := <Yn...Y1 rest>
+            else error() 
+        <t rest> : if t == *(next++)
+            then stack := <Yn...Y1 rest>
+            else error()
+    until stack == <>
+\end{mycode}
+LL(1) languages are defined by a parsing table. 
+No table entry can be multiply defined. 
+We want to generate parsing tables from CFG.
+\\ Consider the state $S\$ \xRightarrow[]{*} \beta A \gamma$, b is the next token and we want to match the string $\beta b \delta$ 
+
 \newpage
 \import{}{esercizi}
 \end{document}
