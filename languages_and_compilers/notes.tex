@@ -10,6 +10,7 @@
 \usepackage{graphicx}
 \usepackage{outlines}
 \usepackage{tikz}
+\usepackage{forest}
 \usepackage{tikz-qtree}
 \usetikzlibrary{automata, positioning}
 \AddToHook{cmd/section/before}{\clearpage} 
@@ -2170,7 +2171,319 @@ We reject when there is an error and accept when we encounter end of input.
 LL(1) languages are defined by a parsing table. 
 No table entry can be multiply defined. 
 We want to generate parsing tables from CFG.
-\\ Consider the state $S\$ \xRightarrow[]{*} \beta A \gamma$, b is the next token and we want to match the string $\beta b \delta$ 
+\\ Consider the state $S\$ \xRightarrow[]{*} \beta A \gamma$, b is the next token and we want to match the string $\beta b \delta$.
+\\ FIRST($\alpha$) is the set of terminals that are at the beginning of a string derived from $\alpha$, $\alpha$ is a generic string. If $\alpha \xRightarrow[]{*} \epsilon$ then $\epsilon \in$ First($\alpha$).
+\\ FOLLOW(A), for non terminal A, is the set of terminals that can follow A in a derivation. There is such a derivation $S \xRightarrow[]{*} \alpha A a \beta$, a is in FOLLOW(A), \$ (the symbol that show the end of the stack) is also in FOLLOW(A).
+\vspace{2mm} 
+\\ Let's define formally first sets. 
+First(X)=$\{ b | X \xRightarrow[]{*} b\beta \cup \{ \epsilon | X \xRightarrow[]{*} \epsilon \}$
+\\ Therefore: 
+\begin{itemize}
+    \item First(b) = { b }
+    \item For all productions $X \rightarrow A_1 ... A_n$ with n$\geq$0.
+        \\ Add First($A_1$) - $\{ \epsilon \}$ to First(X). Stop if $\epsilon \notin$ First($A_1$).
+        \\ Add First($A_2$) - $\{ \epsilon \}$ to First(X). Stop if $\epsilon \notin$ First($A_2$).
+        \\ ...
+        \\ Add First($A_n$) - $\{ \epsilon \}$ to First(X). Stop if $\epsilon \notin$ First($A_2$).
+    \item repeat step 2 until there is no more First
+\end{itemize}
+Here's the definition with n$\geq$0: 
+\\ First($X_1X_2...X_n$) = $\{ b | X_1X_2...X_n \xRightarrow[]{*} b\alpha\} \cup \{ \epsilon | X_1X_2...X_n \xRightarrow[]{*} \epsilon\}$. The steps are the same as above.
+\vspace{2mm}
+\\ Let's define formally follow sets: Follow(X) = $\{ b | S\$ \xRightarrow[]{*} \beta X b \gamma \}$.
+\begin{enumerate}
+    \item Add \$ to Follow(S), if S is the start symbols
+    \item For all productions $Y \rightarrow \alpha X A_1...A_n$ with n$\geq$1 
+    \\ Add First($A_1...A_n$) -\{ $\epsilon$ \} to Follow(X)
+    \\ and for all productions $Y \rightarrow \beta X$ or $Y \rightarrow \alpha X \beta$ with $\epsilon \in First(\beta)$ 
+    \\ Add Follow(Y) to Follow(X)
+    \item repeat step 2 until there is no more Follow
+\end{enumerate}
+\vspace{3mm}
+Here's an example of the algorithm. Using the grammar: 
+\\ E $\rightarrow$ TX
+\\ X $\rightarrow$ +E $| \epsilon$
+\\ T $\rightarrow$ (E)Y $|$ int Y
+\\ Y $\rightarrow$ *T $| \epsilon$
+\\ First sets: 
+\begin{itemize}
+    \item Terminals: 
+        \begin{itemize}
+            \item First(+) = \{ + \} 
+            \item First(*) = \{ * \}
+            \item First(() = \{ ( \}
+            \item First()) = \{ ) \} 
+            \item First(int) = \{ int \}
+        \end{itemize}
+    \item Non-terminal: 
+        \begin{itemize}
+            \item First(T) = \{ (, int \} 
+            \item First(X) = \{ +, $\epsilon$ \} 
+            \item First(Y) = \{ *, $\epsilon$ \} 
+            \item First(E) = \{ (, int \} 
+        \end{itemize}
+\end{itemize}
+Follow sets:
+\begin{itemize}
+    \item Follow(E) = \{ \$, ) \} 
+    \item Follow(X) = \{ \$, ) \} 
+    \item Follow(T) = \{ +, \$, ) \} 
+    \item Follow(Y) = \{ +, \$, ) \} 
+\end{itemize}
+
+\subsubsection{Constructing LL(1) parsing table}
+Construct a parsing table T for CFG G. 
+\\ For each production $A \rightarrow \alpha$ in G, do the following:
+\begin{itemize}
+    \item For each terminal b in First($\alpha$), T[A,a] = $\alpha$
+    \item If $\epsilon \in$ First($\alpha$), for each b $in$ Follow(A) do, T[A,a] = $\alpha$
+    \item If $\epsilon \in$ First($\alpha$) and \$ $\in$ Follow(A), T[A,\$] = $\alpha$
+\end{itemize}
+Notes on the algorithm:
+\begin{itemize}
+    \item If any entry is multiply defined, then G is not LL(1): 
+        \\ if G is ambiguous
+        \\ if G is left-recursive 
+        \\ if G is not left-factored
+        \\ and in other cases 
+    \item Most programming grammas are NOT LL(1) 
+    \item There are tools that build LL(1) tables that are fully declarative
+\end{itemize}
+
+\subsubsection{Ambiguity} 
+A grammar is ambiguous if it has more than one parse tree for any string. This is bad and is common with arithmetic expressions and if then else.
+\\ There are ways to deal with ambiguity, the most direct one is to rewrite the grammar, so that you can enforce symbol precedences.
+\\ There is no way to automatically correct ambiguous grammar.
+
+\section{Bottom-up parsing} 
+Let's build a parser for this grammar: 
+\\ E $\rightarrow$ E + T $|$ E - T $|$ T 
+\\ T $\rightarrow$ T * int $|$ int
+\\ This gramma is: 
+\begin{itemize}
+    \item non ambiguous 
+    \item left recursive 
+    \item not left factored
+\end{itemize}
+And our parser will not mind, because we will build it in revers. 
+\\ E 
+\\ E + T 
+\\ T + T 
+\\ T + T * int 
+\\ T + int * int 
+\\ int + int * int 
+\\
+\begin{forest}
+  for tree={
+    parent anchor=south,
+    child anchor=north,
+    align=center,
+  },
+  before typesetting nodes={
+    for tree={
+        if n children=0{
+            tier=terminal
+        }{}
+    }
+  }
+  [E
+    [E
+        [T
+            [int]
+        ]
+    ]
+    [+
+    ]
+    [T
+        [T
+            [int]
+        ]
+        [*]
+        [int]
+    ]
+    ]
+  ]
+\end{forest}
+\\
+Chaos bottom-up: 
+\begin{enumerate}
+    \item stare the input string s
+    \item find in s a right-hand side or r of a production N $\rightarrow$ r
+    \item reduce the found string r into non terminal N
+    \item if all string reduced to start non terminal we'r done
+    \item otherwise repeat from step 1
+\end{enumerate}
+This wont work, we will get stuck eventually: 
+\\ E + E * E (we are stuck here)
+\\ E + E * T 
+\\ E + E * int 
+\\ T + E * int
+\\ int + E * int
+\\ int + T * int
+\\ int + int * int
+\vspace{2mm} 
+If you are lucky you might get by, but let's define ourt luck by using non-determinism.
+\\ The new algorithm: 
+\begin{enumerate}
+    \item find all strings that can be reduced, let's say there are k of them
+    \item create k copies of the input, k instances of the parser
+    \item each instance reduces one of the k strings 
+    \item if any instance reaches the start symbol we are done
+\end{enumerate}
+This will work, but it's not efficient. We could do exponential copies. We could reduce the instances using LR parser. Basically you will try any combination, but keep only 1 instance.
+\\ Why won't this get me stuck? Because each tree follow a different derivation.
+\\ Also keep in mind, the LR parser builds the right most derivation but in revers. Reads from left to right, and deriving the right most symbol: hence LR parser.
+\\ Here's the action of an LR parser: 
+\begin{itemize}
+    \item The left part of the string will be on the stack 
+        \\ the $\triangleright$ symbol is the top of the stack 
+    \item We have 2 simple actions: 
+        \\ reduce: replace a string on the stack 
+    \item shift: move the $\triangleright$ symbol to the right
+\end{itemize}
+\newpage
+This actions are chose non-deterministically.
+\\ E $\triangleright$
+\\ E + T $\triangleright$
+\\ E + T * int $\triangleright$
+\\ E + T * $\triangleright$ int 
+\\ E + T $\triangleright$ * int 
+\\ E + int $\triangleright$ * int
+\\ E + $\triangleright$ int * int
+\\ E $\triangleright$ + int * int 
+\\ T $\triangleright$ + int * int 
+\\ int $\triangleright$ + int * int 
+\\ $\triangleright$ int + int * int
+\\
+\begin{forest}
+  for tree={
+    parent anchor=south,
+    child anchor=north,
+    align=center,
+  },
+  before typesetting nodes={
+    for tree={
+        if n children=0{
+            tier=terminal
+        }{}
+    }
+  }
+  [E
+    [E
+        [T
+            [int]
+        ]
+    ]
+    [+
+    ]
+    [T
+        [T
+            [int]
+        ]
+        [*]
+        [int]
+    ]
+    ]
+  ]
+\end{forest}
+\\ The algorithm will be: 
+\begin{itemize}
+    \item find all reductions allowed on top of the stack 
+    \item create k new instances of the parser
+    \item each instance reduces one of the k strings, in the original instance do no reduction but a shift 
+    \item stop when one instance is at the start
+\end{itemize}
+But we can do better, kill any instance that you know will get stuck ASAP.
+\\ For example T + $\triangleright$ int * int, we know that this will get stuck, so we can kill it. This is because there is no way that T can be on top of the stack.
+\\ How can we tell if a stack is doomed? We list all legal stacks and kill the illegal ones. The listed legal stacks are described as a DFA, if one configuration fails the DFA then it's doomed. In this DFA every state is accepting.
+
+\subsection{Simple LR parser}
+In order to produce a DFA we add a new initial variable 
+E', and a new derivation E' $\rightarrow$ E.
+\\ Our simple grammar becomes: 
+\\ E' $\rightarrow$ E
+\\ E $\rightarrow$ E + T $|$ E - T $|$ T
+\\ T $\rightarrow$ T * int $|$ int
+\\
+\begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
+    \node[state, accepting] (q0) {q1};
+    \node[state, accepting] (q1) [below=of q0]{q1};
+    \node[state, accepting] (q2) [below=of q1]{q2};
+    \node[state, accepting] (q3) [below=of q2]{q3};
+    \node[state, accepting] (q4) [right=of q0]{q4};
+    \node[state, accepting] (q5) [right=of q4]{q5};
+    \node[state, accepting] (q6) [right=of q5]{q6};
+    \node[state, accepting] (q7) [below=of q5]{q7};
+    \node[state, accepting] (q8) [below=of q6]{q8};
+    \node[state, accepting] (q9) [below=of q7]{q9};
+    \path[->]
+        (q0) edge node {T} (q1)
+        (q1) edge node {*} (q2)
+        (q2) edge node {int} (q3)
+        (q0) edge node {E} (q4)
+        (q4) edge node {+} (q5)
+        (q5) edge node {T} (q6)
+        (q0) edge node {int} (q9)
+        (q4) edge node {-} (q7)
+        (q6) edge node {*} (q2)
+        (q8) edge node {*} (q2)
+        (q7) edge node {int} (q9)
+        (q7) edge node {T} (q8)
+        ;
+\end{tikzpicture}
+\\ Each state is: 
+\begin{itemize}
+    \item q0:
+        \\ E'$\rightarrow \circ$ E 
+        \\ E $\rightarrow \circ$ E + T
+        \\ E $\rightarrow \circ$ E - T
+        \\ E $\rightarrow \circ$ T
+        \\ T $\rightarrow \circ$ T * int 
+        \\ T $\rightarrow \circ$ int
+    \item q1:
+        \\ E $\rightarrow$ T $\circ$ 
+        \\ T $\rightarrow$ T $\circ$ * int
+    \item q2:
+        \\ T $\rightarrow$ T * $\circ$ int
+    \item q3:
+        \\ T $\rightarrow$ T * int $\circ$
+    \item q4:
+        \\ E' $\rightarrow$ E $\circ$ 
+        \\ E $\rightarrow$ E $\circ$ + T
+        \\ E $\rightarrow$ E $\circ$ - T
+    \item q5:
+        \\ E $\rightarrow$ E + $\circ$ T
+        \\ T $\rightarrow$ $\circ$ T * int
+        \\ T $\rightarrow$ $\circ$ int
+    \item q6:
+        \\ T $\rightarrow$ E + T $\circ$
+        \\ T $\rightarrow$ T $\circ$ * int
+    \item q7:
+        \\ E $\rightarrow$ E - $\circ$ T
+        \\ T $\rightarrow$ $\circ$ T * int
+        \\ T $\rightarrow$ $\circ$ int
+    \item q8:
+        \\ E $\rightarrow$ E - T $\circ$
+        \\ T $\rightarrow$ T $\circ$ * int
+    \item q9:
+        \\ T $\rightarrow$ int $\circ$
+\end{itemize}
+This is a SLR item: $X \rightarrow \alpha \circ \beta$, with $X \rightarrow \alpha \beta$ being a production. 
+\\ $X \rightarrow \alpha \circ \beta$ describes the context: 
+\begin{itemize}
+    \item we are trying to find X 
+    \item we have $\alpha$ on top of the stack
+    \item we need to see the next a string derived from $\beta$
+\end{itemize}
+$\circ$ and $\triangleright$ are the same thing, but $\circ$ is used for SLR items and $\triangleright$ for LR items. A DFA state is a closet set of SLR(1) items, which means we perform Closure. The stating state is Closure(\{E' $\rightarrow \circ$ E \})
+\\ The operation of extending the context with items is called closure operation: 
+\\ Closure(Items) =
+\\ \hspace*{4mm} repeat 
+\\ \hspace*{8mm} for each X $\rightarrow \alpha \circ Y \beta$ in Items 
+\\ \hspace*{12mm} for each production $Y \rightarrow \gamma$
+\\ \hspace*{16mm} add $Y \rightarrow \circ \gamma$ to items
+\\ until Items is unchanged
+
 
 \newpage
 \import{}{esercizi}
