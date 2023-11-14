@@ -2483,6 +2483,82 @@ $\circ$ and $\triangleright$ are the same thing, but $\circ$ is used for SLR ite
 \\ \hspace*{12mm} for each production $Y \rightarrow \gamma$
 \\ \hspace*{16mm} add $Y \rightarrow \circ \gamma$ to items
 \\ until Items is unchanged
+\vspace{2mm} 
+\\ A State that contains at least an item, X $\rightarrow \alpha \circ y \beta$ has a transition label y to a state Transitions(State,y), y can be terminal or not.
+\\ Transitions(State,y) = 
+\\ \hspace*{4mm} Items $\leftarrow \emptyset$
+\\ \hspace*{4mm} for each X $\rightarrow \alpha \circ y \beta$ in State
+\\ \hspace*{8mm} add X $\rightarrow \alpha y \circ \beta$ to Items
+\\ \hspace*{4mm} return Closure(Items)
+\\ The SLR contains the correct stack configuration but also indicates when to shift/reduce. When the $\circ$ is at the end of the rule reduce, otherwise shift. If there are conflicts use the lookahead. If the look ahead finds a discrepancy, it will change the next transition. 
+\\ The two rules are:
+\begin{itemize}
+    \item lookahead for shit: only on the expected terminals
+    \item lookahead for reduce: only on terminals in the Follow set of the variabile on the l.h.s of the rules used to reduce
+\end{itemize}
+Consider our example grammar: 
+\\ E' $\rightarrow$ E 
+\\ E $\rightarrow$ E + T $|$ E - T $|$ T
+\\ T $\rightarrow$ T * int $|$ int 
+\\ First(E') = { int } (no need to calculate) 
+\\ First(E) = { int } 
+\\ First(T) = { int } 
+\\ First(E') = { \$ } (no need to calculate) 
+\\ First(E) = { \$, +, - } 
+\\ First(T) = { \$, +, - } 
+\\ Here's the SLR table representation 
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{|c|c|c|c|c|c|c|c|}
+        \hline
+        &int &+&-&*&\$&E&T\\ 
+        \hline
+        1 &shift,9& & && &goto,2&goto,5\\ 
+        \hline
+        2 &&shift,3&shift,6& &accept& & \\ 
+        \hline
+        3 &shift,9 & & & & & &goto,4\\ 
+        \hline
+        4 & &red,\linebreak E$\rightarrow$E+T&red,E$\rightarrow$E+T&shift,8&red,E$\rightarrow$E+T & & \\ 
+        \hline
+        5 &&red, E$\rightarrow$T& red, E$\rightarrow$T&shift,8&red, E $\rightarrow$ T& & \\ 
+        \hline
+        6 &shift,9& & & & & &goto,7\\ 
+        \hline
+        7&&red,E$\rightarrow$E-T&red,E$\rightarrow$E- T  &shift,8&red, E $\rightarrow$ E -T & & \\ 
+        \hline
+        8 &shift,10& & & & & & \\ 
+        \hline
+        9 & &red,T$\rightarrow$ int &red, T $\rightarrow$ int &red, T $\rightarrow$ int &red, T $\rightarrow$ int & & \\ 
+        \hline
+        10 &&red,T$\rightarrow$T*int &red,T$\rightarrow$T*int &red,T$\rightarrow$T*int &red,T$\rightarrow$T*int & & \\ 
+        \hline
+	\end{tabular}
+	\caption{SLR(1) table}
+\end{table}
+This table describes the SLR(1) parsing algorithm. This works only if each cell have one action, meaning there is no conflict.
+\\ In this case the grammar is called SLR(1) grammar.
+\subsection{Bottom-up parsing algorithm}
+This algorithm is stronger that LL(1) because the decision are made after seeing all the symbols not just one ahead.
+\\ The parser represents the DFA as a 2D table. Each lines is a state, each column is a terminal or non-terminal. Columns are split into actions and goto.
+\\ After each shift or reduce we rerun the DFA on the entire stack, this is a waste. A smarter approach is to save the state of the DFA after that element. 
+\\ The stack is saved as such: $<sym_1, state_1> ...< sym_n, state_n>$.
+\\ The algorithm is:
+\\ Let I = $w_1w_2...w_n$\$ initial input
+\\ Let j=i
+\\ Let DFA state 0 be the starting state 
+\\ Let stack = $< dummy, 0 >$
+\\ \hspace{4mm} repeat
+\\ \hspace{8mm} case $action[topState(stack), I[j])]$ of 
+\\ \hspace{12mm} shift k: push $<$I[j],j$>$; j+=1
+\\ \hspace{12mm} reduce X $\rightarrow \alpha$:
+\\ \hspace{16mm} pop $|\alpha|$ pairs, 
+\\ \hspace{16mm} push $< X, goto[topState(stack),X]>$
+\\ \hspace{12mm} accept: halt normally
+\\ \hspace{12mm} accept: halt and report error
+\vspace{3mm}
+\\ Bison it's a tool that takes a grammar and generates a parser. It's a LALR(1) parser generator, which is slightly more complex that a SLR(1).
+\\ Bison takes in input grammar rules and C instructions and generates the table and a C program as output. 
 
 
 \newpage
