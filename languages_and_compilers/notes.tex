@@ -3,6 +3,7 @@
 \usepackage[hidelinks]{hyperref}
 \newtheorem{theorem}{Theorem}
 \usepackage{import}
+\usepackage{mathpartir}
 \usepackage{mathtools}
 \usepackage{xcolor}
 \usepackage{textcomp}
@@ -2647,6 +2648,301 @@ We have one big hashtable with all the names, and each name has a list of symbol
     \item To process a use of x, if there is an entry in the symbol-table link the use otherwise error (Undeclared variable) (O(1))
     \item On scope exit, scan all names at first level, if the level is the same as current then remove it from the list. If a name has empty list, then remove it. Finally decrement the current number O(number or names)
 \end{itemize}
+
+\subsection{Type checking}
+Types are a set of values and operations on those values, like class is a type.
+Type are needed because we can make operations with different types.
+\\ There are 3 kinds of languages: 
+\begin{itemize}
+    \item statically typed: types are known at compile time (C)
+    \item dynamically typed: types are known at run time (Scheme, lisp dialect...figures)
+    \item untyped: no type checking (machine code)
+\end{itemize}
+The are lots of type wars, but the truth is that both are good. 
+\\ Static typing avoids errors at compile time and overhead at run time. 
+\\ Dynamic typing allows more flexibility and is easier to prototype.
+\\ Type checking is the process of checking that the program obeys the type system. Type inference is when the compiler automatically deduces the type.
+\\ We have so far 2 formal notations: regex for lexer and CFG for parser. The way to enforce type checking is having logical rules of inference. Inference rules have this form: \emph{If Hypothesis is true, then Conclusion is true} therefore \emph{If $E_1$ and $E_2$ have certain types, then $E_3$ has a certain type}.
+\\ The notation is simple to read, here's a few building blocks: 
+\begin{itemize}
+    \item $\wedge$ is "and" 
+    \item $\Rightarrow$ is "if then"
+    \item x:T is "x has type T"
+\end{itemize}
+Here's an example: 
+\\ If $e_1$ has type Int and $e_2$ has type Int then $e_1 + e_2$ has type Int
+\vspace{2mm} 
+\\($e_1$ has type Int $\wedge$ $e_2$ has type Int) $\Rightarrow$ $e_1 + e_2$ has type Int
+\vspace{2mm} 
+\\($e_1$: Int $\wedge$ $e_2$: Int) $\Rightarrow$ $e_1 + e_2$: Int
+
+\begin{mathpar}
+  \inferrule
+    {\vdash e_1:Int \\ \vdash e_2:Int}
+    {\vdash e_1 + e_2: Int}
+\end{mathpar}
+
+$\vdash$ means "we can prove that..."
+\\ An inference system for proving x$<$y: 
+\begin{mathpar}
+  \inferrule
+    {}
+    {\vdash x < (x+1)}
+\end{mathpar}
+[A] means that A is an axiom, and in the case above it means that any number is smaller than it's successor.
+\begin{mathpar}
+  \inferrule
+    {\vdash x < y \\ \vdash y < z}
+    {\vdash x < z}
+\end{mathpar}
+[T] means that the rule is transitive. Therefore $<$ is transitive.
+\\ Let's prove that 6$<$10.
+% write infer rule for 6<10 
+\begin{mathpar}
+    \inferrule
+    { \inferrule 
+        { }
+        {\vdash 6 < 7} [A]
+        \and 
+        { \inferrule 
+            { \inferrule 
+                { \inferrule 
+                    { } 
+                    {\vdash 7 < 8} [A] 
+                    \and 
+                    { }
+                    {\vdash 8 < 9} [A]
+                } 
+                {\vdash 7 < 9} [T]
+                \and 
+                { } 
+                {\vdash 9 < 10} [A]
+            } 
+            {\vdash 7 < 10} [T]
+        }
+    }
+    {\vdash 6 < 10} [T]
+\end{mathpar}
+In our case 
+\begin{mathpar}
+    \inferrule 
+    { \inferrule
+        { } 
+        { \vdash 1:Int }
+        \and 
+        { \inferrule 
+            { }
+            { \vdash 2:Int }
+        }
+    }
+    { \vdash 1 + 2:Int }
+\end{mathpar}
+A type system is sound if we can infer $\vdash$e:T.
+\\ Here's rules for constants: 
+\begin{mathpar}
+    \inferrule
+    { }
+    { \vdash false: Bool } [Bool]
+\end{mathpar}
+\begin{mathpar}
+    \inferrule
+    { }
+    { \vdash s: String } [String] \text{(s is constant)}
+\end{mathpar}
+Object creation: 
+\begin{mathpar}
+    \inferrule
+    { }
+    { \vdash new \; C(): C} [New] \text{(C is a class)}
+\end{mathpar}
+more rules 
+\begin{mathpar}
+    {
+        \inferrule
+        { \vdash e: Bool}
+        { \vdash not \; e: Bool} \; [Not] 
+    }
+    \\
+    { 
+        \inferrule
+        { \vdash e_1: Bool \\ \vdash e_2: T}
+        { \vdash while \; e_1 \; loop \; e_2 \; pool: Stmnt} \; [Loop]
+    }
+\end{mathpar}
+Let's type: while not false loop 1 + 2 * 3 pool
+\\
+\begin{forest}
+  for tree={
+    parent anchor=south,
+    child anchor=north,
+    align=center,
+  },
+  [ while loop: Stmnt
+    [ not: Bool
+        [ false: Bool ]
+    ]
+    [ + : Int
+        [ 1: Int ]
+        [ * : Int
+            [ 2: Int ]
+            [ 3: Int ]
+        ]
+    ]
+  ]
+\end{forest}
+\begin{mathpar}
+    \inferrule 
+    { \inferrule 
+        { \vdash false: Bool } 
+        { \vdash not \; false: Bool } 
+        \and 
+        { \inferrule 
+            { \inferrule 
+                { } 
+                { \vdash 1: Int } 
+                \and 
+                { \inferrule 
+                    {
+                        { \vdash 2: Int }
+                        \and
+                        { \vdash 3: Int }
+                    }
+                    { \vdash 2*3: Int }
+                }
+            } 
+            { \vdash 1+2*3: Int }
+        }
+    }
+    { \vdash while \; not \; false \; loop \; 1 + 2 * 3 \; pool: Stmnt } 
+\end{mathpar}
+\begin{itemize}
+    \item The root of the tree is the whole expression 
+    \item Each node is an instance of typing rule 
+    \item Leaves are the rules with no hypotheses
+\end{itemize}
+But how can we know the type of a variable? 
+
+\begin{mathpar}
+    \inferrule 
+    { } 
+    { \vdash x: ? } [Var] \; \text{(x is an identifier)}
+\end{mathpar}
+We don't know enough, it's need to have knowledge of the scope. So let's put more information in the scope.
+\\ Let O be a function from Identifiers to Types: 
+\\ The sentence O $\vdash$ e:T reads: 
+\\ Under the assumption that the variables in the current scope have the types given by O, it is provable that expression e has type T (this are info store in the symbol table btw).
+\\ A type environment O gives types for \textbf{free} variables. A free variable is a variable out of current scope.
+\\ Here's the previous rules but modified: 
+\begin{mathpar}
+    {
+        \inferrule
+        { }
+        {O \vdash i: Int} [Bool]
+    }
+    \\
+    {
+        \inferrule
+        { O \vdash e_1: Int \\ O \vdash e_2: Int }
+        {O \vdash e_1 + e_2: Int} \; [Add]
+    }
+\end{mathpar}
+Now we can write new rules: 
+\begin{mathpar}
+    \inferrule 
+    { }
+    { O \vdash x: T } \; \; [Id] \; \; \text{(if O(x)=T)}
+\end{mathpar}
+The types of a function are usually written as: 
+\begin{itemize}
+    \item $T_1,...,T_n \rightarrow T$
+    \item with $T_1,...,T_n \rightarrow T$ being the params
+    \item and T the output return
+\end{itemize}
+\begin{mathpar}
+    \inferrule 
+    { O \vdash f:(T_1,...,T_n \rightarrow T) \\ O \vdash e_1:T_1 \; ... \; O \vdash e_n:T_n }
+    { O \vdash f(e_1,...,e_n):T } \; \; [FuncCall]
+\end{mathpar}
+The let statement declares a variable x with given type $T_0$ that is then defined throughout $e_1$: 
+\begin{itemize}
+    \item $let \; x:T_0 \; in \; e_1$ without initialization
+    \item $let x: T_0 \leftarrow e_0 in e_1$ with initialization
+\end{itemize}
+\begin{mathpar}
+    \inferrule 
+    { O[T_0/x] \vdash e_1:T_1 }
+    { O \vdash let \; x:T_0 \; in \; e_1:T_1 } \; \; [Let-No-Init]
+\end{mathpar}
+For example: 
+\\ let x: $T_0$ in ( (let y: $T_1$ in $E_{x,y}$) + (let x: $T_2$ in $F_{x,y}$)
+\\ $E_{x,y}$ and $F_{x,y}$ are expressions that use x and y
+\\ The type of x in $E_{x,y}$ is $T_0$ and the type of x in $F_{x,y}$ is $T_2$.
+\\
+Notes: 
+\begin{itemize}
+    \item The type environment gives types to free identifier in current scope 
+    \item The type environment is passed down the from root to leaves
+    \item Types are computed from leaves to root
+\end{itemize}
+The downward phase of compilers enrich the AST linking identifies with the their symbol table entry.
+\vspace{3mm} 
+\\ Consider let with initialization: 
+\begin{mathpar}
+    \inferrule 
+    { O \vdash e_0: T_0 \\ O[T_0/x] \vdash e_1: T_1} 
+    { O \vdash let  \; x:T_0 \leftarrow e_0  \; in \; e_1:T_1} \;\; [Let-Init]
+\end{mathpar}
+This rule is too restrictive. Because it does not allow inheritance. 
+\\ class C inherits P { ... }
+\\ let x: P $\leftarrow$ new C() in ...
+\vspace{4mm}
+\\ Let's add a relation X $\leq$ Y on classes that means: 
+\begin{itemize}
+    \item X can be used when Y is acceptable or equivalent 
+    \item X conforms with Y 
+\end{itemize}
+Also know as X is a subclass of Y. Let's define de relations $\leq$: 
+\begin{itemize}
+    \item X $\leq$ Y
+    \item X $\leq$ Y if X inherits from Y
+    \item X $\leq$ Z if X $\leq$ Y and Y $\leq$ Z
+\end{itemize}
+Let's re-write our Let rule:
+\begin{mathpar}
+    \inferrule 
+    { O \vdash e_0: T_0 \\ T \leq T_0 \\ O[T_0/x] \vdash e_1: T_1} 
+    { O \vdash let  \; x:T_0 \leftarrow e_0  \; in \; e_1:T_1} \;\; [Let-Init]
+\end{mathpar}
+It's still sound but more flexible. There is tension between flexible and sounds rules.
+\\ A static type system enables the compiler to detect many common errors but at the cost of disallowing correct programs. Some argue that the solution is more expressive type system, but this leads to more complex language. Others argue that you should use dynamic type instead.
+\\ The static type of an object variable is the class C used to declare the variable, a compile-time notion.
+\\ The dynamic type of an object variable is the class C that is used to create its object \textbf{value} ("new C"), a run-time notion.
+\\ In early type systems those two corresponded (dynamicType(E) = staticType(E)), but in modern languages they don't. You could for instance change class of an object a with class A, if class B inherits from A. Hence dynamicType(E) $\leq$ staticType(E). Soundness Theorem 
+\\ $\forall$E. dynamicType(E) $\leq$ staticType(E)
+\\ This works if the subclass has all public methods and fields of the parent class.
+\vspace{4mm} 
+\\ We also need a rule if x is already declared: 
+\begin{mathpar}
+    \inferrule 
+    { O \vdash e_0: T \\ T \leq T_0 \\ O \vdash e_1:T_1} 
+    { O \vdash x \;\; e_0 \;; \;\; e_1:T_1} \;\; \;\;\text{[Assign] (if O(x) = T\textsubscript{0}}
+\end{mathpar}
+Let's add subtyping to functions, our input parameters need to account for subtyping $T_{0,1},...,T_{0,n} \rightarrow T$
+\begin{mathpar}
+    \inferrule 
+    { O \vdash f:(T_{0,1},...,T_{0,n} \rightarrow T) \\ O \vdash e_1:T_1 \; ... \; O \vdash e_n:T_n \\ \forall i T_i \leq T_{0,i}}
+    { O \vdash f(e_1,...,e_n):T } \; \; [Fun]
+\end{mathpar}
+You can subtype arrays but only the content of the cells.
+\vspace{5mm} 
+\\ Classes usually can override methods and fields. This is the case in our language FOOL. 
+\\ Let's start from fields. 
+\begin{itemize}
+    \item Class A \{ ..., T:f, ... \}
+    \item Class B inherits from  \{ ..., T':f, ... \}
+\end{itemize}
+Fields can be seen as arrays cells, they can be modified but can't change type. Fields subtyping is not sound, that's why in java we cannot override fields. But if fields are immutable then subtyping is admitted, if T'$\leq$T for every fields then B $\leq$ A. These are calle \emph{covariant fields}.
+
 
 
 \newpage
