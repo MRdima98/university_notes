@@ -2560,6 +2560,94 @@ This algorithm is stronger that LL(1) because the decision are made after seeing
 \\ Bison it's a tool that takes a grammar and generates a parser. It's a LALR(1) parser generator, which is slightly more complex that a SLR(1).
 \\ Bison takes in input grammar rules and C instructions and generates the table and a C program as output. 
 
+\section{Semantic analysis}
+\subsection{Symbol table}
+We will learn how to build symbol tables and how to use them to find multiply-declared and undeclared variables.
+\\ So far our compiler does: 
+\begin{itemize}
+    \item lexical analysis: detects illegal tokens
+    \item parsing: detects ill formed parse tree
+    \item semantic analysis: catches all remaining errors
+\end{itemize}
+Here's some typical semantic errors:
+\begin{itemize}
+    \item multiple declarations 
+    \item undeclared variables 
+    \item type mismatch
+    \item wrong argument number/types
+\end{itemize}
+The semantic analysis is done in 2 steps (we visit the AST):
+\begin{enumerate}
+    \item Generation of Enriched AST (performed top-down)
+        \\ For each scope of the programma: 
+        \\ process declarations: add new entries to the symbol table and report any variable/methods method is multiply declared 
+        \\ process statements: check that variables are declared and in "ID" nodes add a pointer to the appropriate symbol table entry
+    \item type checking (performed bottom-up)
+        \\ Process all of the statement in the program again, use the symbol-table entry information to type check
+\end{enumerate}
+The symbol table has to map names of anything declared in the program (variables, classes, fields, methods).
+\\ The symbol table entry is a set of attributes associated with a name: 
+\begin{itemize}
+    \item kind of name (variable, class, field, method)
+    \item type 
+    \item nesting level
+    \item memory location
+\end{itemize}
+The symbol table is designed based on the scoping of the language. Usually a variable can be re-declared once per scope.
+\\ For example java uses these names: 
+\begin{itemize}
+    \item class 
+    \item field of class 
+    \item method of class
+    \item local variable
+\end{itemize}
+Java and C++ support method overloading, method can have same name but have to be unique (by having different params or return). 
+\\ Java and C++ use static scoping:
+\begin{itemize}
+    \item mapping are made at compile time 
+    \item C++ uses the "most closely nested rule"
+    \item in Java inner scopes cannot define variables defined in outer scopes
+\end{itemize}
+Each function has one or more scopes: one for params, one for body and any nested block inside.
+\\ Not all languages use static scoping. For example python uses dynamic scoping, which means that the mapping are made at run time. This is not a great idea, a variable can have different declaration and different types.
+\\ In Java it's possible to use a field or a method before the definition, but not a variable.
+\\ From now on we will assume that our language: 
+\begin{itemize}
+    \item uses static scoping
+    \item requires declaration before usage 
+    \item does not allow multiply declarations in the same scope, no method overloading even with different kinds of names 
+    \item does allow the same method to be defined multiply but once per scope
+\end{itemize}
+In addition our language will answer 2 questions: is this name already declared?, to which declaration does our name correspond?. Once we answer this, the table is no longer needed, names are forgotten.
+\\ Here's the needed operations: 
+\begin{itemize}
+    \item look the name in the current scope, if not found insert a new name in the table
+    \item look the name in the current and enclosing scope, to check and link undeclared names
+    \item operations need when a new scope is entered
+    \item operations need when a new scope is exited
+\end{itemize}
+The implementation can be a list of table or a table of lists. For simplicity we will assume each table only includes type and nesting level.
+
+\subsubsection{List of hashtables}
+The idea is a list of hashtables, one per scope.
+\\ The process: 
+\begin{itemize}
+    \item On scope entry increment the current level number and add a new empty hashtable at the start of the list O(how hashtable size)
+    \item To process a declaration of x, if it's in the first table the we error otherwise add x to the first hashtable with it's name, type and nesting level. (O(1)) lookup in hashtable is constant
+    \item To process a use of x, search for x in the list, if found link it otherwise error. O(depth of nesting)
+    \item On scope exit remove the first hashtable from the list. O(1) 
+\end{itemize}
+
+\subsubsection{Hashtable of lists} 
+We have one big hashtable with all the names, and each name has a list of symbol-table entries. The first item is the closest scope. We also store the level number attribute, which tells us in which enclosing the declaration was made.
+\\ The operations: 
+\begin{itemize}
+    \item On scope entry increment the current level number. O(1)
+    \item To process a declaration of x, look up x in the symbol table, if x has the same nesting number error otherwise add a new item with appropriate current level number (O(1))
+    \item To process a use of x, if there is an entry in the symbol-table link the use otherwise error (Undeclared variable) (O(1))
+    \item On scope exit, scan all names at first level, if the level is the same as current then remove it from the list. If a name has empty list, then remove it. Finally decrement the current number O(number or names)
+\end{itemize}
+
 
 \newpage
 \import{}{esercizi}
