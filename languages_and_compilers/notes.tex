@@ -2942,8 +2942,101 @@ You can subtype arrays but only the content of the cells.
     \item Class B inherits from  \{ ..., T':f, ... \}
 \end{itemize}
 Fields can be seen as arrays cells, they can be modified but can't change type. Fields subtyping is not sound, that's why in java we cannot override fields. But if fields are immutable then subtyping is admitted, if T'$\leq$T for every fields then B $\leq$ A. These are calle \emph{covariant fields}.
+\vspace{4mm} 
+\\ Consider methods overriding by changing the return type and the params: 
+\begin{itemize}
+    \item Class A \{ ..., T : m(T$_1$ p$_1$,...,T$_n$ p$_n$)\{e\} ... \}
+    \item Class B inherits from  \{ ..., T' m(T'$_1$ p$_1$,...,T'$_n$ p$_n$) \{e' \} ... \} 
+\end{itemize}
+Consider "let x:T $\leftarrow$ y.m($e_1,...,e_n$) in e" assuming "y" with static type A and dynamic type B. 
+\begin{itemize}
+    \item the B return type T' must be usavble in place of the A return type T, T'$\leq$T.
+    \item the params types must be usable in place of B params types, T$_i \leq$ T'$_i$
+\end{itemize}
+The general subtyping rule for functions is: 
+\begin{mathpar}
+    \inferrule 
+    { T_1 \leq T'_1 ... T_n \leq T'_n \text{ and } T' \leq T }
+    { (T'_1,...,T'_n \rightarrow T') \leq (T_1,...,T_n \rightarrow T) }
+\end{mathpar}
+"covariant" output return type
+\\ "contravariant" input params types. 
+\vspace{5mm} 
+\\ You have to make a tradeoff, the less sound the language then more bad programs will be accepted. The more sound the language, the less good program will be accepted.
 
+\section{Code generation}
+We covered the front-end phases: lexical analysis, parsing, semantic analysis. Now we will cover the back-end phases: code generation and optimization.
 
+\subsection{Memory management} 
+The initial execution of the program is in the hands of the computer. The OS allocates memory for the program, the code in loaded and the OS jumps to the entry point (the main).
+\\ The memory get's split into code and other space (not necessarily contiguous memory). The other space is usually data. 
+\\ The compiler is responsible for generating the code and organizing the use of the data area. The goals for memory management is to be fast and correct, which is hard.
+\\ Let's make some assumptions about executions: 
+\begin{enumerate}
+    \item Execution is sequential
+    \item When a procedure (functions) is called, we save the pointer to the current position, execute and return to current position
+\end{enumerate}
+An invocation of procedure P is an activation of P. The \emph{lifetime} of P is: all the steps to execute P, including any procedures P calls.
+\\ The \emph{lifetime} of a variable x is the portion of the execution in which x is defined. The difference between variable scope and lifetime is: lifetime dynamic run-time concept while scope is a static concept.
+\\ Our next assumption (2) is that when P calls Q, then Q returns before P does (like in recursions). Lifetimes of procedure activations are nested and can be depicted as trees.
+\begin{mycode}
+    class Main {
+        int g() { return 1; } 
+        int f() { return g(); }
+        void main() { g(); f(); }
+    }
+\end{mycode}
+\begin{forest}
+  for tree={
+    parent anchor=south,
+    child anchor=north,
+    align=center,
+  },
+  [ main
+    [ g ]
+    [ f
+        [ g ]
+    ]
+  ]
+\end{forest}
+\\ Note: 
+\begin{itemize}
+    \item The activation tree depends on run-time behavior
+    \item The activation tree may be different for every program input
+    \item Currently active procedures are tracked in a stack
+\end{itemize}
+
+Memory \\
+\begin{tikzpicture}[scale=0.8]
+  \draw[fill=blue!20, draw=blue] (2,-1.5) rectangle node[midway,align=center] {Code} ++(4,-1);
+  \draw[fill=green!20, draw=green] (2,-2.5) rectangle node[midway,align=center] {Stack} ++(4,-1);
+  \draw[fill=red!20, draw=red] (2,-3.5) rectangle node[midway,align=center] { } ++(4,-1);
+\end{tikzpicture}
+
+The information needed to manage one procedure activation is calle \textbf{activation record} or \textbf{frame}. If procedure f calls g, the g's activation record contains a mix of info about f and g.
+\\ When f calls g, f is "suspended" until g completes. f will be resumed by g, g knows how thanks to it's AR.
+\\ g's AR could contain:
+\begin{itemize}
+    \item the return address of f
+    \item g params
+    \item space for g's local variables
+    \item other temporary values
+\end{itemize}
+g's AR should have: 
+\begin{itemize}
+    \item pointer to the previous AR, called control link and points to the caller of g
+    \item machine status prior to calling g, contents of the registers and program counter (pointer to current position in stack).
+\end{itemize}
+The compiler therefore must determine at compile time the \textbf{layout} of the activation record and generate code that access correctly the locations in the activation record: AR layout and code generator must be designed together.
+\\ You could have a simple stack that has a fixed offset which works, but if organized it could help speed and simplicity.
+\\ All reference to global variables have a fixed address, they can be statically or dynamically allocated.
+\\
+\begin{tikzpicture}[scale=0.8]
+  \draw[fill=blue!20, draw=blue] (2,-1.5) rectangle node[midway,align=center] {Code} ++(4,-1);
+  \draw[fill=yellow!20, draw=yellow] (2,-2.5) rectangle node[midway,align=center] {Static data} ++(4,-1);
+  \draw[fill=green!20, draw=green] (2,-3.5) rectangle node[midway,align=center] {Stack} ++(4,-1);
+  \draw[fill=red!20, draw=red] (2,-4.5) rectangle node[midway,align=center] { } ++(4,-1);
+\end{tikzpicture}
 
 \newpage
 \import{}{esercizi}
