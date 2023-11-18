@@ -3031,12 +3031,204 @@ The compiler therefore must determine at compile time the \textbf{layout} of the
 \\ You could have a simple stack that has a fixed offset which works, but if organized it could help speed and simplicity.
 \\ All reference to global variables have a fixed address, they can be statically or dynamically allocated.
 \\
-\begin{tikzpicture}[scale=0.8]
+    \begin{tikzpicture}[scale=0.8]
   \draw[fill=blue!20, draw=blue] (2,-1.5) rectangle node[midway,align=center] {Code} ++(4,-1);
   \draw[fill=yellow!20, draw=yellow] (2,-2.5) rectangle node[midway,align=center] {Static data} ++(4,-1);
   \draw[fill=green!20, draw=green] (2,-3.5) rectangle node[midway,align=center] {Stack} ++(4,-1);
   \draw[fill=red!20, draw=red] (2,-4.5) rectangle node[midway,align=center] { } ++(4,-1);
 \end{tikzpicture}
+\\ Reference to a variable declared in an outer scope should point to a variable stored in another record. Any block has it's own activation record.
+In particular it should point to the most recent AR within the immediately enclosing scope. 
+\\ The access link is used to find outer scope variables and always point to the enclosing syntax block, like say a functions.
+\\ The value of the access link is defined as follows: 
+\begin{itemize}
+    \item when we enter a new scope or create a function: access link = current AR (we save the current access link address)
+    \item a function calls herself or another function: access link = caller's access link
+    \item call of a function outside the current scope: access link = follow the chain of access link until you find the correct one
+\end{itemize}
+Any data that outlives the procedure can't be saved in the AR, such data must be saved in the \emph{heap}.
+\\ Unlike di AR data the heap data should be remove when it becomes garbage. The garbage collection is done by the system when needed, it is execute at the same time as the program.
+\\ In some languages like C the deallocation is under the responsibility of the programmer which can lead to big problems when pointers share the same memory.
+\vspace{4mm} 
+\\ Mark and sweep algorithm tags all resources with 0, then follows all links and set those tags to 1.
+Finally removes any tag that is 0.
+\vspace{4mm} 
+\\ Reference counting algorithm counts the number of references to a resource, when it reaches 0 it removes the resource. 
+When the pointer is set to a resource it increments the counter, when the pointer is set to null it decrements the counter.
+\\ Datum = data element, which is basically a resource.
+\vspace{4mm} 
+\\ Notes:
+\begin{itemize}
+    \item the code portion contains object code, usually fixed size and read only
+    \item the static area contains data with fixed addresses, fixed size and could be readable and writable
+    \item the stack contains activation records, grows and shrinks dynamically. A single procedure is usually fixed size and contains locals
+    \item heap contains all the other data and it can grow
+    \item heap and stack could grow into each other! One way to avoid it's to have them at opposite memory locations.
+\end{itemize}
+
+\begin{tikzpicture}[scale=0.8]
+  \draw[fill=blue!20, draw=blue] (2,-1.5) rectangle node[midway,align=center] {Code} ++(4,-1);
+  \draw[fill=yellow!20, draw=yellow] (2,-2.5) rectangle node[midway,align=center] {Static data} ++(4,-1);
+  \draw[fill=green!20, draw=green] (2,-3.5) rectangle node[midway,align=center] {Stack} ++(4,-1);
+  \draw[fill=gray!20, draw=gray] (2,-4.5) rectangle node[midway,align=center] { Unallocated } ++(4,-1);
+  \draw[fill=purple!20, draw=purple] (2,-5.5) rectangle node[midway,align=center] { Heap } ++(4,-1);
+\end{tikzpicture}
+
+\subsection{Code generation for stack machine} 
+It's a machine that computes using a stack. 
+Both the operations and the results are pushed on the stack.
+\\ Say you want to add to numbers: push 5, push 7, add.
+The add operation will pop 5 and 7, add them and push the result.
+\\ The big advantage of the stack machine is it's simplicity:
+\begin{itemize}
+    \item input and output in the same place
+    \item uniform compilation which means simple compiler
+    \item the stack is invariant, results stack on top22
+    \item items are always on top of the stack: location is implicit
+    \item no need to specify operands and results 
+    \item compact programs and small instructions 
+    \item java bytecode is a stack machine
+\end{itemize}
+Any operation need the stack will perform 2 reads and 1 write (2 pops and 1 push). We could optimize this by keeping the top of the stack in a register (accumulator) therefore removing one read. We will not do it, for simplicity sake.
+
+\subsubsection{From stack machine to assembly language} 
+We will consider a stack machine without an accumulator.We want to run this code on a processor, in our case it will be MIPS (Microprocessor without Interlocked Pipeline Stage). There are several emulators of this processor.
+To be more precise we implement the stack machine using MIPS instructions and registers.
+\\ MIPS architecture: 
+\begin{itemize}
+    \item Prototype RISC (Reduced Instruction Set Computer) architecture
+    \item arithmetic operations use register for operands and results 
+    \item use load and store instructions to access memory
+    \item 32 general use registers, each 32 bits. We will use \$sp and \$t$_0$,\$t$_1$,\$t$_2$ (temporary registers)
+\end{itemize}
+Therefore the stack will be kept in memory and grow towards lower addresses. The \$sp register keeps track of the top of the stack. Let's define some macros: 
+\begin{itemize}
+    \item push \$t becomes addiu2 \$sp, \$sp, -4; sw \$t, 0(\$sp)
+    \item pop \$t becomes addiu \$sp, \$sp, 4
+    \item \$t $\rightarrow$ pop becomes lw \$t, 0(\$sp); addiut \$sp, \$sp, 4
+    \item pop*n becomes addiu \$sp, \$sp, z where z = 4*n
+\end{itemize}
+Let's define a small language with integers, integer operation and global functions with at least one parameter.
+\\ \hspace*{5mm} P $\rightarrow$ D ; P $|$ S
+\\ \hspace*{5mm} D $\rightarrow$ fun id(ARGS) = E
+\\ \hspace*{5mm} ARGS $\rightarrow$ id, ARGS $|$ id
+\\ \hspace*{5mm} E $\rightarrow$ int $|$ id $|$ if E$_1$ = E$_2$ then E$_3$ else E$_4$ $|$ E$_1$ + E$_2$ $|$ E$_1$ - E$_2$ $|$ id( E$_1$, ..., E$_n$)
+\\ \vspace{3mm} The first function definition f is the main routine.
+\\ Here's the program for computing Fibonacci: 
+\\ \hspace{2mm} fun fib(x) = if x=1 then 0 else:
+\\ \hspace{2mm} if x=2 then 1 else 
+\\ \hspace{2mm} fib(x-1) + fib(x-2)
+\vspace{3mm}
+\\ For each expression $e$ we will generate MIPS code that: 
+\begin{itemize}
+    \item computes the result of $e$ and pushes it to the stack
+    \item preserves the content of the stack that came before $e$, we simply add on the top the result of $e$
+\end{itemize}
+cgen(e) is generation function which generates code for $e$. Eg: Say you have a constant $i$, the code cgen(i) = li \$t$_0$ i ; push \$ t$_0$.
+\\ Let's see cgen(e$_1$, e$_2$): 
+\begin{enumerate}
+    \item cgen(e$_1$)
+    \item cgen(e$_2$)
+    \item \$t$_2 \leftarrow$ pop
+    \item \$t$_1 \leftarrow$ pop
+    \item add \$t$_0$, \$t$_1$, \$t$_2$
+    \item push \$t$_0$
+\end{enumerate}
+What if the put the result in t$_1$ to optimize operations? We would have wrong code! You can't preserve the value of a register between operations!
+\\ Code generation notes: 
+\begin{itemize}
+    \item stack machine code generation is recursive 
+    \item code generations is performed bottom-up by a recursive traversal of the AST.
+\end{itemize}
+Let's add sub to our instructions: sub reg$_0$ reg$_1$ reg$_2$ or reg$_0 \leftarrow$ reg$_1$ reg$_2$.
+\\ cgen(e$_1$ - e$_2$):
+\begin{itemize}
+    \item cgen(e$_1$) 
+    \item cgen(e$_2$)
+    \item \$t$_2 \leftarrow$ pop 
+    \item \$t$_1 \leftarrow$ pop 
+    \item sub \$t$_0$, \$t$_1$, \$t$_2$ 
+    \item push \$t$_0$
+\end{itemize}
+We also need to add flow control instructions: beq reg$_1$ reg$_2$ label or if reg$_1$ = reg$_2$ then goto label.
+\\ Another new instruction is b label, unconditional jump to label.
+\\ cgen(if e$_1$ = e$_2$ then e$_3$ else e$_4$): 
+\\ \hspace*{4mm} cgen(e$_1$)
+\\ \hspace*{4mm} cgen(e$_2$)
+\\ \hspace*{4mm} \$t$_2 \leftarrow$ pop 
+\\ \hspace*{4mm} \$t$_1 \leftarrow$ pop 
+\\ \hspace*{4mm} beq \$t$_1$, \$t$_2$, true\_branch
+\\ \hspace*{4mm} cgen(e$_4$) 
+\\ \hspace*{4mm} b end\_if 
+\\ true\_branch: 
+\\ \hspace*{4mm} cgen(e$_3$) 
+\\ end\_if:
+\\ You are supposed to also generate your labels with cgen().
+\\ Code for functions and functions definition depend on the activation record layout.
+In our case a simple AR will suffice: 
+\begin{itemize}
+    \item the result of the function is on top of the stack, no need to reserve space for the result in the AR
+    \item the AR holds parameters values, these are the only variables in our current language
+\end{itemize}
+We still need to store the return address and the control link. The access link is still not needed, we don't have nested declarations, we have local params and global functions.
+\\ It's handy to have a pointer to the current position (reference pointer) in the AR.
+This pointer is saved in \$fp (frame pointer).
+The reference position is part of AR layout design. \$fp points to the position of the first argument and it's used by the code generator to locate elements (params, based on offset).
+\\ We need to store the caller \$fp (control link) because it has to be restored after the call.
+\\ Now let's add a new instructions: jal label (jump and link). Jump to label and save the return address in \$ra register.
+\\ Code generation for a function call: 
+\\ cgen(f(e$_1$, ..., e$_n$)):
+\\ \hspace*{4mm} push \$fp
+\\ \hspace*{4mm} cgen(e$_n$)
+\\ \hspace*{4mm} ...
+\\ \hspace*{4mm} cgen(e$_1$)
+\\ \hspace*{4mm} jal f\_entry
+\\ We save the frame pointer, push each value in reverse order, save the return address in \$ra and so far our memory used is 4*n+4 bytes (4 bytes for each param and 4 byte for the \$fp).
+\\ Let's add another istruction: jr reg (jump register). Jump to the address contained in reg.
+\\ cgen(fun f(x$_1$, ..., x$_n$) = e):
+\\ \hspace*{4mm} f\_entry:
+\\ \hspace*{4mm} move \$fp, \$sp
+\\ \hspace*{4mm} push \$ra
+\\ \hspace*{4mm} cgen(e)
+\\ \hspace*{4mm} \$t$_0 \leftarrow$ pop 
+\\ \hspace*{4mm} \$ra $\leftarrow$ pop 
+\\ \hspace*{4mm} pop*n 
+\\ \hspace*{4mm} $fp \leftarrow$ pop 
+\\ \hspace*{4mm} push \$t$_0$ 
+\\ \hspace*{4mm} jr \$ra
+\\ Save the current stack in \$fp into \$sp, save the return address in the temporary field \$t$_0$, we do all the operations save the return and jump to the \$ra. 
+\\ Activation record are \textbf{not} saved adjacently in the stack, because the stack grows during execution.
+\\ Be mindful, the \$sp always changes! We can't use to perform operations with our params, however this is not true for the \$fp. Also remember that the \$fp keeps the location of the first param.
+\\ Therefore in fun (f(x$_1$, x$_2$) = e) x$_1$ is at \$fp and x$_2$ is at \$fp + 4. 
+\\ Thus based on the offset of the params x$_i$: cgen(x$_i$) = lw \$t$_0$ z(\$fp); push \$t$_0$. The offset is z=4*(i-1) and should be saved inside the symbol table. 
+
+\subsubsection{Code generation for OOP languages}
+We have 2 issues: 
+\begin{itemize}
+    \item How to represent objects in memory.
+    \item How to dynamically dispatch methods.
+\end{itemize}
+Consider the following code: 
+\begin{mycode}
+    class A { 
+        int a = 0;
+        int d = 1;
+        int f() { return a = a + d; }
+    }
+
+    class B extends A {
+        int b = 2;
+        int f() { return a; }
+        int g() { return a = a - b; }
+    }
+
+    class C extends B {
+        int c = 3;
+        int h() { return a = a * c; }
+    }
+\end{mycode}
+
+
 
 \newpage
 \import{}{esercizi}
