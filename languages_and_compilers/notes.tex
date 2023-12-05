@@ -3218,7 +3218,7 @@ Consider the following code:
 
     class B extends A {
         int b = 2;
-        int f() { return a; }
+        int f() { return a; } // override
         int g() { return a = a - b; }
     }
 
@@ -3227,7 +3227,19 @@ Consider the following code:
         int h() { return a = a * c; }
     }
 \end{mycode}
+Fields a and d are inherited by B and C. All methods in all classes refer to a. For a to work in all classes a must be in the same place. 
+\\ An object is like a struct in C, foo.field is an index into foo struct at an offset corresponding to field. 
+\\ Objects are laid out in a contiguous memory section. Each field is stored at a fixed index. An object is created from the corresponding layout (I assume statically saved) in the heap.
+\\ Given a layout for class A, we can define a subclass B which extends the layout with new name.
+This way A is unchanged.
+\\ Each class has a fixed set of methods, saved in the \textbf{dispatch table}. 
+\\ The dispatch table is a table of function pointers, one for each method. There is also a method f at a fixed offset for a class and all of its subclasses. 
+We can override f but it won't change its index.
+All other methods get a on offset, inside the dispatch table, from f.
 
+\section{Basic logic}
+Logic is a foundational theory.
+In computer science logic provides a language for expressing property of interest of a system and a way of enacting these properties into the same system.
 
 
 \newpage
