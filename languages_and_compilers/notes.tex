@@ -3240,7 +3240,160 @@ All other methods get a on offset, inside the dispatch table, from f.
 \section{Basic logic}
 Logic is a foundational theory.
 In computer science logic provides a language for expressing property of interest of a system and a way of enacting these properties into the same system.
+\\ The basic syntax of logic is: a set of admissible formulas F = \{ $\phi_0, \phi_1,...$ \}.
+\\ The basic semantics of logic is by two elements: $<\mathcal{M}, \models>$: 
 
+\begin{itemize}
+    \item $\mathcal{M}$ is a set of models (M $\in \mathcal{M}$)
+    \item $\vdash \subset \mathcal{M} \times \mathcal{F}$ the satisfaction relation
+\end{itemize}
+Terminology and notation
+\begin{itemize}
+    \item $M \models \phi$ means that model $M$ satisfies formula $\phi$
+    \item (or: formal $\phi$ is satisfied in interpretation/valuation M)
+    \item Also is valid to satisfy a set of formulas $\mathcal{M} \models \phi, \phi',...$
+\end{itemize}
+Given a finite set of propositions symbols (P = \{p,q,r,...\}) a formula can be: 
+\begin{itemize}
+    \item T (true constant)
+    \item $\bot$ (false constant)
+    \item propositional symbol p $\in$ P
+    \item of the kind: $\neg \phi$ (negation)
+    \item of the kind: $\phi \lor \psi$ (or)
+    \item of the kind: $\phi \land \psi$ (and)
+    \item of the kind: $\phi \rightarrow \psi$ (implication)
+\end{itemize}
+nothing else can be a formula. This can also be written as a grammar: $\phi$ ::= p $|$ T $| \bot |
+\neg \phi,
+\phi \lor \psi,
+\phi \land \psi,
+\phi \rightarrow \psi $
+\\ A model M is a function M: P $\rightarrow$ \{F,T\}.
+\\ Let's define the satisfaction relation M $\models \phi$:
+\begin{itemize}
+    \item M $\models$ p $\Longleftrightarrow$ M(p) = T
+    \item M $\models$ T
+    \item M $\not\models$ $\bot$
+    \item M $\models \neg \phi$ $\Longleftrightarrow$ M $\not\models \phi$
+    \item M $\models \phi \lor \psi$ $\Longleftrightarrow$ M $\models \phi$ or M $\models \psi$
+    \item M $\models \phi \land \psi$ $\Longleftrightarrow$ M $\models \phi$ and M $\models \psi$
+    \item M $\models \phi \rightarrow \psi$ $\Longleftrightarrow$ M $\not\models \phi$ implies M $\models \psi$
+\end{itemize}
+Let's define some logical concepts. 
+\\ Logical consequence: 
+\begin{itemize}
+    \item Formal $\phi$ is a logical consequence of $\phi_1,...,\phi_n$ if for any M, when M $\models \phi_1,...,\phi_n$ then M $\models \phi$
+    \item This form is equivalent to: $\phi_1,...,\phi_n \vdash \phi$
+\end{itemize}
+Tautology/Validity definition: A formula $\phi$ that is logical consequence of no formulas (always true in any model) is called tautology. 
+The notation is: $\models \phi$ or we can simply say $\phi$ is valid.
+\\ We can prove by contradiction: If $\phi_1,...,\phi_n \neg \phi \models \bot$ then $\phi_1,...,\phi_n \models \phi$.
+\\ Two formulas logically equivalent if $\phi \models \psi$ therefore $\psi \models \phi$.
+\\ A formula $\phi$ is satisfiable if there is a model M such that M $\models \phi$. $\phi$ is valid if and only $\neg \phi$ is not satisfiable. 
+\\ Logical consequence: $\phi_1, ... , \phi_n$ if and only if $\models ( \phi_1 \land ... \land \phi_n \rightarrow \phi$).
+\vspace{2mm}
+\\ Logical equivalence: $\phi \equiv \psi$ if and only if $\models (\phi \rightarrow \psi) \land (\psi \rightarrow \phi)$. This could also be written using $\leftrightarrow$: LE (... $\models \phi \leftrightarrow \psi$. Note: not all logics has the symbol $\rightarrow$.
+\vspace{2mm} 
+\\ All operators can be defined in terms of $\neg$ and $\rightarrow$: 
+\begin{itemize}
+    \item T $\equiv p \rightarrow q$
+    \item $\bot \equiv \neg (p \rightarrow q)$
+    \item $\phi \lor \psi \equiv \neg \phi \rightarrow \psi$
+    \item $\phi \land \psi \equiv \neg (\phi \rightarrow \neg \psi)$
+\end{itemize}
+We can now simplify the grammar from before like so: $\phi ::= p | \neg \phi | \phi \rightarrow \phi$ or $\phi ::= p | \bot | \phi \rightarrow \phi$
+\\ How can we know if $\phi \models \psi$, after all this should hold for any M, which are infinite. 
+Fortunately M using variables in $\phi$ and $\psi$ are limited, basically it's sufficient to build the truth table.
+\\ In logic there is no obvious way to compute validity, we need some mechanism to do that.
+\\ In propositional logic we can use truth tables.
+There is a more efficient technique called \textbf{CNF} (Conjunctive Normal Form), there are tool which are optimize to compute this form. 
+\\ CNF is a conjunction ($\land$) of clauses, where a clause is a disjunction ($\lor$) of literals. A literal is a propositional symbol or it's negation.
+
+\subsection{Deduction system}
+Validity can be deduced: 
+\begin{itemize}
+    \item ($a \lor b \lor c \lor d \lor e ) \rightarrow c$ since on the left we have a conjunction that includes the implied formula (we have c on the left)
+    \item $\neg((a \lor b \lor c \lor d \lor e ) \rightarrow c)$ is false 
+    \item a false formula can be any formula
+\end{itemize}
+We use axiom to represent this cases: $\phi \lor \psi \rightarrow \phi$, $\neg \neg T$, $\bot \rightarrow \phi$.
+\\ Let's induce a deduction symbol $\vdash$. 
+$\phi_1, ... , \phi_n \vdash \phi$ means that $\phi$ can be deduced from $\phi_1, ... , \phi_n$. $\vdash \phi$ means $\phi$ can't be deduced by any formula. ($\models$ is called semantic entailment, while $\vdash$ is syntactic entailment).
+\\ We can use $\models$ in any mathematical form while $\vdash$ should be constructing use rules and axioms
+\begin{itemize}
+    \item Form axioms: $\vdash \phi$
+    \item Form for rules: $ \inferrule
+            { \vdash \phi_1 ... \vdash \phi_n}
+            { \vdash \phi} $
+\end{itemize}
+where $\phi, \phi_1, ... $ are formulas or formula schemas.
+\\ Hilbert deduction system minimal syntax: $\phi ::= p | \neg \phi | \phi \rightarrow \phi$.
+Axioms: 
+\begin{itemize}
+    \item $\vdash \alpha \rightarrow (\beta \rightarrow \alpha)$
+    \item $\vdash (\alpha \rightarrow (\beta \rightarrow \gamma)) \rightarrow ((\alpha \rightarrow \beta) \rightarrow (\alpha \rightarrow \gamma))$
+    \item $\vdash (\neg \alpha \rightarrow \neg \beta) \rightarrow (\alpha \rightarrow \beta)$
+\end{itemize}
+Rule: $ \inferrule 
+        { \vdash \alpha \vdash \alpha \rightarrow \beta}
+        { \vdash \beta} $
+\\ To prove $\phi_1 ... \phi_n \vdash \phi$ we need to prove $ \inferrule 
+        { \vdash \phi_1 ... \vdash \phi_n}
+        { \vdash \phi} $
+\\ How sound is this system? Well if $\phi_1 ... \phi_n \vdash \phi$ then $\phi_1 ... \phi_n \models \phi$ which works on reverse by the way 
+$\phi_1 ... \phi_n \models \phi$ then $\phi_1 ... \phi_n \vdash \phi$.
+
+\subsection{Predicate logic}
+Predicate logic should be more structure and discuss individual and global properties.
+For example:
+\\ "All men are mortal, Socrates is a man, therefore Socrates is mortal"
+\\ translates to 
+\\ $\models (\forall (man(X) \rightarrow mort(X)) \land man(socrat)) \rightarrow mort(socrat)$.
+\\ Another example: 
+\\ Every student is younger than some professor 
+\\ translates to 
+\\ M $\models (\forall X (stud(X) \rightarrow ( \exists Y(instr(Y) \land younger(X,Y)))))$
+\\ A term t over (C,F) has syntax: t ::= x $|$ c $|$ f(t$_1$, ..., t$_n$) where x is a variable, c $\in$ C is a constant and f $\in$ F is a with n terms as arguments.
+\\ A formula $\phi$ over (P,C,F) has syntax: $\phi ::= p(t_1, ... , t_n) |T| \bot | \neg \phi | \phi \lor \phi | \phi \land \phi | \phi \rightarrow \phi | \forall x \phi | \exists x \phi$ 
+\begin{itemize}
+    \item an atomic formula: p $\in$ P with n terms over (C,F)
+    \item a formula $T, \bot , \neg \phi , \phi \lor \phi , \phi \land \phi , \phi \rightarrow \phi$
+    \item a universal quantification of x in $\phi$
+    \item an existential quantification of x in $\phi$
+\end{itemize}
+The structure of a model M over (C,P,F) is of the kind $<\mathcal{A,C,F,P}>$: 
+\begin{itemize}
+    \item A is a non empty universe of concrete values
+    \item $\mathcal{C}$ : C $\rightarrow$ A associate to each constat a concerete value
+    \item $\mathcal{F}$ : F $\rightarrow$ (A$^n \rightarrow $A) associate to each function name a concrete funcion
+    \item $\mathcal{P}$ : P $\rightarrow$ (A$^n \rightarrow $ \{F, P\}) associate to each predicate name a concrete predicate name
+\end{itemize}
+In a specific model M a term is associated with a concrete value while an atomic formula p is associated with a boolean.
+\\ Let's make an example using the previous student example: 
+\[
+M \models (\forall X (stud(X) \rightarrow ( \exists Y(instr(Y) \land younger(X,Y)))))
+\]
+this translates to: 
+\\ C = \{\}, F = \{\}, P = \{ stud/1, instr/1, younger/2\}
+\\ Therefore our an example model M = $<\mathcal{A,C,F,P}>$ could be: 
+\begin{itemize}
+    \item A = \{bravetti,rossi,omicini,bianchi,natali\}
+    \item C = \{\}, F = \{\}
+    \item P = \{ 
+            \begin{itemize}
+                \item stud(bravetti) = F, stud(rossi) = T, stud(omicini) = F, stud(bianchi) = T, stud(natali) = F
+                \item instr(bravetti) = T, instr(rossi) = F, instr(omicini) = T, instr(bianchi) = F, instr(natali) = T
+                \item younger(rossi, natali) = T, younger(natali, omicini) = F, younger(bianchi, bravetti) = T, ...
+            \end{itemize}
+        \}
+\end{itemize}
+A variable is bound if it's inside a \emph{binder} $\forall$x and $\exists$x otherwise is called free. $\phi$ is closed if it does not include free variables.
+We will talk only about closed formulas, here's the semantics: 
+\begin{itemize}
+    \item M $\models p(t_1, ... , t_n) \Longleftrightarrow$ M(p($t_1, ... , t_n$)) = T
+    \item M $\models $T, M $\not\models \bot$ 
+    \item M $\models \neg \phi \Longleftrightarrow$ M $\not\models \phi$
+\end{itemize}
 
 \newpage
 \import{}{esercizi}
