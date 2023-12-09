@@ -25,6 +25,21 @@
     }
   }%
 }
+\newcommand{\mycircle}[0]{%
+  \begin{tikzpicture}
+    \draw (0,0) circle (0.15); 
+  \end{tikzpicture}%
+}
+\newcommand{\square}[0]{%
+  \begin{tikzpicture}
+      \draw (0,0) rectangle (0.3, 0.3);
+  \end{tikzpicture}%
+}
+\newcommand{\rombo}[0]{%
+  \begin{tikzpicture}
+      \draw (0,0) -- (0.10,0.20) -- (0.20,0) -- (0.10,-0.20) -- cycle; 
+  \end{tikzpicture}%
+}
 \lstnewenvironment{mycode}[1][]
 {
   \lstset{
@@ -3393,7 +3408,477 @@ We will talk only about closed formulas, here's the semantics:
     \item M $\models p(t_1, ... , t_n) \Longleftrightarrow$ M(p($t_1, ... , t_n$)) = T
     \item M $\models $T, M $\not\models \bot$ 
     \item M $\models \neg \phi \Longleftrightarrow$ M $\not\models \phi$
+    \item M $\models \phi \land \psi \Longleftrightarrow$ M $\models \phi$ and M $\models \psi$
+    \item M $\models \phi \lor \psi \Longleftrightarrow$ M $\models \phi$ or M $\models \psi$
+    \item M $\models \phi \rightarrow \psi \Longleftrightarrow$ M $\models \phi$ implies M $\models \psi$
+    \item M $\models \forall \phi \Longleftrightarrow$ for all v $\in$ A we have M $ \models \phi[v/x]$
+    \item M $\models \exists \phi \Longleftrightarrow$ exists v $\in$ A such as M $ \models \phi[v/x]$
 \end{itemize}
+where $\phi[v/x]$ is the formula obtained by replacing all free occurrences of x in $\phi$ with v.
+\\ Let's use some more formal definitions of M(p(t$_1$, ... , t$_n$)), remember the model $<\mathcal{A,C,F,P}>$. \\ M() over atomic fomrulas looks like this: 
+M(p( t$_1$, ... , t$_n$)) = P(p)M(t$_1$,...,M(t$_n$))
+\\ M() over terms looks like this:
+\begin{itemize}
+    \item M(v) = v
+    \item M(c) = C(c)
+    \item M(f(t$_1$,...,t$_n$)) = $\mathcal{F}$(f)(M(t$_1$,...,$M(t_n)$)
+\end{itemize}
+Here's an example of equivalent logic: $\exists x \phi \equiv \neg \forall x \neg \phi$.
+\\ And here's a simplified version of predicate logic: 
+$\phi ::= p(t_1,...,t)n) | \neq \phi | \phi \rightarrow \neg | \forall x \phi$.
+\vspace{5mm} 
+\\ Turing and Church proved that $\models \phi$ is undecidable. In a procedural implementation if $\models \phi$ has an answer in a finite time then is valid, while $\not\models \phi$ happens where the procedure does not terminate.
+
+\subsection{Hilber dedection system} 
+Minimal syntax: $\phi ::= p(t_1,...,t_n) | \neg \phi | \phi \rightarrow \phi | \forall x \phi$.
+\\ Axioms:
+\begin{itemize}
+    \item those of Propositional Logic
+    \item $\vdash (\forall x \alpha) \rightarrow \alpha[t/x]$ with no free variable in t becoming bound 
+    \item $\vdash \forall x (\alpha \rightarrow \beta) \rightarrow (\alpha \rightarrow \forall x \beta)$ with x not free in $\alpha$.
+\end{itemize}
+Rules: 
+\begin{itemize}
+    \item $\inferrule
+            { \vdash \alpha \vdash \alpha \rightarrow \beta}
+            { \vdash \beta} $ (Modus Ponenes)
+    \item $\inferrule
+            { \vdash \phi}
+            { \vdash \forall x \phi} $ (Universal Generalisation)
+\end{itemize}
+where $\phi[t/x]$ is the formula obtained by replacing all free occurrences of x in $\phi$ with t. 
+\\ It can be proved that $\vdash$ is correct and complete, but is undecidable (from $\models$).
+
+\section{Model checking} 
+\subsection{Logiche temporali}
+Nella logica classica c'è un solo "mondo" su cui si posso esprimere proprietà sempre vere o false: "oggi è lunedì" o è sempre vera o è sempre falsa.
+\\ I sistemi software sono dinamici: "x vale 10" può essere a volte vera a volte falsa. Le logiche temporali esprimo proprietà temporali: vere in alcuni mondi false in altri.
+\\ I "mondi| corrispondo a diversi momenti temporali. Queste relazioni possono essere: linear time oppure branching time.
+\\ Una sequenza lineare di mondi indicano fatti veri in quel instante. Estendiamo la nostra logica per specificare proprietà sui mondi: 
+\begin{itemize}
+    \item 
+        \begin{tikzpicture}
+            \draw (0,0) circle (0.15);
+        \end{tikzpicture}
+        $\phi: \phi$ è vera nel prossimo momento
+    \item 
+        \begin{tikzpicture}
+            \draw (0,0) rectangle (0.3, 0.3);
+        \end{tikzpicture}
+        $\phi: \phi$ è vera in tutti i momenti successivi
+    \item 
+        \begin{tikzpicture}
+            \draw (0,0) -- (0.15,0.3) -- (0.3,0) -- (0.15,-0.3) -- cycle; 
+        \end{tikzpicture}
+        $\phi: \phi$ è vera in alcuni momenti successivi
+    \item $\phi \; \mathcal{U} \psi$: $\phi$ è vera fino a quando $\psi$ vera
+\end{itemize}
+Sintassi LTL: 
+\\ $\phi, \psi \rightarrow$ p $|$ (atomic proposition) 
+\\ \hspace*{5mm} T $|$ (true)
+\\ \hspace*{5mm} $\bot |$ (true)
+\\ \hspace*{5mm} $\neg \phi |$ (complement)
+\\ \hspace*{5mm} $\phi \land \psi |$ (conjunction)
+\\ \hspace*{5mm} $\phi \lor \psi |$ (disjunction)
+\\ \hspace*{5mm} 
+        \begin{tikzpicture}
+            \draw (0,0) circle (0.15);
+        \end{tikzpicture} (next time)
+\\ \hspace*{5mm} 
+        \begin{tikzpicture}
+            \draw (0,0) rectangle (0.3, 0.3);
+        \end{tikzpicture} (always)
+\\ \hspace*{5mm} 
+        \begin{tikzpicture}
+            \draw (0,0) -- (0.15,0.3) -- (0.3,0) -- (0.15,-0.3) -- cycle; 
+        \end{tikzpicture} (sometime)
+\\ \hspace*{5mm} 
+    $\phi \; \mathcal{U} \psi$: $\phi$ (until)
+    \vspace{5mm}
+    \\ Si considerino formule di LTL che utilizzano proposizioni p $\in$ P. Un modello $\pi$ è una sequenza infinita di $\pi_1, \pi_2, ...$ di mondi dove $pi_i$ è una funzione: $\pi_i : P \rightarrow \{T, F\}$.
+\\ Definiamo la relazione $\pi \models \phi$: 
+\begin{itemize}
+    \item $ \pi\models p \Longleftrightarrow$ $\pi_1$(p) = T (unica differenza con logica proposizionale)
+    \item $ \pi\models $T, $ \pi\not\models \bot$ 
+    \item $ \pi\models \neg \phi \Longleftrightarrow$ $ \pi\not\models \phi$
+    \item $ \pi\models \phi \land \psi \Longleftrightarrow$ $ \pi\models \phi$ and $ \pi\models \psi$
+    \item $ \pi\models \phi \lor \psi \Longleftrightarrow$ $ \pi\models \phi$ or $ \pi\models \psi$
+    \item $ \pi\models \phi \rightarrow \psi \Longleftrightarrow$ $ \pi\models \phi$ implies $ \pi\models \psi$
+\end{itemize}
+L'operatore next indica la proposizione corretto nel prossimo momento temporale. Esempio: (sad $\land \neg$ rich) \mycircle{0.15} sad. La semantica corretta sarebbe: $\pi \models \mycircle{0.15} \Longleftrightarrow \pi^2 \models \phi$. ($\pi_i$ è la sequenza di mondi, quindi al quadrato significa solo che è il secondo mondo)
+\vspace{5mm}
+\\ L'operatore sometime è vero ora o in qualche momento futuro. Esempio: sad $\Rightarrow$ \rombo happy. Semantica: $\pi \models \rombo \phi \Longleftrightarrow$ there is some i $\geq$ 1 such that $\pi_1 \models \phi$.
+\vspace{5mm}
+\\ L'operatore always è vero ora e in ogni momento futuro. Esempio: lotter-win $\Rightarrow$ \square{0.3} rich. Semantica: $\pi \models \square{0.3} \; \phi \Longleftrightarrow$ for all i $\geq$ 1 we have $\pi^i \models \phi$.
+\vspace{5mm}
+\\ L'operatore until mettere in relazione due proposizioni, una vera ora e per tutti i momenti successivi finché non è vera un altra. Esempio born $\Rightarrow$ alive $\mathcal{U}$ dead. Semantica: $\pi \models \phi \mathcal{U} \psi \Longleftrightarrow$ there is some i $\geq$ 1 such that $\pi^i \models \psi$ and for all j = 1...i-1 we have $\pi^j \models \psi$.
+\vspace {5mm} 
+\\ Possiamo minimizzare gli operatori: 
+\begin{itemize}
+    \item always e sometime sono duali: $\neg \square{0.30} \phi \equiv \rombo \neg \psi$
+    \item sometime può essere espresso usando until: $\square \phi \equiv T \mathcal{U} \psi$
+    \item quindi tutti gli operatori si possono esprimere tramite next e until
+\end{itemize}
+Relazione con operatori classici: 
+\begin{itemize}
+    \item sometime distribuisce su or e always su and 
+        \\ $\rombo \; (\phi \lor \psi) \equiv \rombo \phi \lor \rombo \psi$
+        \\ $\square \; (\phi \land \psi) \equiv \square \phi \land \square \psi$
+    \item relazione con il not: 
+        \\ $\neg \; \mycircle \; \phi \equiv \mycircle \; \neg \phi$
+        \\ $\neg (\psi \mathcal{U} \phi) \equiv (\neg \psi \mathcal{U} (\neg \phi \land \neg \psi)) \lor \; \square \; \neg \psi$
+\end{itemize}
+Possiamo usare notazione alternative: 
+\begin{itemize}
+    \item $\rombo \; \rightarrow$ F oppure $<>$
+    \item $\square \; \rightarrow$ G oppure $[]$
+    \item $\mycircle \; \rightarrow$ X oppure $()$
+\end{itemize}
+Ecco alcuni concetti importanti per i sistemi informatici: 
+\begin{itemize}
+    \item safety (\square $\neg$ ....): non raggiungo mai stati con errori 
+    \item liveness (\rombo ....): primo o poi eseguo un azione
+    \item fairness (\square \; \rombo \; ready $\Rightarrow$ \square \; \rombo \; run): se chiedo una cosa infinite volte, verrà eseguita infinite volte
+\end{itemize}
+Le proposizioni $\pi_i$(p) per i $\geq$ 1 sono codificati tramite predicati unari p(i) su numeri naturali. Una formula LTL $\phi$ è codificata dalla formula $[\![\phi]\!]_{s(z)}$, dove: 
+\\ $[\![p]\!]_t$ = p(t)
+\\ $[\![\mycircle \phi]\!]_t$ = $[\![\phi]\!]_{s(t)}$
+\\ $[\![\rombo \phi]\!]_t$ = $ \exists t' \; t' \geq t \land [\![\phi]\!]_{t'}$
+\\ $[\![\square \phi]\!]_t$ = $ \forall t' \; t' \geq t \rightarrow [\![\phi]\!]_{t'}$
+\\ $[\![\phi \mathcal{U} \psi]\!]_t$ = $ \forall t' \; t' \geq t \rightarrow [\![\psi]\!]_{t'} \land \forall t''(t \leq t'' \land s(t'') \leq t') \rightarrow [\![\phi]\!]_{t''}$
+
+\subsection{Labeled transition system e logiche temporali} 
+Un LTS è un NFA senza stati di accettazione F. Una traccia di un LTS è una sequenza di etichette I$_n$. Le tracce ricordano le stringe degli NFA, a noi interessa le massimali: infinito oppure il programma si blocca.
+\\ Formalmente una traccia $\sigma$ di un LTS (Q, $\Sigma$, $\delta$, q$_0$) è una sequenza di etichette I$_1$ I$_2$ ... tale che esistono stati q$_1$, q$_2$ ... con q$_i \in \delta$(q$_{i-1}$, I$_I$) per ogni i =1 ... len($\sigma$).
+\\ Una traccia $\delta$ è un massimale se len($\sigma$) = $\infty$ oppure se q$_{len(\delta)}$ è di blocco, ovvero $\delta$(q$_{len(\delta)}$, O) = $\emptyset$ per ogni I $\in \Sigma$.
+\vspace{5mm} 
+\\ Lungo una traccia vale solo una proposizione che coincide con l'etichetta della transizione successiva. Un LTS soddisfa una formula se tutte le sue tracci massimali soddisfano la formula.
+\\ Formalmente una traccia $\sigma$ = I$_1$ I$_2$ ... di un LTS (Q,$\Sigma$, $\delta$, q$_0$) individua il modello $\pi$ definito da: 
+\[
+    \pi_i(p) = T \Longleftrightarrow i \; len(\sigma) \land p = I_i 
+\]
+dove i $\geq$ 1 e p $\in \Sigma$.
+\\ Un LTS soddisfa una formula $\phi$ di LTL se i modelli $\pi$ individuati da tutte le sue tracce massimali sono tali che: $\pi \models \phi$.
+\\ Non sono super sicuro sulla mutua esclusione... Riguardalo post esercizi.
+\\ I sistemi modellati da automi LTS sono detti "sistemi concorrenti". La "process algebra" sono un modo naturale per rappresentare sistemi di questo tipo.
+\subsection{Process algebra} 
+Esistono molti tipi di process algebra, noi trattiamo FSP(finite state process) usato dal LTSA (labeled transition system analyzer). Un processo è rappresentato come LTS, ovvero diamo nomi agli stati e descriviamo le transizione che può fare.
+\vspace{3mm}
+\\ Esempio interruttore: 
+\\ SWITCH = OFF, 
+\\ off    = (on $\rightarrow$ ON),
+\\ on     = (off $\rightarrow$ OFF).
+\\ oppure se vogliamo essere concisi 
+\\ SWITCH = (on $\rightarrow$ off $\rightarrow$ SWITCH).
+\\ Anche gli LTS hanno il concetto di concorrenza (interleaving), inoltre c'è il concetto di sincronizzazione che è l'esecuzione fisica contemporanea. 
+\\ Interleaving è l'esecuzione di azioni che mancano in altri processi in ordine arbitraria, mentre la sincronizzazione è l'esecuzione simultanea di etichette comuni in più LTS.
+\vspace{3mm}
+\\ Esempio interleaving: 
+\\ ITCH = (scratch $\rightarrow$ STOP).
+\\ CONVERSE = (think $\rightarrow$ talk $\rightarrow$ STOP).
+\\ CONVERSE\_ITCH = (ITCH $||$ CONVERSE)
+\\ Siccome i due alfabeti sono disgiunti si possono fare le 2 azioni in contemporanea. 
+\vspace{3mm} 
+\\ Esempio sincronizzazione:
+\\ MAKER = (make $\rightarrow$ ready $\rightarrow$ used $\rightarrow$ MAKER $\rightarrow$).
+\\ USER = (ready $\rightarrow$ use $\rightarrow$ used $\rightarrow$ USER $\rightarrow$).
+\\ $||$ MAKER\_USER = (MAKER $||$ USER)
+\\ I due alfabeti si sincronizzano su used.
+\\ Formalmente: 
+\\ Dati due LTS A$_i$ = (Q$_i$, $\Sigma_i$, $\delta_i$, q$_0^i$), la loro composizione parallela A$_1 ||$ A$2$ è l'LTS (Q$_1 \times$ Q$_2$, $\Sigma_1 \cup \Sigma_2, \delta,$(q$_0^1$, q$_0^1$)), dove $\delta$ è definita:
+\begin{itemize}
+    \item per ogni a $\in \Sigma_1 \cap \Sigma_2$ (sincronizzazione)
+        \[
+            \delta((p,q),a) = \delta_1(p,a) \times \delta_2(q,a)
+        \]
+        cioè se  p $\overset{a}{\rightarrow}$ p' e q $\overset{a}{\rightarrow}$ q' allora (p,q) $\overset{a}{\rightarrow}$ (p', q')
+    \item per ogni a $\notin \Sigma_1 \cap \Sigma_2$ (interleaving)
+        \[
+            \delta((p,q),a) = \delta_1(p,a) \times \{q\} se \; a \in \Sigma_1
+        \]
+        cioè se  p $\overset{a}{\rightarrow}$ p' e  allora (p,q) $\overset{a}{\rightarrow}$ (p', q)
+        \[
+            \delta((p,q),a) = \{p\} \times \delta(q,a)   se \; a \in \Sigma_2
+        \]
+        cioè se  q $\overset{a}{\rightarrow}$ q' e  allora (p,q) $\overset{a}{\rightarrow}$ (p, q')
+\end{itemize}
+La composizione parallela è commutativa e associativa:
+\\ (A$_1 ||$ A$_2$) = (A$_2 ||$ A$_1$) 
+\\ (A$_1 ||$ A$_2$) $||$ A$_3$ = A$_1 ||($ A$_2$ $||$ A$_3$)
+\\ Quindi la composizione può essere denotata in paralleli di multipli: A$_1 ||$ A$_2 ||$ ... $||$ A$_n$.
+\\ Possono limitare un alfabeto P usando "P@\{a$_1$,...,ax\}" alle azioni \{a$_1$,...,ax\}. Altre azioni vengono trasformate in \textbf{tau} in modo che si eviti la sincronizzazione con altri processi. 
+\\ User = (acquista $\rightarrow$ use $\rightarrow$ release $\rightarrow$ USER) @\{acquire, release\}.
+\\ Formalmente: 
+\\ Data un LTS A = (Q, $\Sigma$, $\delta$, q$_0$), l'LTS ottenuto limitando il suo alfabeto a $\Sigma' \in \Sigma$ è A@$\Sigma'$ = (Q, $\Sigma', \delta$, q$_0$) dove $\delta'$ è definita: 
+\begin{itemize}
+    \item per l'azione speciale tau (nascondere azioni) 
+        \[ 
+            \delta'(p,\tau) = \bigcup_{a \notin \Sigma'}\delta(p,a)
+        \]
+        cioè se p $\overset{a}{\rightarrow}$ p' $\land \in \Sigma'$ allora in A@$\Sigma'$ si ha p $\overset{tau}{\rightarrow}$ p'
+    \item per ogni a $\in \Sigma'$ (azioni non nascoste) 
+        \[
+            \delta'(p,a) = \delta(p,a)
+        \]
+        cioè se p $\overset{a}{\rightarrow}$ p' $\land \in \Sigma'$ allora in A@$\Sigma'$ si ha p $\overset{a}{\rightarrow}$ p'
+\end{itemize}
+
+\subsection{Rete di Petri (Petri nets)}
+È un approccio grafico alla rappresentazione dei sistemi concorrente. Può essere vista com un estensione degli automi per sistemi concorrenti dove: gli stati sono "piazze" (place), più piazze sono contemporaneamente attive(indicate da token) e le transizioni modificano gli stati attivi (generano e consumano multi insieme di stati attivi/token)
+\\ Formalmente una Petri Net(PN) è una quintupla N = (P, T, F, W, M$_0$) dove:
+\begin{itemize}
+    \item P = \{ p$_1$, ... , p$_m$ \} è un insieme finito di piazze
+    \item T = \{ t$_1$, ... , t$_n$ \} è un insieme finito di transizioni
+    \item F $\subseteq$ (P $\times$ T) $\cup$ (T $\times$ P) è una relazione di flusso (insieme di archi)
+    \item W: F \{1,2,3,..\} è una funzione di peso
+    \item M$_0$: P \{0,1,2,3,..\} è una funzione di marcatura iniziale
+    \item P $\cap$ T = $\emptyset$ e P $\cup$ T $\neq \emptyset$
+\end{itemize}
+Il marking graph di una Petri Net è un LTS che ne definisce il comportamento. C'è una configurazione iniziale (marking) che segna la quantità di token in ogni piazza. Da una configurazione all'altra si modificano il marking corrente. Il marking iniziale è M$_0$.
+\\ Formalmente: 
+\begin{itemize}
+    \item Un marking M è un multi insieme di piazzeç 
+        \\ M: P \{0,1,2,3,..\}
+    \item Una transizione t $\in$ T di una PN è abilitata in un marking M se: 
+        \\Per ogni p $\in$ P    (M(p) $\geq$ W(p,t)
+    \item L'esecuzione di una t $\in$ T abilitata nel marking M fa passare la PN al marking M' dato da: 
+        \\ Per ogni p $\in$ P    (M'(p) = M(p) - W(p,t) + W(t,p)
+\end{itemize}
+È possibile che il marking sia infinito, succede quando la rete di Petri è unbounded. Questo non si verifica se la formula di LTL è soddisfatta.
+
+\section{Macchina di Turing} 
+Turing arrivò alla conclusione seguente conclusione: "Se un problema è intuitivamente calcolabile (risolvibile con seguendo una procedura) allora esiste una touring machine che lo risolve".
+\\ Definizione formale di touring machine: una TM è una 7-pla (Q,$\Sigma, \Gamma, \delta,$q$_0$, B, F) con: 
+\begin{itemize}
+    \item Un insieme finito di stati Q
+    \item Un alfabeto di input $\Sigma$
+    \item Un alfabeto di nastro $\Gamma$ con $\Sigma \subseteq \Gamma$
+    \item Una funzione di transizione $\delta$
+    \item Uno stato iniziale q$_0 \in Q$ 
+    \item Un simbolo di blank B $\in \Gamma \setminus \Sigma$ (tutto il nastro, meno l'input, è blank
+    \item Un insieme di stati finali F $\subseteq$ Q
+\end{itemize}
+C'è una testina che come azione cambia lo stato cambiando il simbolo che indica e si muove alla cella destra o sinistra. Il nastro è un numero infinito di celle che contengono simboli di un alfabeto $\Gamma$.
+\\ Per convenzione: 
+\begin{itemize}
+    \item a, b... sono simboli di input
+    \item ..., X, Y, Z sono simboli del nastro
+    \item ..., w, x, y, z sono stringhe in input
+    \item $\alpha, \beta$,... sono stringhe sul nastro
+\end{itemize}
+Dati due argomenti q in Q e Z in $\Gamma$ la funzione di transizione $\delta$(q,Z) è indefinita oppure è una tripla dalla forma (p, Y, D): 
+\begin{itemize}
+    \item p è uno stato
+    \item Y nuovo simbolo del nastro 
+    \item D è una direzione, L o R
+\end{itemize}
+Quindi se ho $\delta(q,Z) = (p,Y,D)$ allora la TM cambia stato da q a p, cambia il simbolo Z con Y sul nastro e si muove nella direzione D(destra o sinistra, R o L).
+\\ Inizialmente una TM ha una string in input e un infinità di blank in entrambe le direzioni. La testina è sul simbolo di input più a sinistra. 
+\\ Questo stato si chiama ID (descrizione istantanea) e si descrive tramite una stringa $\alpha \textbf{q} \beta$ dove:
+\begin{itemize}
+    \item $\alpha\beta$ è il contenuto del nastro. Tutto quello che è a destra si assume sia blank
+    \item $\textbf{q}$ è lo stato corrente della TM 
+    \item La testina è sul primo simbolo di $\beta$, se non c'è il carattere la testina punta a un blank.
+\end{itemize}
+Come per i PDA usiamo $\vdash$ e $\vdash^*$v per indicare i passaggi di ID (mossa singola e mossa multipla).
+\\ Formalmente una mossa è definita in questo modo:
+\begin{itemize}
+    \item Se $\delta$(q,Z) = (p,Y,R) allora:
+        \begin{itemize}
+            \item $\alpha qZ \beta \vdash \alpha Y p \beta$
+            \item se Z è B, allora anche $\alpha q \vdash \delta Yp$
+        \end{itemize}
+    \item Se $\delta$(q,Z) = (p,Y,L) allora:
+        \begin{itemize}
+            \item $\alpha qZ \beta \vdash \gamma pXY \beta$ dove $\alpha = \gamma X$ oppure $\alpha=\gamma=\epsilon$ e X=B
+            \item se Z è B, allora anche $\alpha q \vdash \gamma p X Yp$
+        \end{itemize}
+\end{itemize}
+Una TM M definisce un linguaggio per stato finale: 
+\\ L(M) = \{ w | q$_0w\vdash * \alpha \textbf{q} \beta$ con q finale\}
+\\ Se w non è in L(M) allora M o si blocca o non finisce mai. Tali linguaggi vengono detti: \textbf{linguaggi ricorsivamente enumerabili}. Se L = L(M) per una qualche Tm M che è un algoritmo, diciamo che L è un linguaggio ricorsivo.
+\\ Ogni CFL è un linguaggio ricorsivo, inoltre ogni linguaggio che data una stringa si può vedere se essa appartiene al linguaggio è anche lui ricorsivo.
+\\ Ci sono alcuni trucchi per rendere le TM più potenti:\begin{itemize}
+    \item tracce multiple: ho una serie di tracce parallele, l'input ha una fila di blank e un solo simbolo, i simbolo del nastro sono un vettore pieno di simboli e ogni blank è un vettore blank
+    \item marcatura: posso usare un simbolo speciale per marcare delle celle
+    \item stato vettore: anche lo stato può essere un vettore, il primo elemento è lo stato il resto è la nostra memoria
+\end{itemize}
+Esempio di applicazione: una TM che copia l'input infinite volte.
+\\ Stati di controllo: 
+\begin{itemize}
+    \item q: marca la posizione e memorizza il simbolo letto
+    \item p: va a destra, quando trova un blank scrive il simbolo in memoria
+    \item r: va a sinistra fino alla marcatura
+    \item ogni stato ha una forma [x,Y] dove: 
+        \begin{itemize}
+            \item x è q, p oppure r
+            \item Y è 0, 1 oppure B (0 e 1 solo quando x è p)
+        \end{itemize}
+\end{itemize}
+I simboli del nastro hanno forma [U,V] dove:
+\begin{itemize}
+    \item U è X (marcatura) oppure B
+    \item U è 0, 1 (input) oppure B 
+        \begin{itemize}
+            \item [B,B] è il blank; [B,0] e [B,1] sono gli input
+        \end{itemize}
+\end{itemize}
+La funzione di transizione è definita come segue: 
+\begin{itemize}
+    \item a e b sono simboli di input (0 e 1)
+    \item $\delta$([q,B], [B,a]) = ([p,a], [X,a],R)
+        \begin{itemize}
+            \item nello stato q copia a, il simbolo sotto la testina
+            \item marca la posizione letta
+            \item va allo stato successivo
+        \end{itemize}
+    \item $\delta$([p,a], [B,b]) = ([p,a], [B,b],R)
+        \begin{itemize}
+            \item nello stato p va a destra in attesa di un blank (deve essere blank sia la marcatura che il simbolo sopra)
+        \end{itemize}
+    \item $\delta$([p,a], [B,B]) = ([r,B], [B,a],L)
+        \begin{itemize}
+            \item quando trovo B, lo rimpiazzo con il simbolo in memoria, ovvero a 
+            \item entra nello stato r e va a sinistra
+        \end{itemize}
+    \item $\delta$([r,a], [B,a]) = ([r,B], [B,a],L)
+        \begin{itemize}
+            \item in r cerco la marcatura verso sinistra
+        \end{itemize}
+    \item $\delta$([r,B], [X,a]) = ([q,B], [B,a],R)
+        \begin{itemize}
+            \item quando trovo la marcatura entro in Q e vado a destra
+            \item rimuovo la marcatura
+            \item q inserirà la marcatura e si ripete il ciclo
+        \end{itemize}
+\end{itemize}
+Invece che avere nastro infinito in entrambe le direzione, possiamo avere due tracce. Uno conteggia le posizioni a destra 1,2, ... e l'altro le posizioni a sinistra -1,-2,... questo è il nastro  semi infinito.
+\\ Inoltre invece che avere un nastro possiamo usare due stack, al posto delle due tracce. Quindi una TM è un PDA ma con due stack.
+\\ Possiamo inoltre avere k nastri e k testine, le mosse dipendono dallo stato e dal simbolo di ogni testina di ogni nastro.
+\\ Ogni nastro è una traccia. C'è una traccia per la posizione della testina. La TM accetta l'input se esiste una possible sequenza di scelte che porta a uno stato accettante.
+\\ Infine posso fare una DTM che tiene conto delle ID di una NTM, scrivendo solo le ID possibile. Se troviamo un ID accettante allora termina l'esecuzione.
+\vspace{5mm}
+\\ I linguaggi ricorsi sono chiusi rispetto a: unione, intersezione, concatenazione, stella di Kleene e reverse.Sono ricorsivi chiusi rispetto a complemento e differenza.
+\vspace{5mm} 
+Sia L$_1$ = L(M$_1$) e L$_2$ = L(M$_2$), assumiamo che M$_1$ e M$_2$ siano TM con un solo nastro semi infinito.
+Costruiamo una TM con 2 nastri che copia l'input su entrambi i nastri e accetta se entrambe le TM accettano: unione.
+\\ Nel caso del complemento possiamo determinare se un linguaggio è ricorsivo, ovvero quando le due macchine, una che riconosce un L RE e l'altra il suo complemento. Quindi esce fuori uno stato accettante e uno che rifiuta.
+\\ La differenza tra L$_1$ e L$_2$ è l'intersezione di L$_1$ con il complemento di L$_2$. I linguaggi ricorsivi sono chiusi rispetto a entrambe le operazioni.
+\\ Nella concatenazione ho due nastri non deterministici. Suddivido l'input w=xy e sposto y sul secondo nastro. 
+Se entrambi i nastri accettano allora accetto. Nel caso ricorsivo devo ripetere l'operazione per ogni x e y e accettare se almeno una suddivisione accetta.
+\\ La stella di Kleene è un caso particolare della concatenazione. RE scommette su una suddivisione mentre i ricorsivi provano ogni suddivisione.
+\\ Per il reverse inverto l'input e simulo L sul input invertito, con entrambe i linuaggi. 
+
+\subsection{Decidibilità}
+È possibile ordinare tutte le stringe finite su un alfabeto.
+Siccome sono infinite esiste una funzione biunivoca da numeri naturali a stringhe. 
+Possiamo fare lo stesso con le TM. È una tabella stringa-TM che ha 1 accetta e 0 non accetta.
+\\ Questa tabella è diagonalizable, ovvero costruiamo un vettore D = a$_1$, a$_2$... con i termini invertiti. D è un linguaggio che nessuna TM conosce. 
+\\ Il linguaggio di diagonalizzazione è L$_d$ = \{w $|$ w è la string i-esima, e la i-esima TM non riconosce w \}. Questo linguaggio non ha impatto sul mondo reale.
+\\ UTM è il linguaggio della Macchina di Turing Universale. (se servisse si approfondisce in un secondo momento)\\ Non esiste un linguaggio senza computazioni non terminanti.
+\\ Teorema di rice: L$_p$ è ricorsivo se P è sempre oppure mai soddisfatta.
+
+\section{Compilatore di Function and Object Oriented Language}
+Sviluppo di un compilatore per il Function and Object Oriented Language (FOOL). 
+La sintassi c'è nel file FOOL.g4.
+I metodi di visita ci sono in BaseASTVisitor.java.
+\\ È il linguaggio che abbiamo fatto in laboratorio, ma con operatori aggiuntivi e OOP. Il compilatore produce codice per la SVM sviluppata a lezione (senza necessità di modifica).
+\\ C'è da implementare lo heap, ma niente garbage collection.
+\\ Sintassi astratta:
+\begin{mycode}[]
+    class ID1 [extends ID2] ( campi dichiarati come parametri) {
+        metodi dichiarati come funzioni
+    }
+
+    // Utilizzo
+    ID1.ID2()
+    new ID() 
+    null
+\end{mycode}
+La classe è di tipo ID.
+\\ Sintassi: 
+\begin{mycode}
+    let 
+        class A (a:int, b:bool) {
+            fun n:int(...) ... ;
+            fun m:bool(...) ... ;
+        }
+    in  
+\end{mycode}
+a e b sono parametri. Gli oggetti una volta creati sono immutabili. I campi sono accessibli solo da dentro la classe o suo figlio. I metodi del padre sono invocabili dal figlio. O anche dal esterno.
+\\ Sintassi ereditarietà:
+\newpage
+\begin{mycode}
+    let 
+        class A (a:int, b:bool) {
+            fun n:int(...) ... ;
+            fun m:bool(...) ... ;
+        }
+        class B extends A (c:int) {
+            fun l:int(...) ... ;
+        }
+    in
+
+    // nuovo oggetto con a=5, b=true e c=7
+    new B(5, true, 7)
+\end{mycode}
+Overriding di campi.
+\begin{mycode}
+    let 
+        class A (a:int, b:bool) {
+            fun n:int(...) ... ;
+            fun m:bool(...) ... ;
+        }
+        //override di a
+        class B extends A (c:int, a:bool) {
+            fun l:int(...) ... ;
+        }
+    in
+
+    // nuovo oggetto con a=false, b=true e c=7
+    new B(false, true, 7)
+\end{mycode}
+Layout oggetti nel heap: 
+\vspace{2mm}
+\\ PRIMA POSIZIONE LIBERA HEAP
+\\ dispatch pointer
+\\ valore primo campo dichiarato
+\\ .
+\\ .
+\\ valore ultimo (n-esimo) campo
+\vspace{5mm}
+Layout oggetti nel heap: 
+\vspace{2mm}
+\\ PRIMA POSIZIONE LIBERA HEAP
+\\ addre ultimo metodo
+\\ .
+\\ .
+\\ addr primo metodo dichiarato
+\vspace{2mm} 
+\\ L'AR funziona uguale, mentre il suo access link è relativo a "this" ovvero la classe.
+
+\subsection{AST}
+Dichiarazioni:
+\begin{itemize}
+    \item ClassNode: salvare i campi figli in fields e metodi in "methods", mentre in "superID" ci va l'ID della classe padre oppure niente
+    \item FieldNode: come ParNode
+    \item MethodNode: come FunNode
+\end{itemize}
+I nodi ora eridato da DecNode per poter scoprire il tipo con getType()
+\\ Espressioni:
+\begin{itemize}
+    \item IdNode        ID 
+    \item CallNode      ID()
+    \item ClassCallNode ID.ID()
+    \item NewNode new   ID()
+    \item EmptyNode     null
+\end{itemize}
+Il nostro type checking ti ritorna RefTypeNode (ID) oppure EmptyTypeNode (null).
+\\ Il nesting level globale è 0, da fare -2 ogni volta che dichiaro una classe. ClassTypeNode ha come campi, ArrayList$\langle$TypeNode$\rangle$ allFields e \\ ArrayList$\langle$ArrowTypeNode$\rangle$ allMethods. Entrambi in ordine di apparizione e inclusi ereditati.
+\\ Abbiamo anche una virtual symbol table. Ogni volta che definisco una classe devo creare una symbol table per salvare i simboli ereditati che non sono stati overloadedati.
+\\ Abbiamo anche una Class Table che mappa ogni nome di classe nella propria Virtual Table: Map$\langle$ String, Map $\langle$ String, STentry $\rangle\rangle$ classTable. Serve per rendere accessibile le dichiarazione anche dopo aver dichiarato la classe (ID1.ID2()).
+\\ Quando si dichiara una classe salvo il nome nella Symbol Table livello 0, se non eredita niente ha fields e calls vuoti altrimenti copia tutto il contenuto del ClassTypeNode. Nella class table aggiungo il nome della classe la sua virtual table, come prima vuota se non eredita altrimenti la copio tutta dal padre. 
+\\ Quando entro nella classe ogni volta che incontro un campo o un metodo aggiorno Vitual Table e oggetto ClassTypeNode.
 
 \newpage
 \import{}{esercizi}
