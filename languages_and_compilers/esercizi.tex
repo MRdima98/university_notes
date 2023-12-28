@@ -308,3 +308,30 @@ Si può concludere che $s \notin L$ quindi L non è regolare.
           \item +: terzo giro, ripeto il 2
       \end{enumerate}
 \end{enumerate}
+
+Esercizio SLR.
+// Grammatica
+\begin{verbatim}
+    A -> Bb | a
+    B -> cA | epsilon
+    A' -> A
+\end{verbatim}
+Prima di tutto ricordati che devi standardizzare la grammatica, quindi aggiungi 
+una produzione $A' \rightarrow A$ e rendi la grammatica non ambigua (se lo è).
+\\ Regole di first:
+\begin{enumerate}
+    \item Se $X \rightarrow \alpha Y \beta$ allora FIRST(Y) è FIRST($\alpha$) ovvero $\alpha$
+    \item Se $X \rightarrow Y$ allora tutto ciò che è in FIRST(Y) è in FIRST(X)
+\end{enumerate}
+
+\\ Regole di follow: 
+\begin{enumerate}
+    \item \$ è in FOLLOW(A)
+    \item Se c'è una produzione $A \rightarrow \alpha B \beta$ allora FOLLOW(B) è FIRST($\beta$) senza $\epsilon$
+    \item Se c'è una produzione $A \rightarrow \alpha B$ allora tutto ciò che è in FOLLOW(A) è in FOLLOW(B)
+\end{enumerate}
+Un shift passa da uno stato al prossimo.
+Un reduce avviene quando si arriva ad una produzione, devo scriverlo nella tabella 
+ovunque siano i follow di un lettera non terminale. 
+Se c'è una collision, ovvero un shift e un reduce nella stessa casella, allora 
+non è SLR.
