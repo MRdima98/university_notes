@@ -486,7 +486,7 @@ $\epsilon$-NFA per riconoscere un numero decimale
 
 		\item $\circumdelta(q,xa) = \bigcup_{p\in\circumdelta(q,x)}(\bigcup_{t\in\delta(q,a)}ENCLOSE(t))$
 	\end{enumerate}
-	\textbf{Teorema} Un linguaggio è linguaggio L è accetto da un $\epsilon$-NFA se è solo se è accettato da un DFA.
+	\textbf{Teorema} Un linguaggio L è accetto da un $\epsilon$-NFA se è solo se è accettato da un DFA.
 
 	\section{Espressioni regolari}
 	Le espressioni regolari definiscono gli stessi linguaggi definiti dai vari automi: \emph{linguaggi regolari}. A differenza degli automi, le espressioni regolari descrivono linguaggi in maniera dichiarativa. Per questo motivo le espressioni regolari sono molto diffuse, per esempio nel commando unix \emph{grep} oppure negli analizzatori lessicali.
@@ -886,6 +886,7 @@ Un CFG è formato da 4 elementi:
 \end{enumerate}
 In maniera contratta, CFG=(V,T,P,S) rispettivamente variabile, terminale, produzioni e simbolo iniziale. 
 \\ Il linguaggio palindromo descritto come CFG è $G_{pal}=(\{P\}, \{0,1\},A,P)$ A è l'insieme delle produzioni del linguaggio.
+\\ Un linguaggio che ha una CFG è detto \emph{libero da contesto}.
 
 \subsection{Derivazione in CFG}
 Possiamo definire le stringhe tramite concatenazione delle produzione, \emph{inferenza ricorsiva} 
@@ -990,7 +991,7 @@ Queste sono 2 operazioni diverse, usiamo i valori $1+2*3$, dal primo albero trov
 \\ \textbf{Definizione} Sia $G=(V,T,P,S)$ una CFG. Diciamo che G è ambigua se esiste almeno una stringa T* che ha più di un albero sintattico. 
 
 \subsubsection{Rimuovere ambiguità}
-È possibile, in alcuni casi, rimuovere l'ambiguità. Non esiste però un modo sistematico e alcuni CFL hanno solo CFG ambigue. 
+È possibile, in alcuni casi, rimuovere l'ambiguità. Non esiste però un modo sistematico e alcuni CFL(context free language) hanno solo CFG ambigue. 
 \\ Studiamo la grammatica 
 \[ E \rightarrow I \;|\; E + E \;|\; E * E \;|\; (E)\]
 \[ I \rightarrow a \;|\; b \;|\; Ia \;|\; Ib \;|\; I0 \; | \; I1\]
@@ -1102,8 +1103,8 @@ dove $\delta$ è definita dalle seguenti regole:
   \item 
         $\delta(q_1,\epsilon,Z_0)$ = $\{(q_2, Z_0)\}$
         se non ho niente nello stack, passo alla soluzione accettante
-
 \end{enumerate}
+Se un linguaggio ha un PDA accettante, allora è un CFL.
 
 \newpage
 \subsection{Descrizioni istantanee}
@@ -1121,12 +1122,12 @@ Un PDA passa da una configurazione all'altra consumando un simbolo in input oppu
 \subsection{Accettazione per stato finale} 
 Sia $P=(Q,\Sigma, \Gamma, \delta, q_0, Z_0, F)$ un PDA, il \emph{linguaggio accettato} da P per stato finale è: 
 \[L(P)=\{w:(q_0,w,Z_0) \overset{*}{\vdash}(q,\epsilon,\alpha, q \in F)\}\]
-In altre parole una volta che $w$ è in uno stato accettante il contenuto della pila è irrilevante
+In altre parole una volta che $w$ è in uno stato accettante il contenuto della pila è irrilevante.
 
 \subsection{Accettazione per pila vuota} 
 Sia $P=(Q,\Sigma, \Gamma, \delta, q_0, Z_0, F)$ un PDA, il \emph{linguaggio accettato} da P per pila vuota è: 
 \[N(P)=\{w:(q_0,w,Z_0) \overset{*}{\vdash}(q,\epsilon,\epsilon)\}\]
-NB $q$ è un generico stato, dunque $N(P)$ è degli input $w$ che svuotano la stack
+NB $q$ è un generico stato, dunque $N(P)$ è degli input $w$ che svuotano la stack.
 
 \newpage
 \subsection{Da stack vuota a stato finale} 
@@ -2422,7 +2423,7 @@ E', and a new derivation E' $\rightarrow$ E.
 \\ T $\rightarrow$ T * int $|$ int
 \\
 \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
-    \node[state, accepting] (q0) {q1};
+    \node[state, accepting] (q0) {q0};
     \node[state, accepting] (q1) [below=of q0]{q1};
     \node[state, accepting] (q2) [below=of q1]{q2};
     \node[state, accepting] (q3) [below=of q2]{q3};
@@ -2509,7 +2510,7 @@ $\circ$ and $\triangleright$ are the same thing, but $\circ$ is used for SLR ite
 \\ The SLR contains the correct stack configuration but also indicates when to shift/reduce. When the $\circ$ is at the end of the rule reduce, otherwise shift. If there are conflicts use the lookahead. If the look ahead finds a discrepancy, it will change the next transition. 
 \\ The two rules are:
 \begin{itemize}
-    \item lookahead for shit: only on the expected terminals
+    \item lookahead for shift: only on the expected terminals
     \item lookahead for reduce: only on terminals in the Follow set of the variabile on the l.h.s of the rules used to reduce
 \end{itemize}
 Consider our example grammar: 
@@ -3297,8 +3298,8 @@ nothing else can be a formula. This can also be written as a grammar: $\phi$ ::=
 Let's define some logical concepts. 
 \\ Logical consequence: 
 \begin{itemize}
-    \item Formal $\phi$ is a logical consequence of $\phi_1,...,\phi_n$ if for any M, when M $\models \phi_1,...,\phi_n$ then M $\models \phi$
-    \item This form is equivalent to: $\phi_1,...,\phi_n \vdash \phi$
+    \item Formal $\psi$ is a logical consequence of $\phi_1,...,\phi_n$ (this formulas are a series of premises) if for any M, when M $\models \phi_1,...,\phi_n$ then M $\models \psi$
+    \item This form is equivalent to: $\phi_1,...,\phi_n \vdash \psi$ ( this would be a series of premises that leads to a conclusion, and it's called a \emph{sequent})
 \end{itemize}
 Tautology/Validity definition: A formula $\phi$ that is logical consequence of no formulas (always true in any model) is called tautology. 
 The notation is: $\models \phi$ or we can simply say $\phi$ is valid.
@@ -3340,6 +3341,7 @@ $\phi_1, ... , \phi_n \vdash \phi$ means that $\phi$ can be deduced from $\phi_1
     \item Form for rules: $ \inferrule
             { \vdash \phi_1 ... \vdash \phi_n}
             { \vdash \phi} $
+            \\ premises above and conclusion below
 \end{itemize}
 where $\phi, \phi_1, ... $ are formulas or formula schemas.
 \\ Hilbert deduction system minimal syntax: $\phi ::= p | \neg \phi | \phi \rightarrow \phi$.
@@ -3473,10 +3475,12 @@ Nella logica classica c'è un solo "mondo" su cui si posso esprimere proprietà 
         $\phi: \phi$ è vera in alcuni momenti successivi
     \item $\phi \; \mathcal{U} \psi$: $\phi$ è vera fino a quando $\psi$ vera
 \end{itemize}
-Sintassi LTL: 
+Un LTL è una serie di stati che si estende nel futuro. Questo viene chiamato \emph{path},
+siccome il futuro non è deciso ci sono una serie di path prima di trova quello corretto.
+\\ Sintassi LTL: 
 \\ $\phi, \psi \rightarrow$ p $|$ (atomic proposition) 
 \\ \hspace*{5mm} T $|$ (true)
-\\ \hspace*{5mm} $\bot |$ (true)
+\\ \hspace*{5mm} $\bot |$ (false)
 \\ \hspace*{5mm} $\neg \phi |$ (complement)
 \\ \hspace*{5mm} $\phi \land \psi |$ (conjunction)
 \\ \hspace*{5mm} $\phi \lor \psi |$ (disjunction)
@@ -3505,11 +3509,11 @@ Sintassi LTL:
     \item $ \pi\models \phi \lor \psi \Longleftrightarrow$ $ \pi\models \phi$ or $ \pi\models \psi$
     \item $ \pi\models \phi \rightarrow \psi \Longleftrightarrow$ $ \pi\models \phi$ implies $ \pi\models \psi$
 \end{itemize}
-L'operatore next indica la proposizione corretto nel prossimo momento temporale. Esempio: (sad $\land \neg$ rich) \mycircle{0.15} sad. La semantica corretta sarebbe: $\pi \models \mycircle{0.15} \Longleftrightarrow \pi^2 \models \phi$. ($\pi_i$ è la sequenza di mondi, quindi al quadrato significa solo che è il secondo mondo)
+L'operatore next indica la proposizione corretto nel prossimo momento temporale. Esempio: (sad $\land \neg$ rich) \mycircle sad. La semantica corretta sarebbe: $\pi \models \mycircle \Longleftrightarrow \pi^2 \models \phi$. ($\pi_i$ è la sequenza di mondi, quindi al quadrato significa solo che è il secondo mondo)
 \vspace{5mm}
 \\ L'operatore sometime è vero ora o in qualche momento futuro. Esempio: sad $\Rightarrow$ \rombo happy. Semantica: $\pi \models \rombo \phi \Longleftrightarrow$ there is some i $\geq$ 1 such that $\pi_1 \models \phi$.
 \vspace{5mm}
-\\ L'operatore always è vero ora e in ogni momento futuro. Esempio: lotter-win $\Rightarrow$ \square{0.3} rich. Semantica: $\pi \models \square{0.3} \; \phi \Longleftrightarrow$ for all i $\geq$ 1 we have $\pi^i \models \phi$.
+\\ L'operatore always è vero ora e in ogni momento futuro. Esempio: lotter-win $\Rightarrow$ \square rich. Semantica: $\pi \models \square \; \phi \Longleftrightarrow$ for all i $\geq$ 1 we have $\pi^i \models \phi$.
 \vspace{5mm}
 \\ L'operatore until mettere in relazione due proposizioni, una vera ora e per tutti i momenti successivi finché non è vera un altra. Esempio born $\Rightarrow$ alive $\mathcal{U}$ dead. Semantica: $\pi \models \phi \mathcal{U} \psi \Longleftrightarrow$ there is some i $\geq$ 1 such that $\pi^i \models \psi$ and for all j = 1...i-1 we have $\pi^j \models \psi$.
 \vspace {5mm} 
@@ -3878,7 +3882,10 @@ Il nostro type checking ti ritorna RefTypeNode (ID) oppure EmptyTypeNode (null).
 \\ Abbiamo anche una virtual symbol table. Ogni volta che definisco una classe devo creare una symbol table per salvare i simboli ereditati che non sono stati overloadedati.
 \\ Abbiamo anche una Class Table che mappa ogni nome di classe nella propria Virtual Table: Map$\langle$ String, Map $\langle$ String, STentry $\rangle\rangle$ classTable. Serve per rendere accessibile le dichiarazione anche dopo aver dichiarato la classe (ID1.ID2()).
 \\ Quando si dichiara una classe salvo il nome nella Symbol Table livello 0, se non eredita niente ha fields e calls vuoti altrimenti copia tutto il contenuto del ClassTypeNode. Nella class table aggiungo il nome della classe la sua virtual table, come prima vuota se non eredita altrimenti la copio tutta dal padre. 
-\\ Quando entro nella classe ogni volta che incontro un campo o un metodo aggiorno Vitual Table e oggetto ClassTypeNode.
+\\ Quando entro nella classe ogni volta che incontro un campo o un metodo aggiorno Vitual Table e oggetto ClassTypeNode
+
+\section{Esclusione esami 2023} 
+LR(1) LARL CYK.
 
 \newpage
 \import{}{esercizi}
